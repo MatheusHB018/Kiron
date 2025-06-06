@@ -58,9 +58,9 @@ O projeto está totalmente alinhado com as práticas de ESG (Environmental, Soci
 
 A seção a seguir descreve as tecnologias usadas no desenvolvimento do projeto.
 
--   **Frontend:** ``
--   **Backend:** ``
--   **Banco de Dados:** ``
+-   **Frontend:** `React`
+-   **Backend:** `Node.js + Express`
+-   **Banco de Dados:** `MYSQL`
 
 ---
 
