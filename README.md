@@ -100,6 +100,6 @@ Para garantir um código flexível, escalável e de fácil manutenção, utiliza
 
 Este projeto foi desenvolvido por:
 
--   Gustavo Henrique 
--   Ian Gabriel 
--   Manoela Pinheiro
+-   Gustavo Henrique Bispo Costa
+-   Ian Gabriel de Abreu Barbosa
+-   Manoela Pinheiro da Silva
