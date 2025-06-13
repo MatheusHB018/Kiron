@@ -76,13 +76,17 @@ Siga os passos abaixo para executar o projeto em seu ambiente local.
     ```sh
     cd MedResiduos
     ```
-3.  **Instale as dependências:**
+3.  **Navegue até o diretório do Front-End:**
     ```sh
-    # Adicione aqui o comando para instalar dependências (ex: npm install)
+    cd client
     ```
-4.  **Inicie o servidor:**
+4.  **Instale as dependências:**
     ```sh
-    # Adicione aqui o comando para iniciar o projeto (ex: npm start)
+    npm install
+    ```
+5.  **Inicie o servidor:**
+    ```sh
+    npm run dev
     ```
 
 ---
