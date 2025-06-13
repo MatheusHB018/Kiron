@@ -1,0 +1,182 @@
+/* src/pages/LoginPage.css */
+
+:root {
+  --logo-primary-green: #0D5D56;
+  --logo-primary-green-darker: #09433e;
+  --logo-light-bg: #f8f9fa;
+  --white-bg: #ffffff;
+  --dark-text-color: #212529;
+  --grey-text-color: #6c757d;
+  --border-color: #ced4da;
+  --focus-glow-color: rgba(13, 93, 86, 0.25);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--logo-light-bg);
+  padding: 1rem;
+}
+
+.login-container {
+  background-color: var(--white-bg);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.logo-container {
+  background-color: var(--logo-light-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+  display: block;
+}
+
+.login-title {
+  color: var(--dark-text-color);
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--logo-primary-green);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #adb5bd;
+}
+
+.form-group input:focus-visible {
+  outline: none;
+  border-color: var(--logo-primary-green);
+  box-shadow: 0 0 0 4px var(--focus-glow-color);
+}
+
+/* ===== NOVO: Estilos para o campo de senha com ícone ===== */
+
+/* Container que permite o posicionamento absoluto do ícone */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Ajusta o padding do input de senha para não sobrepor o ícone */
+.password-wrapper input {
+  padding-right: 3rem; /* Espaço para o ícone */
+}
+
+/* Posiciona o ícone no canto direito do campo */
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--grey-text-color);
+  transition: color 0.2s ease;
+}
+
+.password-toggle-icon:hover {
+  color: var(--logo-primary-green);
+}
+
+/* ======================================================= */
+
+.login-button {
+  background-color: var(--logo-primary-green);
+  color: var(--white-bg);
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: var(--logo-primary-green-darker);
+  transform: translateY(-3px);
+}
+
+.login-button:active {
+  transform: translateY(-1px);
+}
+
+.forgot-password {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.forgot-password a {
+  color: var(--grey-text-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password a:hover {
+  color: var(--logo-primary-green);
+  text-decoration: underline;
+}

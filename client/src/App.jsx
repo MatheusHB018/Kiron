@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Importe o novo Layout e as páginas
+import MainLayout from './components/layout/MainLayout.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+
+// Lembre-se de criar e importar as outras páginas depois
+// import PacientesPage from './pages/Pacientes/PacientesPage.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Rota de Login (sem Header e Footer) */}
+        <Route path="/" element={<LoginPage />} />
+
+        {/* Rotas que USAM o layout principal (com Header e Footer) */}
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          {/*
+            Adicione aqui as outras páginas que devem ter cabeçalho e rodapé.
+            Exemplo:
+            <Route path="/pacientes" element={<PacientesPage />} />
+          */}
+        </Route>
+
+        {/* Você pode adicionar uma rota para "Página não encontrada" aqui depois */}
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
