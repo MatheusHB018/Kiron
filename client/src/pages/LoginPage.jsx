@@ -5,18 +5,31 @@ import './styles/LoginPage.css';
 import Logo from '../assets/logotipo.png';
 // ATUALIZADO: Importando os ícones de olho
 import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { login } from '../services/api';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // NOVO: Estado para controlar a visibilidade da senha
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Tentativa de login com:', { email, password });
-    navigate('/dashboard');
+    setError('');
+    try {
+      const result = await login(email, password);
+      // Salva o tipo do usuário logado no localStorage
+      if (result && result.user && result.user.tipo) {
+        localStorage.setItem('tipoUsuario', result.user.tipo);
+      } else {
+        localStorage.removeItem('tipoUsuario');
+      }
+      navigate('/home');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   // NOVO: Função para alternar a visibilidade da senha
@@ -34,6 +47,7 @@ function LoginPage() {
         <h1 className="login-title">Bem-vindo ao MedResiduos</h1>
         
         <form className="login-form" onSubmit={handleSubmit} noValidate>
+          {error && <div className="login-error">{error}</div>}
           <div className="form-group">
             <label htmlFor="email">
               <FaUser aria-hidden="true" />
