@@ -1,77 +1,106 @@
 /* client/src/components/layout/Header.css */
+
+/* Paleta de Cores (inspirada na logo):
+  - Azul Escuro (Fundo): #213547
+  - Verde/Teal (Destaque): #00A99D
+  - Texto Claro: #F0F0F0
+*/
+
 .header-container {
   display: flex;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  gap: 2rem; /* Espaçamento entre logo, navegação e botão */
+  padding: 0.8rem 2rem;
+  background-color: #213547;
+  color: #F0F0F0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  gap: 2rem;
 }
 
-/* --- Estilos da Logo (sem alteração) --- */
-.header-logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0; /* Evita que a logo encolha */
-}
-
-.header-logo img {
-  height: 40px;
-  margin-right: 10px;
-}
-
-.header-logo span {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #213547;
-}
-
-/* --- NOVOS ESTILOS PARA A NAVEGAÇÃO --- */
-.header-nav {
-  flex-grow: 1; /* Faz a navegação ocupar o espaço disponível */
-  display: flex;
-  justify-content: center; /* Centraliza os links */
-  gap: 1.5rem; /* Espaçamento entre os links */
-}
-
-.header-nav a {
+/* --- LOGO --- */
+/* Novo estilo para o link da logo */
+.header-logo-link {
   text-decoration: none;
-  color: #555;
-  font-weight: 500;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid transparent; /* Borda inferior para o efeito 'active' */
-  transition: color 0.3s ease, border-color 0.3s ease;
-}
-
-.header-nav a:hover {
-  color: #646cff; /* Cor ao passar o mouse */
-}
-
-/* Estilo que o NavLink aplica automaticamente no link da página atual */
-.header-nav a.active {
-  color: #646cff;
-  font-weight: bold;
-  border-bottom-color: #646cff; /* Destaca o link ativo */
-}
-/* --- FIM DOS NOVOS ESTILOS --- */
-
-
-/* --- Estilos das Ações do Usuário --- */
-.header-user-actions {
-  flex-shrink: 0; /* Evita que o botão encolha */
-}
-
-.logout-button {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.4rem;
   transition: background-color 0.3s ease;
 }
 
+.header-logo-link:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Efeito sutil ao passar o mouse */
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-logo img {
+  height: 45px;
+  margin-right: 12px;
+}
+
+.header-logo span {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+/* --- NAVEGAÇÃO --- */
+.header-nav {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.header-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: #E0E0E0;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.header-nav a:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-nav a.active {
+  color: #FFFFFF;
+  background-color: #00A99D;
+  font-weight: 600;
+}
+
+/* --- BOTÃO DE SAIR --- */
+.header-user-actions {
+  flex-shrink: 0;
+}
+
+/* Estilo ajustado para o botão com ícone */
+.logout-button {
+  display: flex; /* Para alinhar ícone e texto */
+  align-items: center;
+  gap: 0.6rem; /* Espaço entre ícone e texto */
+  background-color: transparent; /* Fundo transparente por padrão */
+  color: #E0E0E0;
+  border: 2px solid #00A99D; /* Borda com a cor de destaque */
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
 .logout-button:hover {
-  background-color: #cc0000;
+  background-color: #00A99D; /* Preenche o fundo no hover */
+  color: #FFFFFF;
+  transform: translateY(-2px); /* Efeito de elevação sutil */
+  box-shadow: 0 4px 10px rgba(0, 169, 157, 0.3);
 }

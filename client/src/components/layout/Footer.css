@@ -1,9 +1,21 @@
-/* src/components/layout/Footer.css */
-.footer {
-  background-color: #f9f9f9;
-  color: #888;
+/* client/src/components/layout/Footer.css */
+
+.footer-container {
+  /*
+    A regra !important força o navegador a usar esta cor,
+    ignorando qualquer outro estilo que possa estar causando o fundo branco.
+  */
+  background-color: #213547 !important; /* Fundo azul escuro, idêntico ao Header */
+  
+  color: #A9B4C2;
   text-align: center;
-  padding: 1rem;
-  border-top: 1px solid #e0e0e0;
-  margin-top: auto; /* Empurra o rodapé para o final */
+  padding: 1.5rem;
+  width: 100%;
+  border-top: 2px solid #00A99D; /* Borda de destaque idêntica à do Header */
+}
+
+.footer-container p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
 }

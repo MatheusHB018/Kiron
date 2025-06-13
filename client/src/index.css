@@ -1,23 +1,27 @@
-/* src/index.css */
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* client/src/index.css */
 
-  color-scheme: light dark;
-  color: #213547;
-  background-color: #ffffff;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-/* Removemos o display:flex e place-items:center do body */
+/* Define o padrão de 'box-sizing' para todos os elementos.
+   Isso evita que padding e bordas aumentem a largura total dos elementos,
+   prevenindo a maioria das causas de barras de rolagem. */
+   html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  /* Reseta o 'body' e aplica a regra principal */
+  body {
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove preenchimentos padrão */
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    
+    /* Cor de fundo para as áreas fora do conteúdo principal */
+    background-color: #f0f2f5; 
+    
+    width: 100%;
+    min-height: 100vh;
+  
+    /* A regra definitiva para remover a barra de rolagem horizontal */
+    overflow-x: hidden; 
+  }

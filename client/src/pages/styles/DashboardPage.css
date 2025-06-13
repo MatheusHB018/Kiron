@@ -1,39 +1,99 @@
-/* src/pages/DashboardPage.css */
+/* src/pages/styles/DashboardPage.css */
+
 .dashboard-page {
-  padding: 2rem;
+  padding: 2.5rem;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.dashboard-page h1 {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo para o cabeçalho da página */
+.dashboard-header {
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-header h1 {
   color: #213547;
-  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
+.dashboard-header p {
+  color: #555;
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+
+/* Usando Grid Layout para os cartões */
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  /* Cria colunas responsivas: elas tentam ter 320px, mas se ajustam para preencher o espaço */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
 .card {
   background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   text-decoration: none;
   color: inherit;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  /* Borda lateral que será colorida individualmente */
+  border-left: 6px solid transparent;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-.card h2 {
-  margin-top: 0;
-  color: #646cff;
+.card-icon {
+  font-size: 2.8rem; /* Ícones grandes para impacto visual */
+  margin-right: 1.5rem;
+  transition: transform 0.3s ease;
 }
 
-.card p {
-  color: #555;
+.card:hover .card-icon {
+  transform: scale(1.15) rotate(-5deg); /* Efeito divertido no ícone */
 }
+
+.card-content h2 {
+  margin: 0 0 0.5rem 0;
+  color: #213547;
+  font-size: 1.3rem;
+}
+
+.card-content p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* --- Cores personalizadas para cada cartão --- */
+
+/* Roxo para Pacientes */
+.card-pacientes { border-left-color: #5A67D8; }
+.card-pacientes .card-icon { color: #5A67D8; }
+
+/* Verde para Materiais */
+.card-materiais { border-left-color: #38A169; }
+.card-materiais .card-icon { color: #38A169; }
+
+/* Rosa para Agendamento */
+.card-agendamento { border-left-color: #D53F8C; }
+.card-agendamento .card-icon { color: #D53F8C; }
+
+/* Laranja para Relatórios */
+.card-relatorios { border-left-color: #DD6B20; }
+.card-relatorios .card-icon { color: #DD6B20; }
+
+/* Teal (cor da marca) para Parceiros */
+.card-parceiros { border-left-color: #00A99D; }
+.card-parceiros .card-icon { color: #00A99D; }
