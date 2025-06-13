@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/LoginPage.css';
-import Logo from '../assets/logotipo.png';
+import Logo from '/logotipo.png';
 // ATUALIZADO: Importando os ícones de olho
 import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash } from 'react-icons/fa';
 

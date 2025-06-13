@@ -1,37 +1,77 @@
-/* src/components/layout/Header.css */
-.header {
-  background-color: #ffffff;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* client/src/components/layout/Header.css */
+.header-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 2rem; /* Espaçamento entre logo, navegação e botão */
 }
 
-.header-logo a {
-  text-decoration: none;
-  color: #213547;
+/* --- Estilos da Logo (sem alteração) --- */
+.header-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Evita que a logo encolha */
+}
+
+.header-logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.header-logo span {
   font-size: 1.5rem;
   font-weight: bold;
+  color: #213547;
 }
 
-.header-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* --- NOVOS ESTILOS PARA A NAVEGAÇÃO --- */
+.header-nav {
+  flex-grow: 1; /* Faz a navegação ocupar o espaço disponível */
   display: flex;
-  gap: 1.5rem;
+  justify-content: center; /* Centraliza os links */
+  gap: 1.5rem; /* Espaçamento entre os links */
 }
 
 .header-nav a {
   text-decoration: none;
   color: #555;
   font-weight: 500;
-  transition: color 0.3s ease;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent; /* Borda inferior para o efeito 'active' */
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-.header-nav a:hover,
+.header-nav a:hover {
+  color: #646cff; /* Cor ao passar o mouse */
+}
+
+/* Estilo que o NavLink aplica automaticamente no link da página atual */
 .header-nav a.active {
   color: #646cff;
+  font-weight: bold;
+  border-bottom-color: #646cff; /* Destaca o link ativo */
+}
+/* --- FIM DOS NOVOS ESTILOS --- */
+
+
+/* --- Estilos das Ações do Usuário --- */
+.header-user-actions {
+  flex-shrink: 0; /* Evita que o botão encolha */
+}
+
+.logout-button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
 }

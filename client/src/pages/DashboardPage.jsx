@@ -27,10 +27,6 @@ function DashboardPage() {
           <h2>Rede de Parceiros</h2>
           <p>Gerencie farmácias, UBS e outros pontos de coleta.</p>
         </Link>
-        <Link to="/educativo" className="card">
-          <h2>Módulo Educativo</h2>
-          <p>Acesse conteúdos sobre o descarte correto.</p>
-        </Link>
       </div>
     </div>
   );
