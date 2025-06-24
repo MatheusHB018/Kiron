@@ -26,7 +26,7 @@ function LoginPage() {
       } else {
         localStorage.removeItem('tipoUsuario');
       }
-      navigate('/home');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     }

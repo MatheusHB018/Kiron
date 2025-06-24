@@ -1,52 +1,44 @@
 /* client/src/components/layout/Header.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Paleta de Cores (inspirada na logo):
-  - Azul Escuro (Fundo): #213547
-  - Verde/Teal (Destaque): #00A99D
-  - Texto Claro: #F0F0F0
-*/
-
+/* --- CONTAINER PRINCIPAL --- */
 .header-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.8rem 2rem;
-  background-color: #213547;
-  color: #F0F0F0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  gap: 2rem;
+  background: linear-gradient(90deg, #004d40, #00796b);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Poppins', sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-/* --- LOGO --- */
-/* Novo estilo para o link da logo */
+/* --- LOGOTIPO --- */
 .header-logo-link {
   text-decoration: none;
-  border-radius: 8px;
-  padding: 0.4rem;
-  transition: background-color 0.3s ease;
-}
-
-.header-logo-link:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* Efeito sutil ao passar o mouse */
+  color: white;
 }
 
 .header-logo {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  gap: 0.8rem;
 }
 
 .header-logo img {
-  height: 45px;
-  margin-right: 12px;
+  height: 40px;
 }
 
 .header-logo span {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #FFFFFF;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-/* --- NAVEGAÇÃO --- */
+/* --- NAVEGAÇÃO PRINCIPAL --- */
 .header-nav {
   flex-grow: 1;
   display: flex;
@@ -64,6 +56,7 @@
   padding: 0.6rem 1rem;
   border-radius: 8px;
   transition: color 0.3s ease, background-color 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .header-nav a:hover {
@@ -77,30 +70,88 @@
   font-weight: 600;
 }
 
-/* --- BOTÃO DE SAIR --- */
+/* --- SEÇÃO DE AÇÕES DO USUÁRIO (PERFIL E SAIR) --- */
 .header-user-actions {
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Espaço entre o link de perfil e o botão de sair */
 }
 
-/* Estilo ajustado para o botão com ícone */
-.logout-button {
-  display: flex; /* Para alinhar ícone e texto */
+/* Estilo para o link de perfil - consistente com a navegação */
+.header-nav-profile-link {
+  display: flex;
   align-items: center;
-  gap: 0.6rem; /* Espaço entre ícone e texto */
-  background-color: transparent; /* Fundo transparente por padrão */
+  gap: 0.6rem;
+  text-decoration: none;
   color: #E0E0E0;
-  border: 2px solid #00A99D; /* Borda com a cor de destaque */
-  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.header-nav-profile-link:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-nav-profile-link.active {
+  color: #FFFFFF;
+  background-color: #00A99D;
+  font-weight: 600;
+}
+
+/* --- BOTÃO DE SAIR (Estilo refinado) --- */
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: transparent;
+  border: 1px solid #FF8A80; /* Borda sutil vermelha */
+  color: #FF8A80; /* Texto vermelho claro */
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .logout-button:hover {
-  background-color: #00A99D; /* Preenche o fundo no hover */
-  color: #FFFFFF;
-  transform: translateY(-2px); /* Efeito de elevação sutil */
-  box-shadow: 0 4px 10px rgba(0, 169, 157, 0.3);
+  background-color: #d32f2f; /* Fundo vermelho no hover */
+  color: #ffffff; /* Texto branco no hover */
+  border-color: #d32f2f;
+}
+
+/* --- AJUSTES DE RESPONSIVIDADE --- */
+
+/* Oculta o texto dos links em telas menores, mantendo apenas os ícones */
+@media (max-width: 1200px) {
+  .header-nav a span,
+  .header-nav-profile-link span,
+  .logout-button span {
+    display: none;
+  }
+
+  .header-nav a,
+  .header-nav-profile-link,
+  .logout-button {
+    padding: 0.8rem; /* Aumenta a área de clique nos ícones */
+  }
+  
+  .header-nav {
+    gap: 0.2rem;
+  }
+}
+
+/* Oculta o nome no logo em telas muito pequenas */
+@media (max-width: 768px) {
+    .header-logo span {
+        display: none;
+    }
+    .header-container {
+        padding: 0.8rem 1rem;
+    }
 }

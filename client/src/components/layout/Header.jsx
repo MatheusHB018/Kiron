@@ -10,21 +10,20 @@ import {
   FaChartBar,
   FaHandshake,
   FaSignOutAlt,
-  FaUserPlus // Ícone para o cadastro de usuários
+  FaUserPlus,
+  FaUserCircle // Novo ícone para Perfil
 } from 'react-icons/fa';
-import './Header.css'; // Apenas uma importação do CSS
+import './Header.css';
 
 function Header() {
   const [tipoUsuario, setTipoUsuario] = useState(null);
   const navigate = useNavigate();
 
-  // Pega o tipo de usuário do localStorage quando o componente carrega
   useEffect(() => {
     const userType = localStorage.getItem('tipoUsuario');
     setTipoUsuario(userType);
   }, []);
 
-  // Função de logout com SweetAlert e limpeza do localStorage
   const handleLogout = () => {
     Swal.fire({
       title: 'Você tem certeza?',
@@ -37,10 +36,8 @@ function Header() {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Limpa os dados do usuário do localStorage para um logout completo
         localStorage.removeItem('tipoUsuario');
-        localStorage.removeItem('token'); // Assumindo que você também armazena um token
-
+        localStorage.removeItem('token');
         console.log('Usuário deslogado');
         navigate('/');
       }
@@ -59,22 +56,23 @@ function Header() {
       <nav className="header-nav">
         <NavLink to="/dashboard"><FaTachometerAlt /> <span>Dashboard</span></NavLink>
         <NavLink to="/pacientes"><FaUsers /> <span>Pacientes</span></NavLink>
-        <NavLink to="/agendamento"><FaCalendarCheck /> <span>Coletas</span></NavLink>
+        <NavLink to="/materiais"><FaBoxOpen /> <span>Materiais</span></NavLink>
+        <NavLink to="/painel-coletas"><FaCalendarCheck /> <span>Coletas</span></NavLink>
+        <NavLink to="/parceiros"><FaHandshake /> <span>Parceiros</span></NavLink>
+        <NavLink to="/relatorios"><FaChartBar /> <span>Relatórios</span></NavLink>
         
-        {/* Link condicional para administradores */}
         {tipoUsuario === 'admin' && (
           <NavLink to="/cadastrar-usuario">
             <FaUserPlus /> <span>Usuários</span>
           </NavLink>
         )}
-        
-        {/* Adicionei de volta os links que faltavam */}
-        <NavLink to="/relatorios"><FaChartBar /> <span>Relatórios</span></NavLink>
-        <NavLink to="/parceiros"><FaHandshake /> <span>Parceiros</span></NavLink>
       </nav>
 
       <div className="header-user-actions">
-        <button onClick={handleLogout} className="logout-button">
+        <NavLink to="/perfil" className="header-nav-profile-link" title="Meu Perfil">
+          <FaUserCircle /> <span>Perfil</span>
+        </NavLink>
+        <button onClick={handleLogout} className="logout-button" title="Sair do sistema">
           <FaSignOutAlt />
           <span>Sair</span>
         </button>
