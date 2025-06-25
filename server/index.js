@@ -72,6 +72,23 @@ app.post('/usuarios', (req, res) => {
   );
 });
 
+// ROTA PARA DELETAR UM USUÁRIO
+app.delete('/usuarios/:id', (req, res) => {
+  const { id } = req.params; // Pega o ID do usuário da URL
+
+  db.query('DELETE FROM usuario WHERE id_usuario = ?', [id], (err, results) => {
+    if (err) {
+      console.error('Erro ao deletar usuário:', err);
+      return res.status(500).json({ error: 'Erro interno no servidor' });
+    }
+    // Verifica se alguma linha foi de fato afetada (se o usuário existia)
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    res.json({ message: 'Usuário deletado com sucesso' });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,18 +1,16 @@
-// src/components/auth/AdminRoute.jsx
 import { Navigate, Outlet } from 'react-router-dom';
 
 const AdminRoute = () => {
   const userType = localStorage.getItem('tipoUsuario');
-  const token = localStorage.getItem('token'); 
 
-  // Se não houver token, o usuário não está logado
-  if (!token) {
+  // A verificação é apenas se o tipo de usuário é 'admin'
+  if (userType !== 'admin') {
+    // Se não for admin, volta para a página de login
     return <Navigate to="/" />;
   }
 
-  // Se o usuário logado for admin, permite o acesso.
-  // Senão, redireciona para o dashboard.
-  return userType === 'admin' ? <Outlet /> : <Navigate to="/dashboard" />;
+  // Se for admin, permite o acesso
+  return <Outlet />;
 };
 
 export default AdminRoute;

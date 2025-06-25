@@ -1,0 +1,175 @@
+/* Arquivo: client/src/pages/styles/ListPage.css */
+
+/* --- Variáveis de Cores --- */
+:root {
+    --primary-green: #28a745; /* Verde principal */
+    --primary-green-darker: #1e7e34; /* Verde mais escuro para hover */
+    --secondary-yellow: #ffc107; /* Amarelo para editar */
+    --danger-red: #dc3545; /* Vermelho para excluir */
+    --light-gray: #f8f9fa; /* Fundo da página */
+    --border-color: #dee2e6; /* Cor da borda */
+    --text-color-dark: #495057; /* Cor do texto principal */
+    --text-color-light: #ffffff; /* Cor do texto sobre fundos escuros */
+}
+
+/* --- Container Principal --- */
+.page-container {
+    padding: 2rem;
+    background-color: var(--light-gray);
+    max-width: 1200px;
+    margin: 2rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Cabeçalho da Página (Título + Botão) --- */
+.list-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.list-page-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  color: var(--text-color-dark);
+}
+
+.add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--primary-green);
+  color: var(--text-color-light);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover {
+  background-color: var(--primary-green-darker);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Filtro e Busca --- */
+.filter-container {
+  background-color: var(--text-color-light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text-color-dark);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+/* --- Tabela de Dados --- */
+.table-container {
+  background-color: var(--text-color-light);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.data-table thead {
+  background-color: #e9ecef;
+}
+
+.data-table th {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  text-transform: uppercase;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* --- Célula de Ações e Botões --- */
+.data-table .actions-cell {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.data-table .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.data-table .btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.data-table .btn-edit { background-color: var(--secondary-yellow); }
+.data-table .btn-delete { background-color: var(--danger-red); }
+
+/* Link de detalhes (para pacientes) */
+.data-table .btn-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-green);
+    text-decoration: none;
+    font-weight: 500;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.data-table .btn-details:hover {
+    text-decoration: underline;
+}

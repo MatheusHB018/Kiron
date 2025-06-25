@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001';
+export const API_URL = 'http://localhost:3001';
 
 export async function login(email, password) {
   const response = await fetch(`${API_URL}/login`, {
@@ -32,5 +32,25 @@ export async function cadastrarUsuario(nome, email, senha, tipoUsuario) {
     return response.json();
   } else {
     throw new Error('Resposta inesperada do servidor');
+  }
+}
+
+// ... (depois da função cadastrarUsuario)
+
+export async function deleteUsuario(id) {
+  try {
+    const response = await fetch(`${API_URL}/usuarios/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Erro ao deletar usuário');
+    }
+    // Não precisamos retornar nada se for sucesso, a resposta vazia já basta
+    return true; 
+  } catch (error) {
+    console.error('Erro na chamada para deletar usuário:', error);
+    throw error;
   }
 }
