@@ -1,14 +1,19 @@
-// src/pages/MateriaisPage.jsx
+// client/src/pages/MateriaisPage.jsx
+import { FaBoxOpen } from 'react-icons/fa';
 import './styles/Page.css';
 
 function MateriaisPage() {
   return (
     <div className="page-container">
-      <h1>Controle de Materiais</h1>
+      <div className="page-header-container">
+        <div className="page-title">
+          <FaBoxOpen className="icon" />
+          <h1>Controle de Materiais</h1>
+        </div>
+      </div>
       <p>
-        Nesta seção você pode registrar a retirada de materiais e consultar o histórico por paciente.
+        Registre a saída de materiais para pacientes e mantenha um histórico detalhado.
       </p>
-      {/* Aqui virão os formulários de registro e a lista de materiais. */}
     </div>
   );
 }

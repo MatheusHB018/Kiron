@@ -62,7 +62,7 @@ function Header() {
         <NavLink to="/relatorios"><FaChartBar /> <span>Relatórios</span></NavLink>
         
         {tipoUsuario === 'admin' && (
-          <NavLink to="/cadastrar-usuario">
+          <NavLink to="/listar-usuarios">
             <FaUserPlus /> <span>Usuários</span>
           </NavLink>
         )}

@@ -1,14 +1,19 @@
-// src/pages/ParceirosPage.jsx
+// client/src/pages/ParceirosPage.jsx
+import { FaHandshake } from 'react-icons/fa';
 import './styles/Page.css';
 
 function ParceirosPage() {
   return (
     <div className="page-container">
-      <h1>Rede de Parceiros</h1>
+      <div className="page-header-container">
+        <div className="page-title">
+          <FaHandshake className="icon" />
+          <h1>Gestão de Parceiros</h1>
+        </div>
+      </div>
       <p>
-        Gerencie os pontos de coleta parceiros, como farmácias, UBS e empresas especializadas.
+        Gerencie as informações e o status das empresas parceiras e pontos de coleta.
       </p>
-      {/* Aqui você poderá adicionar e listar os parceiros. */}
     </div>
   );
 }

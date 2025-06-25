@@ -1,21 +1,24 @@
 /* client/src/components/layout/Footer.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
 .footer-container {
-  /*
-    A regra !important força o navegador a usar esta cor,
-    ignorando qualquer outro estilo que possa estar causando o fundo branco.
-  */
-  background-color: #213547 !important; /* Fundo azul escuro, idêntico ao Header */
+  /* Fundo gradiente idêntico ao do Header para consistência visual */
+  background: linear-gradient(90deg, #004d40, #00796b);
   
-  color: #A9B4C2;
+  color: #e0f2f1; /* Cor de texto clara para bom contraste com o fundo verde */
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.5rem 2rem;
   width: 100%;
-  border-top: 2px solid #00A99D; /* Borda de destaque idêntica à do Header */
+  font-family: 'Poppins', sans-serif;
+  
+  /* Borda superior para uma separação elegante do conteúdo */
+  border-top: 3px solid #00A99D;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .footer-container p {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
+  letter-spacing: 0.5px;
 }
