@@ -16,8 +16,6 @@ import RelatoriosPage from './pages/RelatoriosPage.jsx';
 import ParceirosPage from './pages/ParceirosPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
 import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
-import CadastroPacientePage from './pages/CadastroPacientePage.jsx';
-import EditarPacientePage from './pages/EditarPacientePage.jsx';
 
 function App() {
   return (
@@ -29,8 +27,6 @@ function App() {
           {/* Rotas para todos os usuários logados */}
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pacientes" element={<PacientesPage />} />
-          <Route path="/cadastro-paciente" element={<CadastroPacientePage />} />
-          <Route path="/editar-paciente/:id" element={<EditarPacientePage />} />
           <Route path="/pacientes/:id" element={<PacienteDetalhesPage />} />
           <Route path="/materiais" element={<MateriaisPage />} />
           <Route path="/painel-coletas" element={<PainelColetasPage />} />
