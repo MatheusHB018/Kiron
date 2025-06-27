@@ -1,78 +1,121 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaPlus, FaSearch, FaEye } from 'react-icons/fa';
-import './styles/ListPage.css'; // Importa nosso novo CSS padrão
-
-const mockPacientes = [
-    { id: 1, nome: 'Ana Carolina Silva', cpf: '123.456.789-00', telefone: '(11) 98765-4321', status: 'Ativo' },
-    { id: 2, nome: 'Bruno Medeiros Costa', cpf: '234.567.890-11', telefone: '(21) 91234-5678', status: 'Ativo' },
-    { id: 3, nome: 'Carlos de Andrade Dias', cpf: '345.678.901-22', telefone: '(31) 95678-1234', status: 'Inativo' },
-];
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaUsers, FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { getPacientes, deletePaciente } from '../services/api';
+import './styles/Page.css';
+import './styles/Table.css'; // Usaremos um CSS de tabela genérico
 
 function PacientesPage() {
-    const [pacientes, setPacientes] = useState(mockPacientes);
-    const [searchTerm, setSearchTerm] = useState('');
-    const navigate = useNavigate();
+  const [pacientes, setPacientes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleVerDetalhes = (id) => navigate(`/pacientes/${id}`);
+  const fetchPacientes = async () => {
+    try {
+      setLoading(true);
+      const data = await getPacientes();
+      setPacientes(data);
+    } catch (err) {
+      setError('Não foi possível carregar a lista de pacientes.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const filteredPacientes = pacientes.filter(paciente =>
-        paciente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        paciente.cpf.includes(searchTerm)
-    );
+  useEffect(() => {
+    fetchPacientes();
+  }, []);
 
-    return (
-        <div className="page-container">
-            <div className="list-page-header">
-                <h1>Gestão de Pacientes</h1>
-                <Link to="/cadastro-paciente" className="add-button">
-                    <FaPlus />
-                    Cadastrar Paciente
-                </Link>
-            </div>
+  const handleEdit = (id) => {
+    navigate(`/editar-paciente/${id}`);
+  };
 
-            <div className="filter-container">
-                <div className="search-wrapper">
-                    <FaSearch className="search-icon" />
-                    <input
-                        type="text"
-                        placeholder="Buscar por nome ou CPF..."
-                        className="search-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-            </div>
+  const handleDelete = (id, nome) => {
+    Swal.fire({
+      title: 'Você tem certeza?',
+      text: `Deseja realmente excluir o paciente "${nome}"? Esta ação não pode ser desfeita.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePaciente(id);
+          Swal.fire('Excluído!', 'O paciente foi removido do sistema.', 'success');
+          fetchPacientes(); // Atualiza a lista após a exclusão
+        } catch (err) {
+          Swal.fire('Erro!', err.message || 'Não foi possível excluir o paciente.', 'error');
+        }
+      }
+    });
+  };
 
-            <div className="table-container">
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>Telefone</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredPacientes.map((paciente) => (
-                            <tr key={paciente.id}>
-                                <td>{paciente.nome}</td>
-                                <td>{paciente.cpf}</td>
-                                <td>{paciente.telefone}</td>
-                                <td className="actions-cell">
-                                    <button onClick={() => handleVerDetalhes(paciente.id)} className="btn-details">
-                                        <FaEye />
-                                        Ver Detalhes
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+  return (
+    <div className="page-container">
+      <div className="page-header">
+        <div className="page-title">
+          <FaUsers className="icon" />
+          <h1>Gerenciamento de Pacientes</h1>
         </div>
-    );
+        <button className="add-button" onClick={() => navigate('/cadastro-paciente')}>
+          <FaPlus />
+          Cadastrar Paciente
+        </button>
+      </div>
+      <p>Visualize, edite e remova os pacientes cadastrados no sistema.</p>
+
+      {loading && <p>Carregando pacientes...</p>}
+      {error && <p className="error-message">{error}</p>}
+      
+      {!loading && !error && (
+        <div className="table-container">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pacientes.length > 0 ? (
+                pacientes.map((paciente) => (
+                  <tr key={paciente.id}>
+                    <td data-label="Nome">{paciente.nome}</td>
+                    <td data-label="CPF">{paciente.cpf}</td>
+                    <td data-label="Telefone">{paciente.telefone}</td>
+                    <td data-label="Email">{paciente.email}</td>
+                    <td data-label="Ações">
+                      <div className="action-buttons">
+                        <button className="action-button edit" onClick={() => handleEdit(paciente.id)} title="Editar">
+                          <FaEdit />
+                        </button>
+                        <button className="action-button delete" onClick={() => handleDelete(paciente.id, paciente.nome)} title="Excluir">
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="no-data">Nenhum paciente cadastrado.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default PacientesPage;

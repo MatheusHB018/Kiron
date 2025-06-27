@@ -54,3 +54,59 @@ export async function deleteUsuario(id) {
     throw error;
   }
 }
+
+export async function cadastrarPaciente(pacienteData) {
+  const response = await fetch(`${API_URL}/pacientes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pacienteData)
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Erro ao cadastrar paciente.');
+  }
+  return result;
+}
+
+export async function getPacientes() {
+  const response = await fetch(`${API_URL}/pacientes`);
+  if (!response.ok) {
+    throw new Error('Falha ao buscar a lista de pacientes.');
+  }
+  return response.json();
+}
+
+export async function getPacienteById(id) {
+  const response = await fetch(`${API_URL}/pacientes/${id}`);
+  if (!response.ok) {
+    throw new Error('Falha ao buscar dados do paciente.');
+  }
+  return response.json();
+}
+
+export async function updatePaciente(id, pacienteData) {
+  const response = await fetch(`${API_URL}/pacientes/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pacienteData)
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Erro ao atualizar paciente.');
+  }
+  return result;
+}
+
+export async function deletePaciente(id) {
+  const response = await fetch(`${API_URL}/pacientes/${id}`, {
+    method: 'DELETE'
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error || 'Erro ao deletar paciente.');
+  }
+  return result;
+}

@@ -1,0 +1,134 @@
+/* client/src/pages/styles/Table.css */
+
+.table-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow-x: auto; /* Garante que a tabela seja responsiva em telas pequenas */
+    margin-top: 2rem;
+  }
+  
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  .data-table th {
+    background-color: #f8f9fa;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .data-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+  
+  .data-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .data-table tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 3rem;
+    color: #868e96;
+    font-size: 1rem;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  
+  .action-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  .action-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .action-button.edit {
+    color: #1a73e8; /* Azul */
+  }
+  .action-button.edit:hover {
+    background-color: rgba(26, 115, 232, 0.1);
+  }
+  
+  .action-button.delete {
+    color: #d93025; /* Vermelho */
+  }
+  .action-button.delete:hover {
+    background-color: rgba(217, 48, 37, 0.1);
+  }
+  
+  .action-button svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Estilos para responsividade */
+  @media screen and (max-width: 768px) {
+    .data-table {
+      border: 0;
+    }
+  
+    .data-table thead {
+      display: none; /* Esconde o cabeçalho em telas pequenas */
+    }
+  
+    .data-table tr {
+      display: block;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+  
+    .data-table td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      text-align: right;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .data-table td:last-child {
+      border-bottom: 0;
+    }
+  
+    .data-table td::before {
+      content: attr(data-label); /* Usa o data-label como "cabeçalho" da célula */
+      font-weight: 600;
+      text-align: left;
+      margin-right: 1rem;
+      color: #37474f;
+    }
+  
+    .action-buttons {
+      justify-content: flex-end;
+    }
+  }
