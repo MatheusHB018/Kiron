@@ -173,3 +173,45 @@
 .data-table .btn-details:hover {
     text-decoration: underline;
 }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.back-link:hover {
+  color: #00796b; /* Cor primária do tema */
+}
+
+.sortable-header {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+  color: inherit;
+  padding: 1rem;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.sortable-header:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sort-icon {
+  font-size: 0.8em;
+  color: #00796b; /* Cor primária */
+}

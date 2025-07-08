@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Layouts e Componentes
 import MainLayout from './components/layout/MainLayout.jsx';
-import AdminRoute from './components/auth/AdminRoute.jsx'; // Verifique se esta linha está correta
+import AdminRoute from './components/auth/AdminRoute.jsx';
 
 // Páginas
 import LoginPage from './pages/LoginPage.jsx';
@@ -16,6 +16,8 @@ import RelatoriosPage from './pages/RelatoriosPage.jsx';
 import ParceirosPage from './pages/ParceirosPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
 import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
+import CadastroProfissionalPage from './pages/CadastroProfissionalPage.jsx';
+import EditarUsuarioPage from './pages/EditarUsuarioPage.jsx';
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
           {/* Rota exclusiva para Administradores */}
           <Route element={<AdminRoute />}>
             <Route path="/listar-usuarios" element={<ListarUsuarioPage />} />
+            <Route path="/cadastro-profissional" element={<CadastroProfissionalPage />} />
+            <Route path="/editar-usuario/:id" element={<EditarUsuarioPage />} />
           </Route>
         </Route>
       </Routes>

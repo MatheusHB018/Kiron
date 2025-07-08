@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 8px; /* Espaçamento opcional */
+}
