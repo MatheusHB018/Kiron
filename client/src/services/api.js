@@ -1,10 +1,27 @@
+// src/services/api.js
 export const API_URL = 'http://localhost:3001';
 
-export async function login(email, password) {
+// --- Helper para montar os cabeçalhos de autenticação ---
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('authToken');
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
+};
+
+
+// --- FUNÇÕES DA API ---
+
+export async function login(email, password, lembrarMe) {
   const response = await fetch(`${API_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    // Adiciona o 'lembrarMe' ao corpo da requisição
+    body: JSON.stringify({ email, password, lembrarMe }) 
   });
   if (!response.ok) {
     const error = await response.json();
@@ -14,82 +31,91 @@ export async function login(email, password) {
 }
 
 export async function getUsuarios() {
-  const response = await fetch(`${API_URL}/usuarios`);
-  if (!response.ok) {
-    throw new Error('Falha ao buscar usuários da API');
-  }
-  return response.json();
-}
-
-export async function cadastrarUsuario(nome, email, senha, tipoUsuario) {
-  // Pega o tipo do usuário que está LOGADO para enviar como permissão
-  const adminRole = localStorage.getItem('tipoUsuario');
-
-  const response = await fetch(`${API_URL}/usuarios`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // Envia a permissão do usuário logado no cabeçalho
-      'x-user-role': adminRole
-    },
-    // Envia os dados do NOVO usuário no corpo
-    body: JSON.stringify({ nome, email, senha, tipoUsuario })
-  });
-  
-  // Tratamento de erros melhorado
-  const contentType = response.headers.get('content-type');
-  if (!response.ok) {
-    if (contentType && contentType.includes('application/json')) {
-      const error = await response.json();
-      throw new Error(error.error || `Erro ${response.status}`);
-    } else {
-      // Se a resposta não for JSON, mostra o texto (que pode ser o erro HTML)
-      const textError = await response.text();
-      throw new Error('Erro inesperado do servidor: ' + textError);
-    }
-  }
-  
-  if (contentType && contentType.includes('application/json')) {
+    const response = await fetch(`${API_URL}/usuarios`, {
+        headers: getAuthHeaders() // Usa o helper
+    });
+    if (!response.ok) throw new Error('Falha ao buscar usuários');
     return response.json();
-  }
-  // Retorno padrão para o caso de a resposta ser 201 Created sem corpo JSON
-  return { message: 'Operação bem-sucedida' };
-}
-// Função para buscar um usuário pelo ID
-export async function getUsuarioById(id) {
-  const response = await fetch(`${API_URL}/usuarios/${id}`);
-  if (!response.ok) throw new Error('Falha ao buscar dados do usuário');
-  return response.json();
 }
 
-// Função para atualizar um usuário
+export async function getUsuarioById(id) {
+    const response = await fetch(`${API_URL}/usuarios/${id}`, {
+        headers: getAuthHeaders() // Usa o helper
+    });
+    if (!response.ok) throw new Error('Falha ao buscar dados do usuário');
+    return response.json();
+}
+
+// A função de cadastro agora não precisa mais do 'x-user-role'
+// porque o backend vai validar o token.
+export async function cadastrarUsuario(usuarioData) {
+    const response = await fetch(`${API_URL}/usuarios`, {
+        method: 'POST',
+        headers: getAuthHeaders(), // Usa o helper
+        body: JSON.stringify(usuarioData)
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao cadastrar usuário');
+    }
+    return response.json();
+}
+
 export async function updateUsuario(id, usuarioData) {
-  const response = await fetch(`${API_URL}/usuarios/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(usuarioData),
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Falha ao atualizar usuário');
-  }
-  return response.json();
+    const response = await fetch(`${API_URL}/usuarios/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(), // Usa o helper
+        body: JSON.stringify(usuarioData),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao atualizar usuário');
+    }
+    return response.json();
 }
 
 export async function deleteUsuario(id) {
-  try {
     const response = await fetch(`${API_URL}/usuarios/${id}`, {
-      method: 'DELETE',
+        method: 'DELETE',
+        headers: getAuthHeaders() // Usa o helper
     });
-
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Erro ao deletar usuário');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao deletar usuário');
     }
-    // Não precisamos retornar nada se for sucesso, a resposta vazia já basta
-    return true; 
-  } catch (error) {
-    console.error('Erro na chamada para deletar usuário:', error);
-    throw error;
-  }
+    return true;
+}
+
+export async function getMeuPerfil() {
+    const response = await fetch(`${API_URL}/perfil`, {
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Falha ao buscar dados do perfil');
+    return response.json();
+}
+
+export async function updateMeuPerfil(profileData) {
+    const response = await fetch(`${API_URL}/perfil`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(profileData)
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao atualizar o perfil');
+    }
+    return response.json();
+}
+
+export async function updateMinhaSenha(passwordData) {
+    const response = await fetch(`${API_URL}/perfil/senha`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(passwordData)
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao alterar a senha');
+    }
+    return response.json();
 }

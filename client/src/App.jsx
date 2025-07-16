@@ -38,8 +38,8 @@ function App() {
 
           {/* Rota exclusiva para Administradores */}
           <Route element={<AdminRoute />}>
-            <Route path="/listar-usuarios" element={<ListarUsuarioPage />} />
             <Route path="/cadastro-profissional" element={<CadastroProfissionalPage />} />
+            <Route path="/listar-usuarios" element={<ListarUsuarioPage />} />
             <Route path="/editar-usuario/:id" element={<EditarUsuarioPage />} />
           </Route>
         </Route>

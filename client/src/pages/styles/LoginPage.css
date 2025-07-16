@@ -180,3 +180,32 @@
   color: var(--logo-primary-green);
   text-decoration: underline;
 }
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remember-me label {
+  cursor: pointer;
+  color: #555;
+}
+
+.forgot-password-link {
+  color: var(--primary-color); /* Use a cor principal do seu tema */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}

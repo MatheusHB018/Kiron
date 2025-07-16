@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 13-Jun-2025 às 20:19
--- Versão do servidor: 10.4.27-MariaDB
--- versão do PHP: 8.2.0
+-- Tempo de geração: 16/07/2025 às 05:24
+-- Versão do servidor: 10.4.28-MariaDB
+-- Versão do PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `agenda_de_coleta`
+-- Estrutura para tabela `agenda_de_coleta`
 --
 
 CREATE TABLE `agenda_de_coleta` (
@@ -38,7 +38,7 @@ CREATE TABLE `agenda_de_coleta` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `paciente`
+-- Estrutura para tabela `paciente`
 --
 
 CREATE TABLE `paciente` (
@@ -54,7 +54,7 @@ CREATE TABLE `paciente` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `parceiro`
+-- Estrutura para tabela `parceiro`
 --
 
 CREATE TABLE `parceiro` (
@@ -70,7 +70,7 @@ CREATE TABLE `parceiro` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `residuo`
+-- Estrutura para tabela `residuo`
 --
 
 CREATE TABLE `residuo` (
@@ -83,7 +83,7 @@ CREATE TABLE `residuo` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuario`
+-- Estrutura para tabela `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -91,25 +91,31 @@ CREATE TABLE `usuario` (
   `nome` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `senha` varchar(255) DEFAULT NULL,
-  `tipo` enum('admin','comum') DEFAULT 'comum'
+  `tipo` enum('admin','comum') DEFAULT 'comum',
+  `cep` varchar(10) DEFAULT NULL,
+  `logradouro` varchar(255) DEFAULT NULL,
+  `numero` varchar(20) DEFAULT NULL,
+  `complemento` varchar(100) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
+  `cidade` varchar(100) DEFAULT NULL,
+  `uf` varchar(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `usuario`
+-- Despejando dados para a tabela `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nome`, `email`, `senha`, `tipo`) VALUES
-(1, 'Gustavo', 'gu@gmail.com', '123', 'admin'),
-(2, 'carlos', 'carlos@gmail.com', '123', 'comum'),
-(3, 'Manu', 'manu@gmail.com', '123', 'comum'),
-(4, 'Buja', 'buaj@gmail.com', '123', 'comum');
+INSERT INTO `usuario` (`id_usuario`, `nome`, `email`, `senha`, `tipo`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `uf`) VALUES
+(7, 'Lorena Andrade', 'lorena@apae.org', '$2b$10$azlUeI98KNv0BV4LN0fg3uB.Sv/yRbtEutvtJ808GAICcnABT7glK', 'admin', '19200009', 'Rua Angelo Salvatori', '125', 'ao lado do hoel almanara', 'Centro', 'Pirapozinho', 'SP'),
+(8, 'Manoela Pinheiro da Silva', 'manoela2903@outlook.com', '$2b$10$cy6YqZ7w3PdejvlBZHsk5exZ7hiqUBnc/s6h17lMep65xP9dx6FKm', 'admin', '19200009', 'Rua Angelo Salvatori', '125', 'Ao Lado do Hotel Almanara', 'Centro', 'Pirapozinho', 'SP'),
+(9, 'João Pedro Garcia Girotto', 'godlolpro32@gmail.com', '$2b$10$bKRia0FHmbGs.SI7Xu6bWu70c6KSV7bSigWO.nwy7n.AgRVg18B1S', 'comum', '19064145', 'Rua Renê Antônio Sanches', '284', '', 'Conjunto Habitacional Ana Jacinta', 'Presidente Prudente', 'SP');
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices para tabela `agenda_de_coleta`
+-- Índices de tabela `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
   ADD PRIMARY KEY (`id_agenda`),
@@ -117,33 +123,33 @@ ALTER TABLE `agenda_de_coleta`
   ADD KEY `id_parceiro` (`id_parceiro`);
 
 --
--- Índices para tabela `paciente`
+-- Índices de tabela `paciente`
 --
 ALTER TABLE `paciente`
   ADD PRIMARY KEY (`id_paciente`),
   ADD UNIQUE KEY `cpf` (`cpf`);
 
 --
--- Índices para tabela `parceiro`
+-- Índices de tabela `parceiro`
 --
 ALTER TABLE `parceiro`
   ADD PRIMARY KEY (`id_parceiro`);
 
 --
--- Índices para tabela `residuo`
+-- Índices de tabela `residuo`
 --
 ALTER TABLE `residuo`
   ADD PRIMARY KEY (`id_residuo`);
 
 --
--- Índices para tabela `usuario`
+-- Índices de tabela `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
@@ -174,14 +180,14 @@ ALTER TABLE `residuo`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- Restrições para despejos de tabelas
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `agenda_de_coleta`
+-- Restrições para tabelas `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
   ADD CONSTRAINT `agenda_de_coleta_ibfk_1` FOREIGN KEY (`id_paciente`) REFERENCES `paciente` (`id_paciente`),

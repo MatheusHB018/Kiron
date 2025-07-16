@@ -215,3 +215,16 @@
   font-size: 0.8em;
   color: #00796b; /* Cor primária */
 }
+
+.btn-action.disabled {
+  background-color: #cccccc; /* Cinza claro */
+  cursor: not-allowed; /* Ícone de "proibido" ao passar o mouse */
+  opacity: 0.7;
+  pointer-events: none; /* Garante que a ação de clique não seja disparada */
+}
+
+/* Remove o efeito de hover do botão desabilitado */
+.btn-action.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
