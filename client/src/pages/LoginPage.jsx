@@ -1,51 +1,44 @@
 // src/pages/LoginPage.jsx
-import { useState, useEffect } from 'react'; // Importe o useEffect
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 
 import './styles/LoginPage.css';
+import './styles/ForgotPassword.css';
 import Logo from '/logotipo.png';
 import { login } from '../services/api';
+import ForgotPasswordFlow from '../components/auth/ForgotPasswordFlow'; // Importa o novo componente
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [lembrarMe, setLembrarMe] = useState(false);
+    const [showForgotPassword, setShowForgotPassword] = useState(false); // Estado para controlar o modal
     const navigate = useNavigate();
 
-    // NOVO: Este useEffect roda uma vez quando a página carrega
     useEffect(() => {
         const emailSalvo = localStorage.getItem('lembrarEmail');
-        const lembrarPreferencia = localStorage.getItem('lembrarPreferencia');
-
-        if (emailSalvo && lembrarPreferencia === 'true') {
+        if (emailSalvo) {
             setEmail(emailSalvo);
             setLembrarMe(true);
         }
-    }, []); // O array vazio [] garante que ele só rode na montagem
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        // Lógica para salvar ou limpar os dados no localStorage
         if (lembrarMe) {
             localStorage.setItem('lembrarEmail', email);
-            localStorage.setItem('lembrarPreferencia', 'true');
         } else {
             localStorage.removeItem('lembrarEmail');
-            localStorage.removeItem('lembrarPreferencia');
         }
-
         try {
             const result = await login(email, password, lembrarMe);
-            
             if (result && result.user && result.token) {
                 localStorage.setItem('tipoUsuario', result.user.tipo);
                 localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userId', result.user.id_usuario);
-                
                 navigate('/dashboard');
             } else {
                 throw new Error('Resposta inválida do servidor.');
@@ -60,53 +53,60 @@ function LoginPage() {
         }
     };
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
     return (
-        <main className="login-page">
-            <div className="login-container">
-                <div className="logo-container">
-                    <img src={Logo} alt="Logotipo da MedResiduos" className="logo" />
+        <>
+            <main className="login-page">
+                <div className="login-container">
+                    {/* ... (código do logo e título) ... */}
+                    <div className="logo-container">
+                      <img src={Logo} alt="Logotipo da MedResiduos" className="logo" />
+                    </div>
+                    <h1 className="login-title">Bem-vindo ao MedResiduos</h1>
+                    
+                    <form className="login-form" onSubmit={handleSubmit} noValidate>
+                        {/* ... (código dos inputs de email e senha) ... */}
+                        <div className="form-group">
+                          <label htmlFor="email"><FaUser aria-hidden="true" /> Usuário ou e-mail</label>
+                          <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Digite seu usuário ou e-mail" required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password"><FaLock aria-hidden="true" /> Senha</label>
+                            <div className="password-wrapper">
+                                <input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Digite sua senha" required />
+                                <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                            </div>
+                        </div>
+
+                        <div className="form-options">
+                            <div className="remember-me">
+                                <input type="checkbox" id="lembrar-me" checked={lembrarMe} onChange={(e) => setLembrarMe(e.target.checked)} />
+                                <label htmlFor="lembrar-me">Lembrar-me</label>
+                            </div>
+                            {/* Este link agora é um botão para abrir o modal */}
+                            <button type="button" className="forgot-password-link" onClick={() => setShowForgotPassword(true)}>
+                                <FaKey aria-hidden="true" /> Esqueci minha senha
+                            </button>
+                        </div>
+                        
+                        <button type="submit" className="login-button">
+                            Entrar <FaArrowRight aria-hidden="true" />
+                        </button>
+                    </form>
                 </div>
-                
-                <h1 className="login-title">Bem-vindo ao MedResiduos</h1>
-                
-                <form className="login-form" onSubmit={handleSubmit} noValidate>
-                    <div className="form-group">
-                        <label htmlFor="email"><FaUser aria-hidden="true" /> Usuário ou e-mail</label>
-                        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Digite seu usuário ou e-mail" required />
+            </main>
+
+            {/* Renderização condicional do Modal */}
+            {showForgotPassword && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="close-modal-button" onClick={() => setShowForgotPassword(false)}>
+                            <FaTimes />
+                        </button>
+                        <ForgotPasswordFlow closeModal={() => setShowForgotPassword(false)} />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password"><FaLock aria-hidden="true" /> Senha</label>
-                        <div className="password-wrapper">
-                            <input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Digite sua senha" required />
-                            <span className="password-toggle-icon" onClick={togglePasswordVisibility}>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
-                        </div>
-                    </div>
-                    
-                    <div className="form-options">
-                        <div className="remember-me">
-                            <input
-                                type="checkbox"
-                                id="lembrar-me"
-                                checked={lembrarMe}
-                                onChange={(e) => setLembrarMe(e.target.checked)}
-                            />
-                            <label htmlFor="lembrar-me">Lembrar-me</label>
-                        </div>
-                        <a href="#" className="forgot-password-link">
-                            <FaKey aria-hidden="true" /> Esqueci minha senha
-                        </a>
-                    </div>
-                    
-                    <button type="submit" className="login-button">
-                        Entrar <FaArrowRight aria-hidden="true" />
-                    </button>
-                </form>
-            </div>
-        </main>
+                </div>
+            )}
+        </>
     );
 }
 

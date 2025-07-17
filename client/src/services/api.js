@@ -119,3 +119,39 @@ export async function updateMinhaSenha(passwordData) {
     }
     return response.json();
 }
+
+export async function requestPasswordReset(email) {
+    const response = await fetch(`${API_URL}/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    });
+    // A API sempre retorna sucesso aqui por segurança, então não precisamos de um 'ok' check
+    return response.json();
+}
+
+export async function validateResetCode(email, code) {
+    const response = await fetch(`${API_URL}/validate-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao validar o código.');
+    }
+    return response.json();
+}
+
+export async function resetPassword(email, code, newPassword) {
+    const response = await fetch(`${API_URL}/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao redefinir a senha.');
+    }
+    return response.json();
+}
