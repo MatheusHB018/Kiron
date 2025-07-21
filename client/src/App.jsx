@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Layouts e Componentes
 import MainLayout from './components/layout/MainLayout.jsx';
 import AdminRoute from './components/auth/AdminRoute.jsx';
+import CadastroParceiroPage from './pages/CadastroParceiroPage.jsx';
+import EditarParceiroPage from './pages/EditarParceiroPage.jsx';
 
 // Páginas
 import LoginPage from './pages/LoginPage.jsx';
@@ -34,6 +36,8 @@ function App() {
           <Route path="/painel-coletas" element={<PainelColetasPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />
           <Route path="/parceiros" element={<ParceirosPage />} />
+          <Route path="/cadastro-parceiro" element={<CadastroParceiroPage />} />
+          <Route path="/editar-parceiro/:id" element={<EditarParceiroPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
 
           {/* Rota exclusiva para Administradores */}

@@ -1,3 +1,4 @@
+
 // server/index.js
 const express = require('express');
 const cors = require('cors');
@@ -34,6 +35,64 @@ const resetCodes = {};
 // Rota de teste
 app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
+});
+
+// --- ROTAS DE PARCEIROS (CRUD) ---
+
+// Listar todos os parceiros
+app.get('/parceiros', (req, res) => {
+  db.query('SELECT * FROM parceiro', (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar parceiros' });
+    res.json(results);
+  });
+});
+
+// Buscar parceiro por ID
+app.get('/parceiros/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM parceiro WHERE id_parceiro = ?', [id], (err, results) => {
+    if (err || results.length === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    res.json(results[0]);
+  });
+});
+
+// Cadastrar novo parceiro
+app.post('/parceiros', (req, res) => {
+  const { nome, cnpj, tipo, endereco, telefone, email } = req.body;
+  if (!nome || !cnpj || !tipo) return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
+  const query = 'INSERT INTO parceiro (nome, cnpj, tipo, endereco, telefone, email) VALUES (?, ?, ?, ?, ?, ?)';
+  const values = [nome, cnpj, tipo, endereco, telefone, email];
+  db.query(query, values, (err, result) => {
+    if (err) {
+      if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'CNPJ já cadastrado.' });
+      return res.status(500).json({ error: 'Erro ao cadastrar parceiro' });
+    }
+    res.status(201).json({ message: 'Parceiro cadastrado com sucesso!', id_parceiro: result.insertId });
+  });
+});
+
+// Atualizar parceiro
+app.put('/parceiros/:id', (req, res) => {
+  const { id } = req.params;
+  const { nome, cnpj, tipo, endereco, telefone, email } = req.body;
+  if (!nome || !cnpj || !tipo) return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
+  const query = 'UPDATE parceiro SET nome = ?, cnpj = ?, tipo = ?, endereco = ?, telefone = ?, email = ? WHERE id_parceiro = ?';
+  const values = [nome, cnpj, tipo, endereco, telefone, email, id];
+  db.query(query, values, (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao atualizar parceiro' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    res.json({ message: 'Parceiro atualizado com sucesso!' });
+  });
+});
+
+// Excluir parceiro
+app.delete('/parceiros/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM parceiro WHERE id_parceiro = ?', [id], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao excluir parceiro' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    res.json({ message: 'Parceiro excluído com sucesso!' });
+  });
 });
 
 // --- ROTAS DE GESTÃO DE USUÁRIOS (CRUD) ---
