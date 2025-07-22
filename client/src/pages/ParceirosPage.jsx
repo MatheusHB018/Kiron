@@ -158,6 +158,13 @@ function ParceirosPage() {
                   <td>{parceiro.cidade || 'N/A'}</td>
                   <td>{formatPartnerType(parceiro.tipo)}</td>
                   <td className="actions-cell">
+                    <button
+                      onClick={() => navigate(`/detalhes-parceiro/${parceiro.id_parceiro}`)}
+                      className="btn-action btn-details"
+                      style={{ marginRight: 6 }}
+                    >
+                      <FaSearch /> Detalhes
+                    </button>
                     <button onClick={() => navigate(`/editar-parceiro/${parceiro.id_parceiro}`)} className="btn-action btn-edit">
                       <FaEdit /> Editar
                     </button>

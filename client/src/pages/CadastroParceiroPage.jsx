@@ -40,8 +40,34 @@ function CadastroParceiroPage() {
   const navigate = useNavigate();
   const numeroRef = useRef(null); // Para focar no campo 'número' após buscar o CEP
 
+  // Função para máscara de CNPJ
+  function maskCNPJ(value) {
+    return value
+      .replace(/\D/g, '')
+      .replace(/^(\d{2})(\d)/, '$1.$2')
+      .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+      .replace(/\.(\d{3})(\d)/, '.$1/$2')
+      .replace(/(\d{4})(\d)/, '$1-$2')
+      .slice(0, 18);
+  }
+
+  // Função para máscara de telefone (celular ou fixo)
+  function maskTelefone(value) {
+    value = value.replace(/\D/g, '');
+    if (value.length <= 10) {
+      // Fixo: (00) 0000-0000
+      return value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3').slice(0, 14);
+    } else {
+      // Celular: (00) 00000-0000
+      return value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3').slice(0, 15);
+    }
+  }
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+    if (name === 'cnpj') value = maskCNPJ(value);
+    if (name === 'telefone') value = maskTelefone(value);
+    setForm({ ...form, [name]: value });
   };
 
   const handleCepChange = async (e) => {
@@ -128,7 +154,16 @@ function CadastroParceiroPage() {
             </div>
             <div className="form-group">
               <label htmlFor="cnpj">CNPJ</label>
-              <input type="text" id="cnpj" name="cnpj" value={form.cnpj} onChange={handleChange} required maxLength="18" placeholder="00.000.000/0000-00" />
+              <input
+                type="text"
+                id="cnpj"
+                name="cnpj"
+                value={form.cnpj}
+                onChange={handleChange}
+                required
+                maxLength="18"
+                placeholder="00.000.000/0000-00"
+              />
             </div>
             <div className="form-group">
               <label htmlFor="inscricao_estadual">Inscrição Estadual</label>
@@ -154,7 +189,14 @@ function CadastroParceiroPage() {
                 <label htmlFor="telefone">Telefone</label>
                 <div className="input-with-icon">
                     <FaPhone className="input-icon" />
-                    <input type="text" id="telefone" name="telefone" value={form.telefone} onChange={handleChange} placeholder="(00) 00000-0000" />
+                    <input
+                      type="text"
+                      id="telefone"
+                      name="telefone"
+                      value={form.telefone}
+                      onChange={handleChange}
+                      placeholder="(00) 00000-0000"
+                    />
                 </div>
             </div>
             <div className="form-group">
