@@ -1,47 +1,91 @@
-// src/pages/CadastroParceiroPage.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaPlus, FaSave, FaArrowLeft, FaSpinner, FaBuilding, FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
+import {
+  FaPlus,
+  FaSave,
+  FaArrowLeft,
+  FaSpinner,
+  FaBuilding,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaUser,
+  FaInfoCircle
+} from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css';
+import './styles/CadastroProfissionalPage.css'; // Pode reutilizar os estilos
 
 function CadastroParceiroPage() {
   const [form, setForm] = useState({
     nome: '',
     cnpj: '',
+    inscricao_estadual: '',
+    responsavel: '',
+    observacoes: '',
     tipo: '',
-    endereco: '',
     telefone: '',
-    email: ''
+    email: '',
+    cep: '',
+    logradouro: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    cidade: '',
+    estado: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCepLoading, setIsCepLoading] = useState(false);
   const navigate = useNavigate();
+  const numeroRef = useRef(null); // Para focar no campo 'número' após buscar o CEP
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleCepChange = async (e) => {
+    const cep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    setForm({ ...form, cep });
+
+    if (cep.length === 8) {
+      setIsCepLoading(true);
+      try {
+        const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        if (data.erro) {
+          Swal.fire('CEP não encontrado', 'Por favor, verifique o CEP digitado e tente novamente.', 'warning');
+          setForm(prev => ({ ...prev, logradouro: '', bairro: '', cidade: '', estado: '' }));
+        } else {
+          setForm(prev => ({
+            ...prev,
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            estado: data.uf,
+          }));
+          numeroRef.current.focus(); // Move o foco para o campo do número
+        }
+      } catch (error) {
+        Swal.fire('Erro', 'Não foi possível buscar o CEP. Verifique sua conexão e tente novamente.', 'error');
+      } finally {
+        setIsCepLoading(false);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.nome || !form.cnpj || !form.tipo) {
-      Swal.fire('Atenção', 'Preencha os campos obrigatórios.', 'warning');
+      Swal.fire('Atenção', 'Os campos Nome, CNPJ e Tipo são obrigatórios.', 'warning');
       return;
     }
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:3001/parceiros', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Erro ao cadastrar parceiro');
-      }
+      // Usando axios para a requisição POST
+      await axios.post('http://localhost:3001/parceiros', form);
       Swal.fire({
         title: 'Sucesso!',
-        text: 'Parceiro cadastrado com sucesso.',
+        text: 'Empresa parceira cadastrada com sucesso.',
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
@@ -50,7 +94,7 @@ function CadastroParceiroPage() {
         navigate('/parceiros');
       });
     } catch (err) {
-      Swal.fire('Erro!', err.message || 'Ocorreu um erro ao cadastrar o parceiro.', 'error');
+      Swal.fire('Erro!', err.response?.data?.error || 'Ocorreu um erro ao cadastrar a empresa.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -61,62 +105,118 @@ function CadastroParceiroPage() {
       <div className="page-header-container">
         <div className="page-title">
           <FaPlus className="icon" />
-          <h1>Cadastro de Parceiro</h1>
+          <h1>Cadastro de Empresa Parceira</h1>
         </div>
       </div>
       <Link to="/parceiros" className="back-link">
         <FaArrowLeft /> Voltar para a lista
       </Link>
-      <p>Adicione uma nova empresa parceira ou ponto de coleta preenchendo o formulário abaixo.</p>
 
       <div className="form-container">
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="nome">Nome</label>
+          {/* Seção de Informações da Empresa */}
+          <div className="form-section">
+            <h3>Informações da Empresa</h3>
+          </div>
+          <div className="form-grid two-columns">
+            <div className="form-group span-2">
+              <label htmlFor="nome">Nome / Razão Social</label>
               <div className="input-with-icon">
                 <FaBuilding className="input-icon" />
-                <input type="text" id="nome" name="nome" value={form.nome} onChange={handleChange} required placeholder="Nome da empresa" />
+                <input type="text" id="nome" name="nome" value={form.nome} onChange={handleChange} required placeholder="Ex: Farmácia Central" />
               </div>
             </div>
             <div className="form-group">
               <label htmlFor="cnpj">CNPJ</label>
-              <input type="text" id="cnpj" name="cnpj" value={form.cnpj} onChange={handleChange} required placeholder="CNPJ" maxLength="18" />
+              <input type="text" id="cnpj" name="cnpj" value={form.cnpj} onChange={handleChange} required maxLength="18" placeholder="00.000.000/0000-00" />
             </div>
             <div className="form-group">
-              <label htmlFor="tipo">Tipo</label>
+              <label htmlFor="inscricao_estadual">Inscrição Estadual</label>
+              <input type="text" id="inscricao_estadual" name="inscricao_estadual" value={form.inscricao_estadual} onChange={handleChange} placeholder="Apenas números (se aplicável)" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="responsavel">Responsável</label>
+              <div className="input-with-icon">
+                <FaUser className="input-icon" />
+                <input type="text" id="responsavel" name="responsavel" value={form.responsavel} onChange={handleChange} placeholder="Nome do contato principal" />
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="tipo">Tipo de Parceiro</label>
               <select id="tipo" name="tipo" value={form.tipo} onChange={handleChange} required>
-                <option value="">Selecione</option>
+                <option value="">Selecione o tipo</option>
                 <option value="empresa_coleta">Empresa de Coleta</option>
                 <option value="farmacia">Farmácia</option>
                 <option value="ubs">UBS</option>
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="endereco">Endereço</label>
-              <div className="input-with-icon">
-                <FaMapMarkerAlt className="input-icon" />
-                <input type="text" id="endereco" name="endereco" value={form.endereco} onChange={handleChange} placeholder="Endereço completo" />
-              </div>
+                <label htmlFor="telefone">Telefone</label>
+                <div className="input-with-icon">
+                    <FaPhone className="input-icon" />
+                    <input type="text" id="telefone" name="telefone" value={form.telefone} onChange={handleChange} placeholder="(00) 00000-0000" />
+                </div>
             </div>
             <div className="form-group">
-              <label htmlFor="telefone">Telefone</label>
-              <div className="input-with-icon">
-                <FaPhone className="input-icon" />
-                <input type="text" id="telefone" name="telefone" value={form.telefone} onChange={handleChange} placeholder="Telefone" />
-              </div>
+                <label htmlFor="email">Email</label>
+                <div className="input-with-icon">
+                    <FaEnvelope className="input-icon" />
+                    <input type="email" id="email" name="email" value={form.email} onChange={handleChange} placeholder="contato@empresa.com" />
+                </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
+             <div className="form-group span-2">
+              <label htmlFor="observacoes">Observações</label>
               <div className="input-with-icon">
-                <FaEnvelope className="input-icon" />
-                <input type="email" id="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" />
+                <FaInfoCircle className="input-icon" />
+                <input type="text" id="observacoes" name="observacoes" value={form.observacoes} onChange={handleChange} placeholder="Qualquer informação adicional relevante" />
               </div>
             </div>
           </div>
+
+          {/* Seção de Endereço */}
+          <div className="form-section">
+            <h3>Endereço</h3>
+          </div>
+          <div className="form-grid three-columns">
+            <div className="form-group">
+              <label htmlFor="cep">CEP</label>
+              <div className="input-with-icon">
+                <input type="text" id="cep" name="cep" value={form.cep} onChange={handleCepChange} maxLength="9" placeholder="00000-000" />
+                {isCepLoading && <FaSpinner className="spinner input-icon-right" />}
+              </div>
+            </div>
+            <div className="form-group span-2">
+              <label htmlFor="logradouro">Logradouro</label>
+               <div className="input-with-icon">
+                    <FaMapMarkerAlt className="input-icon" />
+                    <input type="text" id="logradouro" name="logradouro" value={form.logradouro} onChange={handleChange} placeholder="Preenchido automaticamente" readOnly />
+                </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="numero">Número</label>
+              <input type="text" id="numero" name="numero" ref={numeroRef} value={form.numero} onChange={handleChange} placeholder="Ex: 123" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="complemento">Complemento</label>
+              <input type="text" id="complemento" name="complemento" value={form.complemento} onChange={handleChange} placeholder="Ex: Sala 10, Bloco B" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="bairro">Bairro</label>
+              <input type="text" id="bairro" name="bairro" value={form.bairro} onChange={handleChange} placeholder="Preenchido automaticamente" readOnly />
+            </div>
+             <div className="form-group">
+              <label htmlFor="cidade">Cidade</label>
+              <input type="text" id="cidade" name="cidade" value={form.cidade} onChange={handleChange} placeholder="Preenchido automaticamente" readOnly />
+            </div>
+            <div className="form-group">
+              <label htmlFor="estado">Estado</label>
+              <input type="text" id="estado" name="estado" value={form.estado} onChange={handleChange} maxLength="2" placeholder="UF" readOnly />
+            </div>
+          </div>
+          
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isSubmitting}>
-              {isSubmitting ? <><FaSpinner className="spinner" /> A guardar...</> : <><FaSave /> Cadastrar Parceiro</>}
+            <button type="submit" className="submit-button" disabled={isSubmitting || isCepLoading}>
+              {isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Cadastrar Parceiro</>}
             </button>
           </div>
         </form>

@@ -37,12 +37,14 @@ app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
 });
 
-// --- ROTAS DE PARCEIROS (CRUD) ---
-
 // Listar todos os parceiros
 app.get('/parceiros', (req, res) => {
+  // Esta rota não precisa de alteração, mas a mantemos aqui para o bloco completo.
   db.query('SELECT * FROM parceiro', (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erro ao buscar parceiros' });
+    if (err) {
+      console.error("Erro no banco de dados:", err);
+      return res.status(500).json({ error: 'Erro ao buscar parceiros' });
+    }
     res.json(results);
   });
 });
@@ -51,46 +53,104 @@ app.get('/parceiros', (req, res) => {
 app.get('/parceiros/:id', (req, res) => {
   const { id } = req.params;
   db.query('SELECT * FROM parceiro WHERE id_parceiro = ?', [id], (err, results) => {
-    if (err || results.length === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    if (err) {
+      console.error("Erro no banco de dados:", err);
+      return res.status(500).json({ error: 'Erro ao buscar parceiro' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Parceiro não encontrado' });
+    }
     res.json(results[0]);
   });
 });
 
-// Cadastrar novo parceiro
+// Cadastrar novo parceiro (VERSÃO CORRIGIDA)
 app.post('/parceiros', (req, res) => {
-  const { nome, cnpj, tipo, endereco, telefone, email } = req.body;
-  if (!nome || !cnpj || !tipo) return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
-  const query = 'INSERT INTO parceiro (nome, cnpj, tipo, endereco, telefone, email) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [nome, cnpj, tipo, endereco, telefone, email];
+  // Agora desestruturamos TODOS os campos do formulário, incluindo o endereço detalhado
+  const {
+    nome, cnpj, tipo, telefone, email, inscricao_estadual, responsavel, observacoes,
+    cep, logradouro, numero, complemento, bairro, cidade, estado
+  } = req.body;
+
+  if (!nome || !cnpj || !tipo) {
+    return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
+  }
+
+  const query = `
+    INSERT INTO parceiro 
+    (nome, cnpj, inscricao_estadual, responsavel, observacoes, tipo, telefone, email, cep, logradouro, numero, complemento, bairro, cidade, estado) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  const values = [
+    nome, cnpj, inscricao_estadual, responsavel, observacoes, tipo, telefone, email,
+    cep, logradouro, numero, complemento, bairro, cidade, estado
+  ];
+
   db.query(query, values, (err, result) => {
     if (err) {
-      if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'CNPJ já cadastrado.' });
-      return res.status(500).json({ error: 'Erro ao cadastrar parceiro' });
+      // Adicionando um log do erro no console do servidor para facilitar a depuração
+      console.error("Erro ao inserir parceiro no banco de dados:", err);
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ error: 'CNPJ já cadastrado.' });
+      }
+      return res.status(500).json({ error: 'Erro ao cadastrar parceiro. Verifique o console do servidor.' });
     }
     res.status(201).json({ message: 'Parceiro cadastrado com sucesso!', id_parceiro: result.insertId });
   });
 });
 
-// Atualizar parceiro
+// Atualizar parceiro (VERSÃO CORRIGIDA)
 app.put('/parceiros/:id', (req, res) => {
   const { id } = req.params;
-  const { nome, cnpj, tipo, endereco, telefone, email } = req.body;
-  if (!nome || !cnpj || !tipo) return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
-  const query = 'UPDATE parceiro SET nome = ?, cnpj = ?, tipo = ?, endereco = ?, telefone = ?, email = ? WHERE id_parceiro = ?';
-  const values = [nome, cnpj, tipo, endereco, telefone, email, id];
+  // Desestruturamos todos os campos, igual ao POST
+  const {
+    nome, cnpj, tipo, telefone, email, inscricao_estadual, responsavel, observacoes,
+    cep, logradouro, numero, complemento, bairro, cidade, estado
+  } = req.body;
+
+  if (!nome || !cnpj || !tipo) {
+    return res.status(400).json({ error: 'Nome, CNPJ e tipo são obrigatórios.' });
+  }
+  
+  const query = `
+    UPDATE parceiro SET 
+    nome = ?, cnpj = ?, inscricao_estadual = ?, responsavel = ?, observacoes = ?, tipo = ?, 
+    telefone = ?, email = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, 
+    bairro = ?, cidade = ?, estado = ? 
+    WHERE id_parceiro = ?
+  `;
+  
+  const values = [
+    nome, cnpj, inscricao_estadual, responsavel, observacoes, tipo, telefone, email,
+    cep, logradouro, numero, complemento, bairro, cidade, estado,
+    id
+  ];
+
   db.query(query, values, (err, result) => {
-    if (err) return res.status(500).json({ error: 'Erro ao atualizar parceiro' });
-    if (result.affectedRows === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    if (err) {
+      console.error("Erro ao atualizar parceiro no banco de dados:", err);
+      return res.status(500).json({ error: 'Erro ao atualizar parceiro. Verifique o console do servidor.' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Parceiro não encontrado' });
+    }
     res.json({ message: 'Parceiro atualizado com sucesso!' });
   });
 });
+
 
 // Excluir parceiro
 app.delete('/parceiros/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM parceiro WHERE id_parceiro = ?', [id], (err, result) => {
-    if (err) return res.status(500).json({ error: 'Erro ao excluir parceiro' });
-    if (result.affectedRows === 0) return res.status(404).json({ error: 'Parceiro não encontrado' });
+    if (err) {
+       console.error("Erro ao excluir parceiro no banco de dados:", err);
+      return res.status(500).json({ error: 'Erro ao excluir parceiro' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Parceiro não encontrado' });
+    }
     res.json({ message: 'Parceiro excluído com sucesso!' });
   });
 });
