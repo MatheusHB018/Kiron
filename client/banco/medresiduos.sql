@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23/07/2025 às 05:01
--- Versão do servidor: 10.4.28-MariaDB
--- Versão do PHP: 8.2.4
+-- Tempo de geração: 23/07/2025 às 21:50
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,6 +34,18 @@ CREATE TABLE `agenda_de_coleta` (
   `data_agendada` datetime DEFAULT NULL,
   `status` enum('agendada','realizada','cancelada') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `agenda_de_coleta`
+--
+
+INSERT INTO `agenda_de_coleta` (`id_agenda`, `id_paciente`, `id_parceiro`, `data_agendada`, `status`) VALUES
+(1, 8, 2, '2025-07-22 01:00:00', 'cancelada'),
+(2, 9, 5, '2025-07-22 16:28:00', 'realizada'),
+(3, 4, 2, '2025-07-31 16:36:00', 'agendada'),
+(4, 13, 4, '2025-08-09 16:37:00', 'agendada'),
+(5, 14, 6, '2025-08-05 20:40:00', 'agendada'),
+(6, 12, 2, '2025-07-10 17:40:00', 'agendada');
 
 -- --------------------------------------------------------
 
@@ -150,7 +162,8 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`id_usuario`, `nome`, `email`, `senha`, `tipo`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `uf`) VALUES
 (7, 'Lorena Andrade', 'lorena@apae.org', '$2b$10$azlUeI98KNv0BV4LN0fg3uB.Sv/yRbtEutvtJ808GAICcnABT7glK', 'admin', '19200009', 'Rua Angelo Salvatori', '125', 'ao lado do hoel almanara', 'Centro', 'Pirapozinho', 'SP'),
 (8, 'Manoela Pinheiro da Silva', 'manoela2903@outlook.com', '$2b$10$cy6YqZ7w3PdejvlBZHsk5exZ7hiqUBnc/s6h17lMep65xP9dx6FKm', 'admin', '19200009', 'Rua Angelo Salvatori', '125', 'Ao Lado do Hotel Almanara', 'Centro', 'Pirapozinho', 'SP'),
-(9, 'João Pedro Garcia Girotto', 'godlolpro32@gmail.com', '$2b$10$bKRia0FHmbGs.SI7Xu6bWu70c6KSV7bSigWO.nwy7n.AgRVg18B1S', 'comum', '19064145', 'Rua Renê Antônio Sanches', '284', '', 'Conjunto Habitacional Ana Jacinta', 'Presidente Prudente', 'SP');
+(9, 'João Pedro Garcia Girotto', 'godlolpro32@gmail.com', '$2b$10$bKRia0FHmbGs.SI7Xu6bWu70c6KSV7bSigWO.nwy7n.AgRVg18B1S', 'comum', '19064145', 'Rua Renê Antônio Sanches', '284', '', 'Conjunto Habitacional Ana Jacinta', 'Presidente Prudente', 'SP'),
+(10, 'Gustavo Henrique Bispo Costa', 'gustavobispocosta5521@gmail.com', '$2b$10$eyBqAjIehZIXtgi0OSEYO.J6w.iUV8CacfghHcc7MDZ2UvRVP67z2', 'admin', '19220222', 'Rua José Braz da Silva', '4', 'Casa com Sobrado', 'Parque dos Ingás II', 'Narandiba', 'SP');
 
 --
 -- Índices para tabelas despejadas
@@ -199,7 +212,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de tabela `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
-  MODIFY `id_agenda` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_agenda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `paciente`
@@ -223,7 +236,7 @@ ALTER TABLE `residuo`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restrições para tabelas despejadas

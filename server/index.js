@@ -1,4 +1,5 @@
 
+
 // server/index.js
 const express = require('express');
 const cors = require('cors');
@@ -35,6 +36,62 @@ const resetCodes = {};
 // Rota de teste
 app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
+});
+// --- ROTAS DE COLETAS ---
+// Listar todas as coletas
+app.get('/coletas', (req, res) => {
+  db.query('SELECT * FROM agenda_de_coleta', (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar coletas' });
+    res.json(results);
+  });
+});
+
+// Buscar coleta por ID
+app.get('/coletas/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM agenda_de_coleta WHERE id_agenda = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar coleta' });
+    if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada' });
+    res.json(results[0]);
+  });
+});
+
+// Agendar nova coleta
+app.post('/coletas', (req, res) => {
+  const { id_paciente, id_parceiro, data_agendada } = req.body;
+  if (!id_paciente || !id_parceiro || !data_agendada) {
+    return res.status(400).json({ error: 'Paciente, parceiro e data agendada são obrigatórios.' });
+  }
+  const query = 'INSERT INTO agenda_de_coleta (id_paciente, id_parceiro, data_agendada, status) VALUES (?, ?, ?, ?)';
+  db.query(query, [id_paciente, id_parceiro, data_agendada, 'agendada'], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao agendar coleta' });
+    db.query('SELECT * FROM agenda_de_coleta WHERE id_agenda = ?', [result.insertId], (err2, results2) => {
+      if (err2) return res.status(500).json({ error: 'Erro ao buscar coleta agendada' });
+      res.status(201).json(results2[0]);
+    });
+  });
+});
+
+// Editar coleta
+app.put('/coletas/:id', (req, res) => {
+  const { id } = req.params;
+  const { id_paciente, id_parceiro, data_agendada, status } = req.body;
+  const query = 'UPDATE agenda_de_coleta SET id_paciente = ?, id_parceiro = ?, data_agendada = ?, status = ? WHERE id_agenda = ?';
+  db.query(query, [id_paciente, id_parceiro, data_agendada, status, id], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao atualizar coleta' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Coleta não encontrada' });
+    res.json({ message: 'Coleta atualizada com sucesso!' });
+  });
+});
+
+// Confirmar coleta
+app.put('/coletas/:id/confirmar', (req, res) => {
+  const { id } = req.params;
+  db.query('UPDATE agenda_de_coleta SET status = ? WHERE id_agenda = ?', ['realizada', id], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao confirmar coleta' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Coleta não encontrada' });
+    res.json({ message: 'Coleta confirmada com sucesso!' });
+  });
 });
 
 // Listar todos os parceiros

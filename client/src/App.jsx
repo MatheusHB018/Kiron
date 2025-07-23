@@ -15,6 +15,9 @@ import PacientesPage from './pages/PacientesPage.jsx';
 import PacienteDetalhesPage from './pages/PacienteDetalhesPage.jsx';
 import MateriaisPage from './pages/MateriaisPage.jsx';
 import PainelColetasPage from './pages/PainelColetasPage.jsx';
+import CadastroColetaPage from './pages/CadastroColetaPage.jsx';
+import EditarColetaPage from './pages/EditarColetaPage.jsx';
+import DetalhesColetaPage from './pages/DetalhesColetaPage.jsx';
 import RelatoriosPage from './pages/RelatoriosPage.jsx';
 import ParceirosPage from './pages/ParceirosPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
@@ -40,6 +43,9 @@ function App() {
           <Route path="/editar-paciente/:id" element={<EditarPacientePage />} /> {/* Adicionar */}
           <Route path="/materiais" element={<MateriaisPage />} />
           <Route path="/painel-coletas" element={<PainelColetasPage />} />
+          <Route path="/agendar-coleta" element={<CadastroColetaPage />} />
+          <Route path="/editar-coleta/:id" element={<EditarColetaPage />} />
+          <Route path="/detalhes-coleta/:id" element={<DetalhesColetaPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />
           <Route path="/parceiros" element={<ParceirosPage />} />
           <Route path="/cadastro-parceiro" element={<CadastroParceiroPage />} />
