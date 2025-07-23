@@ -229,3 +229,37 @@
   transform: none;
   box-shadow: none;
 }
+
+.filter-container {
+    margin-bottom: 20px;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Ou o tamanho que preferir */
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888; /* Cor do ícone */
+    font-size: 16px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px 12px 45px; /* Aumenta o padding à esquerda para dar espaço ao ícone */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box; /* Garante que padding não afete a largura total */
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff; /* Cor da borda ao focar */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}

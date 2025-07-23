@@ -21,6 +21,9 @@ import PerfilPage from './pages/PerfilPage.jsx';
 import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
 import CadastroProfissionalPage from './pages/CadastroProfissionalPage.jsx';
 import EditarUsuarioPage from './pages/EditarUsuarioPage.jsx';
+import CadastroPacientePage from './pages/CadastroPacientePage.jsx'; // Importar
+import EditarPacientePage from './pages/EditarPacientePage.jsx';   // Importar
+
 
 function App() {
   return (
@@ -33,6 +36,8 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pacientes" element={<PacientesPage />} />
           <Route path="/pacientes/:id" element={<PacienteDetalhesPage />} />
+          <Route path="/cadastro-paciente" element={<CadastroPacientePage />} /> {/* Adicionar */}
+          <Route path="/editar-paciente/:id" element={<EditarPacientePage />} /> {/* Adicionar */}
           <Route path="/materiais" element={<MateriaisPage />} />
           <Route path="/painel-coletas" element={<PainelColetasPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />

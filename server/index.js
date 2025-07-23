@@ -155,6 +155,67 @@ app.delete('/parceiros/:id', (req, res) => {
   });
 });
 
+// --- ROTAS DE PACIENTES ---
+app.get('/pacientes', (req, res) => {
+    db.query('SELECT * FROM paciente', (err, results) => {
+        if (err) return res.status(500).json({ error: 'Erro ao buscar pacientes' });
+        res.json(results);
+    });
+});
+
+app.get('/pacientes/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM paciente WHERE id_paciente = ?', [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Erro ao buscar paciente' });
+        if (results.length === 0) return res.status(404).json({ error: 'Paciente não encontrado' });
+        res.json(results[0]);
+    });
+});
+
+app.post('/pacientes', (req, res) => {
+    const { nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado } = req.body;
+    if (!nome || !cpf) return res.status(400).json({ error: 'Nome e CPF são obrigatórios' });
+    
+    // Garante que a data de nascimento seja nula se não for fornecida
+    const nascimento = data_nascimento || null;
+
+    const query = 'INSERT INTO paciente (nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [nome, cpf, telefone, email, nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado];
+    db.query(query, values, (err, result) => {
+        if (err) {
+            if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'CPF já cadastrado.' });
+            return res.status(500).json({ error: 'Erro ao cadastrar paciente' });
+        }
+        res.status(201).json({ message: 'Paciente cadastrado com sucesso!', id: result.insertId });
+    });
+});
+
+app.put('/pacientes/:id', (req, res) => {
+    const { id } = req.params;
+    const { nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado } = req.body;
+    if (!nome || !cpf) return res.status(400).json({ error: 'Nome e CPF são obrigatórios' });
+
+    // Garante que a data de nascimento seja nula se não for fornecida
+    const nascimento = data_nascimento || null;
+
+    const query = 'UPDATE paciente SET nome = ?, cpf = ?, telefone = ?, email = ?, data_nascimento = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, estado = ? WHERE id_paciente = ?';
+    const values = [nome, cpf, telefone, email, nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado, id];
+    db.query(query, values, (err, result) => {
+        if (err) return res.status(500).json({ error: 'Erro ao atualizar paciente' });
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Paciente não encontrado' });
+        res.json({ message: 'Paciente atualizado com sucesso!' });
+    });
+});
+
+app.delete('/pacientes/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM paciente WHERE id_paciente = ?', [id], (err, result) => {
+        if (err) return res.status(500).json({ error: 'Erro ao excluir paciente' });
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Paciente não encontrado' });
+        res.json({ message: 'Paciente excluído com sucesso!' });
+    });
+});
+
 // --- ROTAS DE GESTÃO DE USUÁRIOS (CRUD) ---
 
 app.get('/usuarios', (req, res) => {

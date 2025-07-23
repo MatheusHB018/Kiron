@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22/07/2025 às 03:14
+-- Tempo de geração: 23/07/2025 às 05:01
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -47,9 +47,32 @@ CREATE TABLE `paciente` (
   `cpf` varchar(14) DEFAULT NULL,
   `telefone` varchar(20) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `endereco` varchar(200) DEFAULT NULL,
+  `cep` varchar(9) DEFAULT NULL,
+  `logradouro` varchar(255) DEFAULT NULL,
+  `numero` varchar(20) DEFAULT NULL,
+  `complemento` varchar(100) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
+  `cidade` varchar(100) DEFAULT NULL,
+  `estado` varchar(2) DEFAULT NULL,
   `data_nascimento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `paciente`
+--
+
+INSERT INTO `paciente` (`id_paciente`, `nome`, `cpf`, `telefone`, `email`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `estado`, `data_nascimento`) VALUES
+(4, 'Manoela Pinheiro da Silva', '48767759823', '18996816585', 'manoelaps2022@gmail.com', '19200009', 'Rua Angelo Salvatori', '125', 'ao lado do hotel almanara', 'Centro', 'Pirapozinho', 'SP', '2006-03-29'),
+(5, 'João da Silva', '11122233344', '11987654321', 'joao.silva@email.com', '01311000', 'Avenida Paulista', '1578', 'Andar 10', 'Bela Vista', 'São Paulo', 'SP', '1980-05-15'),
+(6, 'Maria Oliveira', '22233344455', '21912345678', 'maria.oliveira@email.com', '22071000', 'Avenida Atlântica', '1702', 'Apto 501', 'Copacabana', 'Rio de Janeiro', 'RJ', '1992-11-20'),
+(7, 'Carlos Pereira', '33344455566', '18999887766', 'carlos.pereira@email.com', '19015020', 'Avenida Washington Luiz', '2500', NULL, 'Jardim Paulista', 'Presidente Prudente', 'SP', '1975-02-10'),
+(8, 'Ana Costa', '44455566677', '18988776655', 'ana.costa@email.com', '19200000', 'Rua Sete de Setembro', '450', 'Casa', 'Centro', 'Pirapozinho', 'SP', '2001-07-30'),
+(9, 'Pedro Martins', '55566677788', '31977665544', 'pedro.martins@email.com', '30112010', 'Avenida do Contorno', '2905', 'Sala 3', 'Santa Efigênia', 'Belo Horizonte', 'MG', '1988-09-01'),
+(10, 'Lúcia Ferreira', '66677788899', '71966554433', 'lucia.ferreira@email.com', '40020000', 'Avenida Sete de Setembro', '1234', NULL, 'Centro', 'Salvador', 'BA', '1995-03-25'),
+(11, 'Marcos Almeida', '77788899900', '81955443322', 'marcos.almeida@email.com', '50030000', 'Avenida Marquês de Olinda', '290', 'Pista Local', 'Recife', 'Recife', 'PE', '1969-12-07'),
+(12, 'Sofia Ribeiro', '88899900011', '41944332211', 'sofia.ribeiro@email.com', '80050350', 'Avenida Sete de Setembro', '2775', 'Loja 15', 'Rebouças', 'Curitiba', 'PR', '2003-01-18'),
+(13, 'Daniel Carvalho', '99900011122', '51933221100', 'daniel.carvalho@email.com', '90010191', 'Rua dos Andradas', '1001', 'Sobreloja', 'Centro Histórico', 'Porto Alegre', 'RS', '1978-06-22'),
+(14, 'Beatriz Santos', '00011122233', '62922110099', 'beatriz.santos@email.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1999-08-14');
 
 -- --------------------------------------------------------
 
@@ -182,7 +205,7 @@ ALTER TABLE `agenda_de_coleta`
 -- AUTO_INCREMENT de tabela `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `parceiro`
