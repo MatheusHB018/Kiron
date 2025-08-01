@@ -27,8 +27,10 @@ import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
 import CadastroProfissionalPage from './pages/CadastroProfissionalPage.jsx';
 import EditarUsuarioPage from './pages/EditarUsuarioPage.jsx';
 import CadastroPacientePage from './pages/CadastroPacientePage.jsx'; 
-import EditarPacientePage from './pages/EditarPacientePage.jsx'; 
-
+import EditarPacientePage from './pages/EditarPacientePage.jsx';
+import CadastroEntregaPage from './pages/CadastroEntregaPage.jsx';
+import EntregasPage from './pages/EntregasPage.jsx';
+import EditarEntregaPage from './pages/EditarEntregaPage.jsx'; // Importa a nova página
 
 function App() {
   return (
@@ -41,8 +43,8 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pacientes" element={<PacientesPage />} />
           <Route path="/pacientes/:id" element={<PacienteDetalhesPage />} />
-          <Route path="/cadastro-paciente" element={<CadastroPacientePage />} /> {/* Adicionar */}
-          <Route path="/editar-paciente/:id" element={<EditarPacientePage />} /> {/* Adicionar */}
+          <Route path="/cadastro-paciente" element={<CadastroPacientePage />} />
+          <Route path="/editar-paciente/:id" element={<EditarPacientePage />} />
           <Route path="/residuos" element={<ResiduosPage />} />
           <Route path="/residuos/novo" element={<CadastroResiduoPage />} />
           <Route path="/residuos/editar/:id" element={<EditarResiduoPage />} />
@@ -56,6 +58,11 @@ function App() {
           <Route path="/editar-parceiro/:id" element={<EditarParceiroPage />} />
           <Route path="/detalhes-parceiro/:id" element={<ParceiroDetalhesPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
+
+          {/* Rotas para entregas - CRUD COMPLETO */}
+          <Route path="/entregas" element={<EntregasPage />} />
+          <Route path="/entregas/novo" element={<CadastroEntregaPage />} />
+          <Route path="/entregas/editar/:id" element={<EditarEntregaPage />} />
 
           {/* Rota exclusiva para Administradores */}
           <Route element={<AdminRoute />}>

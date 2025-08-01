@@ -557,10 +557,54 @@ app.delete('/residuos/:id', (req, res) => {
   });
 });
 
+// =================================================================
+// ROTAS DE ENTREGA DE MATERIAIS/RESÍDUOS (CRUD COMPLETO)
+// =================================================================
 
-// =================================================================
-// ROTAS DE ENTREGA DE MATERIAIS/RESÍDUOS
-// =================================================================
+// LISTAR TODAS as entregas (com filtro de busca)
+app.get('/entregas', (req, res) => {
+    const { busca } = req.query;
+
+    let query = `
+        SELECT 
+            e.id_entrega,
+            e.quantidade,
+            e.data_entrega,
+            e.observacoes,
+            p.nome as paciente_nome,
+            r.nome as residuo_nome,
+            r.grupo as residuo_grupo
+        FROM entrega_materiais e
+        JOIN paciente p ON e.id_paciente = p.id_paciente
+        JOIN residuo r ON e.id_residuo = r.id_residuo
+    `;
+    const params = [];
+
+    if (busca) {
+        query += ' WHERE p.nome LIKE ? OR r.nome LIKE ?';
+        params.push(`%${busca}%`, `%${busca}%`);
+    }
+
+    query += ' ORDER BY e.data_entrega DESC';
+
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar entregas:", err);
+            return res.status(500).json({ error: 'Erro interno no servidor ao buscar entregas.' });
+        }
+        res.json(results);
+    });
+});
+
+// BUSCAR UMA entrega específica por ID
+app.get('/entregas/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('SELECT * FROM entrega_materiais WHERE id_entrega = ?', [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Erro ao buscar entrega' });
+        if (results.length === 0) return res.status(404).json({ error: 'Entrega não encontrada' });
+        res.json(results[0]);
+    });
+});
 
 // REGISTRAR uma nova entrega
 app.post('/entregas', (req, res) => {
@@ -568,7 +612,7 @@ app.post('/entregas', (req, res) => {
     if (!id_paciente || !id_residuo || !quantidade) {
         return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
     }
-    const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes) VALUES (?, ?, ?, ?)';
+    const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes, data_entrega) VALUES (?, ?, ?, ?, NOW())';
     db.query(query, [id_paciente, id_residuo, quantidade, observacoes], (err, result) => {
         if (err) {
             console.error("Erro ao registrar entrega:", err);
@@ -578,53 +622,28 @@ app.post('/entregas', (req, res) => {
     });
 });
 
-// LISTAR entregas de um paciente específico
-app.get('/pacientes/:id/entregas', (req, res) => {
+// ATUALIZAR uma entrega
+app.put('/entregas/:id', (req, res) => {
     const { id } = req.params;
-    // Query corrigida: seleciona os novos campos detalhados do resíduo, não mais a 'categoria'
-    const query = `
-        SELECT 
-            e.id_entrega,
-            e.quantidade,
-            e.data_entrega,
-            e.observacoes,
-            r.nome as residuo_nome,
-            r.grupo as residuo_grupo
-        FROM entrega_materiais e
-        JOIN residuo r ON e.id_residuo = r.id_residuo
-        WHERE e.id_paciente = ?
-        ORDER BY e.data_entrega DESC
-    `;
-    db.query(query, [id], (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar histórico de entregas:", err);
-            return res.status(500).json({ error: 'Erro interno no servidor ao buscar histórico.' });
-        }
-        res.json(results);
+    const { id_paciente, id_residuo, quantidade, observacoes } = req.body;
+    if (!id_paciente || !id_residuo || !quantidade) {
+        return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
+    }
+    const query = 'UPDATE entrega_materiais SET id_paciente = ?, id_residuo = ?, quantidade = ?, observacoes = ? WHERE id_entrega = ?';
+    db.query(query, [id_paciente, id_residuo, quantidade, observacoes, id], (err, result) => {
+        if (err) return res.status(500).json({ error: 'Erro ao atualizar entrega' });
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Entrega não encontrada' });
+        res.json({ message: 'Entrega atualizada com sucesso!' });
     });
 });
 
-// LISTAR TODAS as entregas (útil para a futura tela de controle)
-app.get('/entregas', (req, res) => {
-    const query = `
-        SELECT 
-            e.id_entrega,
-            e.quantidade,
-            e.data_entrega,
-            p.nome as paciente_nome,
-            r.nome as residuo_nome,
-            r.grupo as residuo_grupo
-        FROM entrega_materiais e
-        JOIN paciente p ON e.id_paciente = p.id_paciente
-        JOIN residuo r ON e.id_residuo = r.id_residuo
-        ORDER BY e.data_entrega DESC
-    `;
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar todas as entregas:", err);
-            return res.status(500).json({ error: 'Erro interno no servidor ao buscar entregas.' });
-        }
-        res.json(results);
+// EXCLUIR uma entrega
+app.delete('/entregas/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM entrega_materiais WHERE id_entrega = ?', [id], (err, result) => {
+        if (err) return res.status(500).json({ error: 'Erro ao excluir entrega' });
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Entrega não encontrada' });
+        res.json({ message: 'Entrega excluída com sucesso!' });
     });
 });
 

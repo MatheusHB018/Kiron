@@ -11,7 +11,7 @@ import {
   FaHandshake,
   FaSignOutAlt,
   FaUserPlus,
-  FaUserCircle // Novo ícone para Perfil
+  FaUserCircle
 } from 'react-icons/fa';
 import './Header.css';
 
@@ -56,6 +56,7 @@ function Header() {
       <nav className="header-nav">
         <NavLink to="/dashboard"><FaTachometerAlt /> <span>Dashboard</span></NavLink>
         <NavLink to="/pacientes"><FaUsers /> <span>Pacientes</span></NavLink>
+        <NavLink to="/entregas"><FaBoxOpen /> <span>Entregas</span></NavLink>
         <NavLink to="/residuos"><FaBoxOpen /> <span>Resíduos</span></NavLink>
         <NavLink to="/painel-coletas"><FaCalendarCheck /> <span>Coletas</span></NavLink>
         <NavLink to="/parceiros"><FaHandshake /> <span>Parceiros</span></NavLink>
