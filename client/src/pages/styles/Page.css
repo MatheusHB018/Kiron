@@ -1,48 +1,41 @@
-/* client/src/pages/styles/Page.css */
+/* Define o fundo cinza claro para a área inteira da página */
 .page-container {
   padding: 2rem;
-  animation: fadeIn 0.5s ease-in-out;
+  background-color: #f8f9fa; /* Fundo cinza claro */
+  min-height: calc(100vh - 60px); /* Ocupa a altura da tela menos o header */
 }
 
-/* Container que agrupa o título e o ícone, e contém a borda */
+/* Container do cabeçalho da página (Título + Botão) */
 .page-header-container {
+  display: flex;
+  justify-content: space-between; /* Título na esquerda, botão na direita */
+  align-items: center;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 3px solid #00A99D;
 }
 
-/* Flex container para alinhar ícone e texto */
+/* Estilo do título da página (ícone + texto) */
 .page-title {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #37474f; /* Cor herdada pelo ícone */
-}
-
-.page-title .icon {
-  font-size: 2.2rem;
 }
 
 .page-title h1 {
   font-size: 2rem;
-  color: #37474f;
+  font-weight: 700;
+  color: #343a40; /* Cor escura para o texto */
   margin: 0;
 }
 
-.page-container p {
-  color: #555;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-top: 1.5rem;
+.page-title .icon {
+  font-size: 2rem;
+  color: #495057;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Container principal do conteúdo (a caixa branca) */
+.content-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }

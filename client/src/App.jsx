@@ -13,7 +13,9 @@ import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import PacientesPage from './pages/PacientesPage.jsx';
 import PacienteDetalhesPage from './pages/PacienteDetalhesPage.jsx';
-import MateriaisPage from './pages/MateriaisPage.jsx';
+import ResiduosPage from './pages/ResiduosPage.jsx';
+import CadastroResiduoPage from './pages/CadastroResiduoPage.jsx';
+import EditarResiduoPage from './pages/EditarResiduoPage.jsx';
 import PainelColetasPage from './pages/PainelColetasPage.jsx';
 import CadastroColetaPage from './pages/CadastroColetaPage.jsx';
 import EditarColetaPage from './pages/EditarColetaPage.jsx';
@@ -24,8 +26,8 @@ import PerfilPage from './pages/PerfilPage.jsx';
 import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
 import CadastroProfissionalPage from './pages/CadastroProfissionalPage.jsx';
 import EditarUsuarioPage from './pages/EditarUsuarioPage.jsx';
-import CadastroPacientePage from './pages/CadastroPacientePage.jsx'; // Importar
-import EditarPacientePage from './pages/EditarPacientePage.jsx';   // Importar
+import CadastroPacientePage from './pages/CadastroPacientePage.jsx'; 
+import EditarPacientePage from './pages/EditarPacientePage.jsx'; 
 
 
 function App() {
@@ -41,7 +43,9 @@ function App() {
           <Route path="/pacientes/:id" element={<PacienteDetalhesPage />} />
           <Route path="/cadastro-paciente" element={<CadastroPacientePage />} /> {/* Adicionar */}
           <Route path="/editar-paciente/:id" element={<EditarPacientePage />} /> {/* Adicionar */}
-          <Route path="/materiais" element={<MateriaisPage />} />
+          <Route path="/residuos" element={<ResiduosPage />} />
+          <Route path="/residuos/novo" element={<CadastroResiduoPage />} />
+          <Route path="/residuos/editar/:id" element={<EditarResiduoPage />} />
           <Route path="/painel-coletas" element={<PainelColetasPage />} />
           <Route path="/agendar-coleta" element={<CadastroColetaPage />} />
           <Route path="/editar-coleta/:id" element={<EditarColetaPage />} />

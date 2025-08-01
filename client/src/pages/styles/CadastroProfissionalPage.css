@@ -150,3 +150,39 @@
 .input-with-icon input {
   padding-left: 40px !important;
 }
+
+/* Adicione ou modifique estas classes no seu arquivo de estilo */
+
+/* Adiciona um título para separar seções do formulário */
+.form-section-title {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #334e68; /* Um azul-acinzentado escuro */
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+/* Define um grid com 4 colunas */
+.form-grid.four-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; /* Aumenta o espaçamento entre os campos */
+}
+
+/* --- Ajustes para Responsividade --- */
+
+/* Em telas menores (tablets), o grid de 4 colunas vira 2 colunas */
+@media (max-width: 1024px) {
+  .form-grid.four-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Em telas de celular, tudo vira uma coluna só */
+@media (max-width: 768px) {
+  .form-grid.two-columns,
+  .form-grid.four-columns {
+    grid-template-columns: 1fr;
+  }
+}

@@ -454,6 +454,179 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+// =================================================================
+// ROTAS DE RESÍDUOS (CRUD COMPLETO E DETALHADO)
+// =================================================================
+
+// LISTAR todos os tipos de resíduos (com filtro "começa com")
+app.get('/residuos', (req, res) => {
+  const { busca } = req.query;
+
+  let query = 'SELECT * FROM residuo';
+  const params = [];
+
+  // Se houver um termo de busca, modifica a query para filtrar
+  if (busca) {
+    query += ' WHERE nome LIKE ? OR grupo LIKE ? OR acondicionamento LIKE ?';
+    // MUDANÇA AQUI: Removemos o primeiro '%' para buscar apenas pelo início da palavra
+    params.push(`${busca}%`, `${busca}%`, `${busca}%`);
+  }
+
+  query += ' ORDER BY nome';
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar resíduos:", err);
+      return res.status(500).json({ error: 'Erro interno no servidor ao buscar resíduos.' });
+    }
+    res.json(results);
+  });
+});
+
+// BUSCAR um resíduo específico por ID
+app.get('/residuos/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM residuo WHERE id_residuo = ?', [id], (err, results) => {
+    if (err) {
+      console.error("Erro ao buscar resíduo por ID:", err);
+      return res.status(500).json({ error: 'Erro interno no servidor.' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Resíduo não encontrado.' });
+    }
+    res.json(results[0]);
+  });
+});
+
+// CADASTRAR novo resíduo (versão detalhada)
+app.post('/residuos', (req, res) => {
+  const { nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento } = req.body;
+  
+  if (!nome || !grupo || !risco_especifico || !estado_fisico || !acondicionamento) {
+    return res.status(400).json({ error: 'Todos os campos de seleção e o nome são obrigatórios.' });
+  }
+
+  const query = 'INSERT INTO residuo (nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento) VALUES (?, ?, ?, ?, ?, ?)';
+  db.query(query, [nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento], (err, result) => {
+    if (err) {
+      console.error("Erro ao cadastrar resíduo:", err);
+      return res.status(500).json({ error: 'Erro interno no servidor ao cadastrar resíduo.' });
+    }
+    res.status(201).json({ message: 'Resíduo cadastrado com sucesso!', id: result.insertId });
+  });
+});
+
+// ATUALIZAR um resíduo (versão detalhada)
+app.put('/residuos/:id', (req, res) => {
+  const { id } = req.params;
+  const { nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento } = req.body;
+
+  if (!nome || !grupo || !risco_especifico || !estado_fisico || !acondicionamento) {
+    return res.status(400).json({ error: 'Todos os campos de seleção e o nome são obrigatórios.' });
+  }
+
+  const query = 'UPDATE residuo SET nome = ?, descricao = ?, grupo = ?, risco_especifico = ?, estado_fisico = ?, acondicionamento = ? WHERE id_residuo = ?';
+  db.query(query, [nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento, id], (err, result) => {
+    if (err) {
+      console.error("Erro ao atualizar resíduo:", err);
+      return res.status(500).json({ error: 'Erro interno no servidor ao atualizar resíduo.' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Resíduo não encontrado.' });
+    }
+    res.json({ message: 'Resíduo atualizado com sucesso!' });
+  });
+});
+
+// EXCLUIR um resíduo
+app.delete('/residuos/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM residuo WHERE id_residuo = ?', [id], (err, result) => {
+    if (err) {
+      // Trata erro de chave estrangeira (se um resíduo já foi entregue)
+      if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+        return res.status(400).json({ error: 'Não é possível excluir. Este resíduo já está associado a uma entrega.' });
+      }
+      console.error("Erro ao excluir resíduo:", err);
+      return res.status(500).json({ error: 'Erro interno no servidor ao excluir resíduo.' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Resíduo não encontrado.' });
+    }
+    res.json({ message: 'Resíduo excluído com sucesso!' });
+  });
+});
+
+
+// =================================================================
+// ROTAS DE ENTREGA DE MATERIAIS/RESÍDUOS
+// =================================================================
+
+// REGISTRAR uma nova entrega
+app.post('/entregas', (req, res) => {
+    const { id_paciente, id_residuo, quantidade, observacoes } = req.body;
+    if (!id_paciente || !id_residuo || !quantidade) {
+        return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
+    }
+    const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes) VALUES (?, ?, ?, ?)';
+    db.query(query, [id_paciente, id_residuo, quantidade, observacoes], (err, result) => {
+        if (err) {
+            console.error("Erro ao registrar entrega:", err);
+            return res.status(500).json({ error: 'Erro interno no servidor ao registrar entrega.' });
+        }
+        res.status(201).json({ message: 'Entrega registrada com sucesso!', id: result.insertId });
+    });
+});
+
+// LISTAR entregas de um paciente específico
+app.get('/pacientes/:id/entregas', (req, res) => {
+    const { id } = req.params;
+    // Query corrigida: seleciona os novos campos detalhados do resíduo, não mais a 'categoria'
+    const query = `
+        SELECT 
+            e.id_entrega,
+            e.quantidade,
+            e.data_entrega,
+            e.observacoes,
+            r.nome as residuo_nome,
+            r.grupo as residuo_grupo
+        FROM entrega_materiais e
+        JOIN residuo r ON e.id_residuo = r.id_residuo
+        WHERE e.id_paciente = ?
+        ORDER BY e.data_entrega DESC
+    `;
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar histórico de entregas:", err);
+            return res.status(500).json({ error: 'Erro interno no servidor ao buscar histórico.' });
+        }
+        res.json(results);
+    });
+});
+
+// LISTAR TODAS as entregas (útil para a futura tela de controle)
+app.get('/entregas', (req, res) => {
+    const query = `
+        SELECT 
+            e.id_entrega,
+            e.quantidade,
+            e.data_entrega,
+            p.nome as paciente_nome,
+            r.nome as residuo_nome,
+            r.grupo as residuo_grupo
+        FROM entrega_materiais e
+        JOIN paciente p ON e.id_paciente = p.id_paciente
+        JOIN residuo r ON e.id_residuo = r.id_residuo
+        ORDER BY e.data_entrega DESC
+    `;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar todas as entregas:", err);
+            return res.status(500).json({ error: 'Erro interno no servidor ao buscar entregas.' });
+        }
+        res.json(results);
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor a correr na porta ${PORT}`);

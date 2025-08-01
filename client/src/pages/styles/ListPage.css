@@ -263,3 +263,144 @@
     border-color: #007bff; /* Cor da borda ao focar */
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
+
+/* =============================================== */
+/* ESTILIZAÇÃO PADRÃO PARA BOTÕES (VERSÃO CORRIGIDA) */
+/* =============================================== */
+
+/* Botão "Novo" no topo da página de listagem */
+.new-button {
+  background-color: #28a745; /* Verde */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.new-button:hover {
+  background-color: #218838; /* Verde mais escuro */
+}
+
+/* --- Botões na Tabela (Detalhes/Editar/Excluir) --- */
+
+/* Célula que contém os botões de ação */
+.actions-cell {
+  display: flex;
+  gap: 8px; /* Espaçamento entre os botões */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilo base para os botões de ação retangulares */
+.action-button {
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none; /* Para o caso de ser um Link */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: opacity 0.2s;
+}
+
+.action-button:hover {
+  opacity: 0.85;
+}
+
+/* Cor específica para o botão DETALHES (se aplicável) */
+.action-button.details {
+  background-color: #17a2b8; /* Azul-petróleo/Info */
+}
+
+/* Cor específica para o botão EDITAR */
+.action-button.edit {
+  background-color: #ffc107; /* Amarelo/Warning */
+  color: #212529; /* Texto escuro para melhor contraste */
+}
+
+/* Cor específica para o botão EXCLUIR */
+.action-button.delete {
+  background-color: #dc3545; /* Vermelho/Danger */
+}
+
+/* --- Botões nos Formulários (Salvar/Voltar) --- */
+/* (Estes já estavam corretos, mas incluídos para garantir) */
+
+.back-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* ===================================== */
+/* ESTILO PARA A BARRA DE BUSCA/FILTRO   */
+/* ===================================== */
+
+.search-container {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #adb5bd; /* Cinza claro */
+}
+
+.search-container input {
+  width: 100%;
+  padding: 12px 20px 12px 40px; /* Espaço para o ícone à esquerda */
+  border-radius: 8px;
+  border: 1px solid #dee2e6; /* Borda cinza clara */
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #80bdff; /* Azul claro no foco */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

@@ -56,7 +56,7 @@ function Header() {
       <nav className="header-nav">
         <NavLink to="/dashboard"><FaTachometerAlt /> <span>Dashboard</span></NavLink>
         <NavLink to="/pacientes"><FaUsers /> <span>Pacientes</span></NavLink>
-        <NavLink to="/materiais"><FaBoxOpen /> <span>Materiais</span></NavLink>
+        <NavLink to="/residuos"><FaBoxOpen /> <span>Resíduos</span></NavLink>
         <NavLink to="/painel-coletas"><FaCalendarCheck /> <span>Coletas</span></NavLink>
         <NavLink to="/parceiros"><FaHandshake /> <span>Parceiros</span></NavLink>
         <NavLink to="/relatorios"><FaChartBar /> <span>Relatórios</span></NavLink>
