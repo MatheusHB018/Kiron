@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaPlus, FaSave, FaArrowLeft, FaCalendarCheck } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
+import EntityFactory from '../services/EntityFactory';
 import './styles/Page.css';
 
 
@@ -29,12 +30,23 @@ function CadastroColetaPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Usar o Factory Method para criar o objeto padronizado
+    const coleta = EntityFactory.create('agendacoleta', form);
+    
+    // Validar usando o factory
+    const validacao = EntityFactory.validate('agendacoleta', coleta);
+    if (!validacao.isValid) {
+      Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       const res = await fetch(`${API_URL}/coletas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(coleta)
       });
       if (!res.ok) throw new Error('Erro ao agendar coleta');
       Swal.fire({

@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaBoxOpen, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
+import EntityFactory from '../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 
@@ -24,11 +25,22 @@ function CadastroResiduoPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Usar o Factory Method para criar o objeto padronizado
+    const residuo = EntityFactory.create('residuo', form);
+    
+    // Validar usando o factory
+    const validacao = EntityFactory.validate('residuo', residuo);
+    if (!validacao.isValid) {
+      Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+      return;
+    }
+    
     try {
       const response = await fetch(`${API_URL}/residuos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(residuo),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Falha ao cadastrar o tipo de resíduo.');

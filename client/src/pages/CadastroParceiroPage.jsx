@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import EntityFactory from '../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css'; // Pode reutilizar os estilos
 
@@ -101,14 +102,26 @@ function CadastroParceiroPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.nome || !form.cnpj || !form.tipo) {
-      Swal.fire('Atenção', 'Os campos Nome, CNPJ e Tipo são obrigatórios.', 'warning');
+    
+    // Usar o Factory Method para criar o objeto padronizado
+    const parceiro = EntityFactory.create('parceiro', {
+      ...form,
+      cnpj: form.cnpj.replace(/\D/g, ''),
+      telefone: form.telefone.replace(/\D/g, ''),
+      cep: form.cep.replace(/\D/g, '')
+    });
+    
+    // Validar usando o factory
+    const validacao = EntityFactory.validate('parceiro', parceiro);
+    if (!validacao.isValid) {
+      Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
       return;
     }
+    
     setIsSubmitting(true);
     try {
       // Usando axios para a requisição POST
-      await axios.post('http://localhost:3001/parceiros', form);
+      await axios.post('http://localhost:3001/parceiros', parceiro);
       Swal.fire({
         title: 'Sucesso!',
         text: 'Empresa parceira cadastrada com sucesso.',

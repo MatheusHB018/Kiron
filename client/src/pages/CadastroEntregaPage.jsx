@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaBox, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
+import EntityFactory from '../services/EntityFactory';
 
 function CadastroEntregaPage() {
   const navigate = useNavigate();
@@ -45,19 +46,26 @@ function CadastroEntregaPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.id_paciente || !form.id_residuo) {
-        Swal.fire('Atenção!', 'Por favor, selecione um paciente e um material.', 'warning');
-        return;
+    
+    // Usar o Factory Method para criar o objeto padronizado
+    const entrega = EntityFactory.create('entregamaterial', {
+      ...form,
+      // Envia null se a data não for preenchida
+      data_prevista_devolucao: form.data_prevista_devolucao || null
+    });
+    
+    // Validar usando o factory
+    const validacao = EntityFactory.validate('entregamaterial', entrega);
+    if (!validacao.isValid) {
+      Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+      return;
     }
+    
     try {
       const response = await fetch(`${API_URL}/entregas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            ...form,
-            // Envia null se a data não for preenchida
-            data_prevista_devolucao: form.data_prevista_devolucao || null
-        }),
+        body: JSON.stringify(entrega),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Falha ao registrar a entrega.');

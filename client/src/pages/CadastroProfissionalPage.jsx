@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaUserPlus, FaSave, FaEye, FaEyeSlash, FaArrowLeft, FaSpinner, FaUser, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { cadastrarUsuario } from '../services/api';
+import EntityFactory from '../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 
@@ -66,9 +67,24 @@ function CadastroProfissionalPage() {
             return;
         }
 
+        // Usar o Factory Method para criar o objeto padronizado
+        const usuario = EntityFactory.create('usuario', {
+            ...formData,
+            tipo: formData.tipoUsuario, // Mapear tipoUsuario para tipo
+            uf: formData.uf,
+            cep: formData.cep.replace(/\D/g, '') // Limpar CEP
+        });
+
+        // Validar usando o factory
+        const validacao = EntityFactory.validate('usuario', usuario);
+        if (!validacao.isValid) {
+            Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+            return;
+        }
+
         setIsSubmitting(true);
         try {
-            await cadastrarUsuario(formData);
+            await cadastrarUsuario(usuario);
             Swal.fire({
                 title: 'Sucesso!',
                 text: 'Usuário cadastrado com sucesso.',

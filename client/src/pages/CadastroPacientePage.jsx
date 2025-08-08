@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { InputMask } from '@react-input/mask'; // ATUALIZADO: Importar da nova biblioteca
 import { API_URL } from '../services/api';
+import EntityFactory from '../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 
@@ -52,18 +53,29 @@ function CadastroPacientePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const dataToSend = {
+        
+        // Usar o Factory Method para criar o objeto padronizado
+        const paciente = EntityFactory.create('paciente', {
             ...formData,
             cpf: formData.cpf.replace(/\D/g, ''),
             telefone: formData.telefone.replace(/\D/g, ''),
             cep: formData.cep.replace(/\D/g, ''),
             data_nascimento: formData.data_nascimento || null
-        };
+        });
+        
+        // Validar usando o factory
+        const validacao = EntityFactory.validate('paciente', paciente);
+        if (!validacao.isValid) {
+            Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+            setIsSubmitting(false);
+            return;
+        }
+        
         try {
             const response = await fetch(`${API_URL}/pacientes`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSend)
+                body: JSON.stringify(paciente)
             });
             if (!response.ok) throw new Error((await response.json()).error || 'Falha ao cadastrar');
             Swal.fire({
