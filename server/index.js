@@ -1,12 +1,11 @@
-
-
 // server/index.js
 const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer'); // Dependência para enviar emails
+const nodemailer = require('nodemailer');
+const NotificationService = require('./NotificationService'); // 1. IMPORTA O SINGLETON
 
 const app = express();
 const PORT = 3001;
@@ -18,27 +17,34 @@ app.use(cors());
 app.use(express.json());
 
 // --- CONFIGURAÇÃO DO SERVIÇO DE EMAIL (NODEMAILER) ---
-// ATENÇÃO: Substitua com as suas credenciais. Use variáveis de ambiente em produção!
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-        user: "manoelaps2022@gmail.com", // Insira o seu email do Gmail
-        pass: "aryl sfjn tojr bzdv"  // Insira a sua "Senha de App" gerada no Google
+        user: "manoelaps2022@gmail.com",
+        pass: "aryl sfjn tojr bzdv"
     },
 });
 
-// Armazenamento temporário dos códigos de redefinição.
-// Em produção, isto deve ser feito numa tabela no banco de dados com data de expiração.
 const resetCodes = {};
 
 // Rota de teste
 app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
 });
+
+// --- ROTA PARA VISUALIZAR NOTIFICAÇÕES (PARA DEMONSTRAÇÃO) ---
+app.get('/notificacoes', (req, res) => {
+    const unread = NotificationService.getUnreadNotifications();
+    res.json({
+        total: unread.length,
+        notificacoes: unread
+    });
+});
+
+
 // --- ROTAS DE COLETAS ---
-// Listar todas as coletas
 app.get('/coletas', (req, res) => {
   db.query('SELECT * FROM agenda_de_coleta', (err, results) => {
     if (err) return res.status(500).json({ error: 'Erro ao buscar coletas' });
@@ -46,7 +52,6 @@ app.get('/coletas', (req, res) => {
   });
 });
 
-// Buscar coleta por ID
 app.get('/coletas/:id', (req, res) => {
   const { id } = req.params;
   db.query('SELECT * FROM agenda_de_coleta WHERE id_agenda = ?', [id], (err, results) => {
@@ -56,7 +61,6 @@ app.get('/coletas/:id', (req, res) => {
   });
 });
 
-// Agendar nova coleta
 app.post('/coletas', (req, res) => {
   const { id_paciente, id_parceiro, data_agendada } = req.body;
   if (!id_paciente || !id_parceiro || !data_agendada) {
@@ -65,6 +69,14 @@ app.post('/coletas', (req, res) => {
   const query = 'INSERT INTO agenda_de_coleta (id_paciente, id_parceiro, data_agendada, status) VALUES (?, ?, ?, ?)';
   db.query(query, [id_paciente, id_parceiro, data_agendada, 'agendada'], (err, result) => {
     if (err) return res.status(500).json({ error: 'Erro ao agendar coleta' });
+    
+    // 2. USA O SINGLETON
+    NotificationService.addNotification(
+      'NOVA_COLETA',
+      `Nova coleta agendada para o paciente ID ${id_paciente}`,
+      { pacienteId: id_paciente, parceiroId: id_parceiro, data: data_agendada }
+    );
+
     db.query('SELECT * FROM agenda_de_coleta WHERE id_agenda = ?', [result.insertId], (err2, results2) => {
       if (err2) return res.status(500).json({ error: 'Erro ao buscar coleta agendada' });
       res.status(201).json(results2[0]);
@@ -72,7 +84,6 @@ app.post('/coletas', (req, res) => {
   });
 });
 
-// Editar coleta
 app.put('/coletas/:id', (req, res) => {
   const { id } = req.params;
   const { id_paciente, id_parceiro, data_agendada, status } = req.body;
@@ -84,7 +95,6 @@ app.put('/coletas/:id', (req, res) => {
   });
 });
 
-// Confirmar coleta
 app.put('/coletas/:id/confirmar', (req, res) => {
   const { id } = req.params;
   db.query('UPDATE agenda_de_coleta SET status = ? WHERE id_agenda = ?', ['realizada', id], (err, result) => {
@@ -94,9 +104,9 @@ app.put('/coletas/:id/confirmar', (req, res) => {
   });
 });
 
-// Listar todos os parceiros
+
+// --- ROTAS DE PARCEIROS ---
 app.get('/parceiros', (req, res) => {
-  // Esta rota não precisa de alteração, mas a mantemos aqui para o bloco completo.
   db.query('SELECT * FROM parceiro', (err, results) => {
     if (err) {
       console.error("Erro no banco de dados:", err);
@@ -106,7 +116,6 @@ app.get('/parceiros', (req, res) => {
   });
 });
 
-// Buscar parceiro por ID
 app.get('/parceiros/:id', (req, res) => {
   const { id } = req.params;
   db.query('SELECT * FROM parceiro WHERE id_parceiro = ?', [id], (err, results) => {
@@ -121,9 +130,7 @@ app.get('/parceiros/:id', (req, res) => {
   });
 });
 
-// Cadastrar novo parceiro (VERSÃO CORRIGIDA)
 app.post('/parceiros', (req, res) => {
-  // Agora desestruturamos TODOS os campos do formulário, incluindo o endereço detalhado
   const {
     nome, cnpj, tipo, telefone, email, inscricao_estadual, responsavel, observacoes,
     cep, logradouro, numero, complemento, bairro, cidade, estado
@@ -146,21 +153,18 @@ app.post('/parceiros', (req, res) => {
 
   db.query(query, values, (err, result) => {
     if (err) {
-      // Adicionando um log do erro no console do servidor para facilitar a depuração
       console.error("Erro ao inserir parceiro no banco de dados:", err);
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(409).json({ error: 'CNPJ já cadastrado.' });
       }
-      return res.status(500).json({ error: 'Erro ao cadastrar parceiro. Verifique o console do servidor.' });
+      return res.status(500).json({ error: 'Erro ao cadastrar parceiro.' });
     }
     res.status(201).json({ message: 'Parceiro cadastrado com sucesso!', id_parceiro: result.insertId });
   });
 });
 
-// Atualizar parceiro (VERSÃO CORRIGIDA)
 app.put('/parceiros/:id', (req, res) => {
   const { id } = req.params;
-  // Desestruturamos todos os campos, igual ao POST
   const {
     nome, cnpj, tipo, telefone, email, inscricao_estadual, responsavel, observacoes,
     cep, logradouro, numero, complemento, bairro, cidade, estado
@@ -187,7 +191,7 @@ app.put('/parceiros/:id', (req, res) => {
   db.query(query, values, (err, result) => {
     if (err) {
       console.error("Erro ao atualizar parceiro no banco de dados:", err);
-      return res.status(500).json({ error: 'Erro ao atualizar parceiro. Verifique o console do servidor.' });
+      return res.status(500).json({ error: 'Erro ao atualizar parceiro.' });
     }
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Parceiro não encontrado' });
@@ -196,8 +200,6 @@ app.put('/parceiros/:id', (req, res) => {
   });
 });
 
-
-// Excluir parceiro
 app.delete('/parceiros/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM parceiro WHERE id_parceiro = ?', [id], (err, result) => {
@@ -211,6 +213,7 @@ app.delete('/parceiros/:id', (req, res) => {
     res.json({ message: 'Parceiro excluído com sucesso!' });
   });
 });
+
 
 // --- ROTAS DE PACIENTES ---
 app.get('/pacientes', (req, res) => {
@@ -233,7 +236,6 @@ app.post('/pacientes', (req, res) => {
     const { nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado } = req.body;
     if (!nome || !cpf) return res.status(400).json({ error: 'Nome e CPF são obrigatórios' });
     
-    // Garante que a data de nascimento seja nula se não for fornecida
     const nascimento = data_nascimento || null;
 
     const query = 'INSERT INTO paciente (nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -252,7 +254,6 @@ app.put('/pacientes/:id', (req, res) => {
     const { nome, cpf, telefone, email, data_nascimento, cep, logradouro, numero, complemento, bairro, cidade, estado } = req.body;
     if (!nome || !cpf) return res.status(400).json({ error: 'Nome e CPF são obrigatórios' });
 
-    // Garante que a data de nascimento seja nula se não for fornecida
     const nascimento = data_nascimento || null;
 
     const query = 'UPDATE paciente SET nome = ?, cpf = ?, telefone = ?, email = ?, data_nascimento = ?, cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, estado = ? WHERE id_paciente = ?';
@@ -273,8 +274,8 @@ app.delete('/pacientes/:id', (req, res) => {
     });
 });
 
-// --- ROTAS DE GESTÃO DE USUÁRIOS (CRUD) ---
 
+// --- ROTAS DE GESTÃO DE USUÁRIOS (CRUD) ---
 app.get('/usuarios', (req, res) => {
   db.query('SELECT id_usuario, nome, email, tipo, cidade, uf FROM usuario', (err, results) => {
     if (err) return res.status(500).json({ error: 'Erro ao buscar usuários' });
@@ -332,8 +333,8 @@ app.delete('/usuarios/:id', (req, res) => {
   });
 });
 
-// --- ROTA DE LOGIN ---
 
+// --- ROTA DE LOGIN ---
 app.post('/login', (req, res) => {
     const { email, password, lembrarMe } = req.body; 
     if (!email || !password) return res.status(400).json({ error: 'Email e senha são obrigatórios.' });
@@ -354,8 +355,8 @@ app.post('/login', (req, res) => {
     });
 });
 
-// --- MIDDLEWARE E ROTAS DE PERFIL ---
 
+// --- MIDDLEWARE E ROTAS DE PERFIL ---
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -403,8 +404,8 @@ app.put('/perfil/senha', authenticateToken, (req, res) => {
     });
 });
 
-// --- ROTAS PARA REDEFINIÇÃO DE SENHA ---
 
+// --- ROTAS PARA REDEFINIÇÃO DE SENHA ---
 app.post('/forgot-password', (req, res) => {
     const { email } = req.body;
     db.query('SELECT * FROM usuario WHERE email = ?', [email], (err, results) => {
@@ -454,149 +455,101 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
-// =================================================================
-// ROTAS DE RESÍDUOS (CRUD COMPLETO E DETALHADO)
-// =================================================================
 
-// LISTAR todos os tipos de resíduos (com filtro "começa com")
+// =================================================================
+// ROTAS DE RESÍDUOS
+// =================================================================
 app.get('/residuos', (req, res) => {
   const { busca } = req.query;
-
   let query = 'SELECT * FROM residuo';
   const params = [];
-
-  // Se houver um termo de busca, modifica a query para filtrar
   if (busca) {
     query += ' WHERE nome LIKE ? OR grupo LIKE ? OR acondicionamento LIKE ?';
-    // MUDANÇA AQUI: Removemos o primeiro '%' para buscar apenas pelo início da palavra
-    params.push(`${busca}%`, `${busca}%`, `${busca}%`);
+    params.push(`%${busca}%`, `%${busca}%`, `%${busca}%`);
   }
-
   query += ' ORDER BY nome';
-
   db.query(query, params, (err, results) => {
-    if (err) {
-      console.error("Erro ao buscar resíduos:", err);
-      return res.status(500).json({ error: 'Erro interno no servidor ao buscar resíduos.' });
-    }
+    if (err) return res.status(500).json({ error: 'Erro ao buscar resíduos.' });
     res.json(results);
   });
 });
 
-// BUSCAR um resíduo específico por ID
 app.get('/residuos/:id', (req, res) => {
   const { id } = req.params;
   db.query('SELECT * FROM residuo WHERE id_residuo = ?', [id], (err, results) => {
-    if (err) {
-      console.error("Erro ao buscar resíduo por ID:", err);
-      return res.status(500).json({ error: 'Erro interno no servidor.' });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ error: 'Resíduo não encontrado.' });
-    }
+    if (err) return res.status(500).json({ error: 'Erro interno no servidor.' });
+    if (results.length === 0) return res.status(404).json({ error: 'Resíduo não encontrado.' });
     res.json(results[0]);
   });
 });
 
-// CADASTRAR novo resíduo (versão detalhada)
 app.post('/residuos', (req, res) => {
   const { nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento } = req.body;
-  
   if (!nome || !grupo || !risco_especifico || !estado_fisico || !acondicionamento) {
-    return res.status(400).json({ error: 'Todos os campos de seleção e o nome são obrigatórios.' });
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
   }
-
   const query = 'INSERT INTO residuo (nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento) VALUES (?, ?, ?, ?, ?, ?)';
   db.query(query, [nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento], (err, result) => {
-    if (err) {
-      console.error("Erro ao cadastrar resíduo:", err);
-      return res.status(500).json({ error: 'Erro interno no servidor ao cadastrar resíduo.' });
-    }
+    if (err) return res.status(500).json({ error: 'Erro ao cadastrar resíduo.' });
     res.status(201).json({ message: 'Resíduo cadastrado com sucesso!', id: result.insertId });
   });
 });
 
-// ATUALIZAR um resíduo (versão detalhada)
 app.put('/residuos/:id', (req, res) => {
   const { id } = req.params;
   const { nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento } = req.body;
-
   if (!nome || !grupo || !risco_especifico || !estado_fisico || !acondicionamento) {
-    return res.status(400).json({ error: 'Todos os campos de seleção e o nome são obrigatórios.' });
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
   }
-
   const query = 'UPDATE residuo SET nome = ?, descricao = ?, grupo = ?, risco_especifico = ?, estado_fisico = ?, acondicionamento = ? WHERE id_residuo = ?';
   db.query(query, [nome, descricao, grupo, risco_especifico, estado_fisico, acondicionamento, id], (err, result) => {
-    if (err) {
-      console.error("Erro ao atualizar resíduo:", err);
-      return res.status(500).json({ error: 'Erro interno no servidor ao atualizar resíduo.' });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Resíduo não encontrado.' });
-    }
+    if (err) return res.status(500).json({ error: 'Erro ao atualizar resíduo.' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Resíduo não encontrado.' });
     res.json({ message: 'Resíduo atualizado com sucesso!' });
   });
 });
 
-// EXCLUIR um resíduo
 app.delete('/residuos/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM residuo WHERE id_residuo = ?', [id], (err, result) => {
     if (err) {
-      // Trata erro de chave estrangeira (se um resíduo já foi entregue)
       if (err.code === 'ER_ROW_IS_REFERENCED_2') {
         return res.status(400).json({ error: 'Não é possível excluir. Este resíduo já está associado a uma entrega.' });
       }
-      console.error("Erro ao excluir resíduo:", err);
-      return res.status(500).json({ error: 'Erro interno no servidor ao excluir resíduo.' });
+      return res.status(500).json({ error: 'Erro ao excluir resíduo.' });
     }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Resíduo não encontrado.' });
-    }
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Resíduo não encontrado.' });
     res.json({ message: 'Resíduo excluído com sucesso!' });
   });
 });
 
-// =================================================================
-// ROTAS DE ENTREGA DE MATERIAIS/RESÍDUOS (CRUD COMPLETO)
-// =================================================================
 
-// LISTAR TODAS as entregas (com filtro de busca)
+// =================================================================
+// ROTAS DE ENTREGA DE MATERIAIS
+// =================================================================
 app.get('/entregas', (req, res) => {
     const { busca } = req.query;
-
     let query = `
         SELECT 
-            e.id_entrega,
-            e.quantidade,
-            e.data_entrega,
-            e.observacoes,
+            e.*,
             p.nome as paciente_nome,
-            r.nome as residuo_nome,
-            r.grupo as residuo_grupo
+            r.nome as residuo_nome
         FROM entrega_materiais e
         JOIN paciente p ON e.id_paciente = p.id_paciente
         JOIN residuo r ON e.id_residuo = r.id_residuo
     `;
     const params = [];
-
     if (busca) {
         query += ' WHERE p.nome LIKE ? OR r.nome LIKE ?';
         params.push(`%${busca}%`, `%${busca}%`);
     }
-
     query += ' ORDER BY e.data_entrega DESC';
-
     db.query(query, params, (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar entregas:", err);
-            return res.status(500).json({ error: 'Erro interno no servidor ao buscar entregas.' });
-        }
+        if (err) return res.status(500).json({ error: 'Erro ao buscar entregas.' });
         res.json(results);
     });
 });
 
-// BUSCAR UMA entrega específica por ID
 app.get('/entregas/:id', (req, res) => {
     const { id } = req.params;
     db.query('SELECT * FROM entrega_materiais WHERE id_entrega = ?', [id], (err, results) => {
@@ -606,25 +559,31 @@ app.get('/entregas/:id', (req, res) => {
     });
 });
 
-// REGISTRAR uma nova entrega (VERSÃO ATUALIZADA)
 app.post('/entregas', (req, res) => {
-    // Adiciona os novos campos
     const { id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status } = req.body;
     if (!id_paciente || !id_residuo || !quantidade) {
         return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
     }
-    // Inclui os novos campos na query SQL
     const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes, data_entrega, data_prevista_devolucao, status) VALUES (?, ?, ?, ?, NOW(), ?, ?)';
     db.query(query, [id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status || 'Aguardando Devolução'], (err, result) => {
         if (err) {
             console.error("Erro ao registrar entrega:", err);
-            return res.status(500).json({ error: 'Erro interno no servidor ao registrar entrega.' });
+            return res.status(500).json({ error: 'Erro interno no servidor.' });
         }
+        
+        // 3. USA O SINGLETON
+        if (data_prevista_devolucao) {
+             NotificationService.addNotification(
+                'ENTREGA_COM_DEVOLUCAO',
+                `Material entregue ao paciente ID ${id_paciente}. Devolução prevista para ${data_prevista_devolucao}.`,
+                { pacienteId: id_paciente, residuoId: id_residuo, quantidade }
+            );
+        }
+
         res.status(201).json({ message: 'Entrega registrada com sucesso!', id: result.insertId });
     });
 });
 
-// ATUALIZAR uma entrega (VERSÃO ATUALIZADA)
 app.put('/entregas/:id', (req, res) => {
     const { id } = req.params;
     const { id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status } = req.body;
@@ -639,7 +598,6 @@ app.put('/entregas/:id', (req, res) => {
     });
 });
 
-// EXCLUIR uma entrega
 app.delete('/entregas/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM entrega_materiais WHERE id_entrega = ?', [id], (err, result) => {
@@ -648,6 +606,7 @@ app.delete('/entregas/:id', (req, res) => {
         res.json({ message: 'Entrega excluída com sucesso!' });
     });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Servidor a correr na porta ${PORT}`);
