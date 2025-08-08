@@ -64,7 +64,7 @@ function EditarResiduoPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaBoxOpen className="icon" />
           <h1>Editar Tipo de Resíduo</h1>
@@ -134,7 +134,7 @@ function EditarResiduoPage() {
            </div>
 
           <div className="form-actions">
-            <button type="submit" className="submit-button">
+            <button type="submit" className="btn btn-primary">
               <FaSave /> Salvar Alterações
             </button>
           </div>

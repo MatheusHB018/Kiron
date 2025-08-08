@@ -59,7 +59,7 @@
   text-align: right;
 }
 
-.submit-button {
+.btn btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
@@ -74,7 +74,7 @@
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-.submit-button:hover {
+.btn btn-primary:hover {
   background-color: #00897b;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);

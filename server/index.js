@@ -606,14 +606,16 @@ app.get('/entregas/:id', (req, res) => {
     });
 });
 
-// REGISTRAR uma nova entrega
+// REGISTRAR uma nova entrega (VERSÃO ATUALIZADA)
 app.post('/entregas', (req, res) => {
-    const { id_paciente, id_residuo, quantidade, observacoes } = req.body;
+    // Adiciona os novos campos
+    const { id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status } = req.body;
     if (!id_paciente || !id_residuo || !quantidade) {
         return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
     }
-    const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes, data_entrega) VALUES (?, ?, ?, ?, NOW())';
-    db.query(query, [id_paciente, id_residuo, quantidade, observacoes], (err, result) => {
+    // Inclui os novos campos na query SQL
+    const query = 'INSERT INTO entrega_materiais (id_paciente, id_residuo, quantidade, observacoes, data_entrega, data_prevista_devolucao, status) VALUES (?, ?, ?, ?, NOW(), ?, ?)';
+    db.query(query, [id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status || 'Aguardando Devolução'], (err, result) => {
         if (err) {
             console.error("Erro ao registrar entrega:", err);
             return res.status(500).json({ error: 'Erro interno no servidor ao registrar entrega.' });
@@ -622,15 +624,15 @@ app.post('/entregas', (req, res) => {
     });
 });
 
-// ATUALIZAR uma entrega
+// ATUALIZAR uma entrega (VERSÃO ATUALIZADA)
 app.put('/entregas/:id', (req, res) => {
     const { id } = req.params;
-    const { id_paciente, id_residuo, quantidade, observacoes } = req.body;
+    const { id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status } = req.body;
     if (!id_paciente || !id_residuo || !quantidade) {
         return res.status(400).json({ error: 'Paciente, resíduo e quantidade são obrigatórios.' });
     }
-    const query = 'UPDATE entrega_materiais SET id_paciente = ?, id_residuo = ?, quantidade = ?, observacoes = ? WHERE id_entrega = ?';
-    db.query(query, [id_paciente, id_residuo, quantidade, observacoes, id], (err, result) => {
+    const query = 'UPDATE entrega_materiais SET id_paciente = ?, id_residuo = ?, quantidade = ?, observacoes = ?, data_prevista_devolucao = ?, status = ? WHERE id_entrega = ?';
+    db.query(query, [id_paciente, id_residuo, quantidade, observacoes, data_prevista_devolucao, status, id], (err, result) => {
         if (err) return res.status(500).json({ error: 'Erro ao atualizar entrega' });
         if (result.affectedRows === 0) return res.status(404).json({ error: 'Entrega não encontrada' });
         res.json({ message: 'Entrega atualizada com sucesso!' });

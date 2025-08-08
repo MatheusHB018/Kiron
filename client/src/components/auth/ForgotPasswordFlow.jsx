@@ -75,7 +75,7 @@ function ForgotPasswordFlow({ closeModal }) {
                         </div>
                     </div>
                     {/* BOTÃO ATUALIZADO */}
-                    <button type="submit" className="submit-button" disabled={isLoading}>
+                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
                         {isLoading ? <><FaSpinner className="spinner" /> Enviando...</> : 'Enviar Código'}
                     </button>
                 </form>
@@ -93,7 +93,7 @@ function ForgotPasswordFlow({ closeModal }) {
                         </div>
                     </div>
                      {/* BOTÃO ATUALIZADO */}
-                    <button type="submit" className="submit-button" disabled={isLoading}>
+                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
                         {isLoading ? <><FaSpinner className="spinner" /> Validando...</> : 'Validar Código'}
                     </button>
                 </form>
@@ -118,7 +118,7 @@ function ForgotPasswordFlow({ closeModal }) {
                         </div>
                     </div>
                      {/* BOTÃO ATUALIZADO */}
-                    <button type="submit" className="submit-button" disabled={isLoading}>
+                    <button type="submit" className="btn btn-primary" disabled={isLoading}>
                         {isLoading ? <><FaSpinner className="spinner" /> Redefinindo...</> : 'Redefinir Senha'}
                     </button>
                 </form>

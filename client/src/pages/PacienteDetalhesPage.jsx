@@ -62,7 +62,7 @@ function PacienteDetalhesPage() {
 
   return (
     <div className="page-container">
-        <div className="page-header-container">
+        <div className="page-header">
             <div className="page-title"><FaUser className="icon" /><h1>Detalhes do Paciente</h1></div>
         </div>
       

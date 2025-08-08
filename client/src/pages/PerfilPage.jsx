@@ -107,7 +107,7 @@ function PerfilPage() {
 
     return (
         <div className="page-container">
-            <div className="page-header-container"><div className="page-title"><FaUserCircle className="icon" /><h1>Meu Perfil</h1></div></div>
+            <div className="page-header"><div className="page-title"><FaUserCircle className="icon" /><h1>Meu Perfil</h1></div></div>
 
             {/* Formulário de Dados Pessoais */}
             <div className="form-container" style={{ marginBottom: '2rem' }}>
@@ -127,7 +127,7 @@ function PerfilPage() {
                         <div className="form-group"><label htmlFor="cidade">Cidade</label><input type="text" id="cidade" name="cidade" value={formData.cidade} onChange={handleChange} readOnly /></div>
                         <div className="form-group"><label htmlFor="uf">UF</label><input type="text" id="uf" name="uf" value={formData.uf} onChange={handleChange} maxLength="2" readOnly /></div>
                     </div>
-                    <div className="form-actions"><button type="submit" className="submit-button" disabled={isSubmitting}>{isSubmitting ? <FaSpinner className="spinner" /> : <FaSave />} Salvar Dados</button></div>
+                    <div className="form-actions"><button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? <FaSpinner className="spinner" /> : <FaSave />} Salvar Dados</button></div>
                 </form>
             </div>
 
@@ -138,7 +138,7 @@ function PerfilPage() {
                    <div className="form-group"><label htmlFor="senhaAtual">Senha Atual</label><div className="password-input-wrapper"><input type={showPasswords ? 'text' : 'password'} id="senhaAtual" name="senhaAtual" value={passwordData.senhaAtual} onChange={handlePasswordChange} required /><button type="button" className="password-toggle-button" onClick={() => setShowPasswords(!showPasswords)}>{showPasswords ? <FaEyeSlash /> : <FaEye />}</button></div></div>
                    <div className="form-group"><label htmlFor="novaSenha">Nova Senha</label><div className="password-input-wrapper"><input type={showPasswords ? 'text' : 'password'} id="novaSenha" name="novaSenha" value={passwordData.novaSenha} onChange={handlePasswordChange} required /><button type="button" className="password-toggle-button" onClick={() => setShowPasswords(!showPasswords)}>{showPasswords ? <FaEyeSlash /> : <FaEye />}</button></div></div>
                    <div className="form-group"><label htmlFor="confirmarNovaSenha">Confirmar Nova Senha</label><div className="password-input-wrapper"><input type={showPasswords ? 'text' : 'password'} id="confirmarNovaSenha" name="confirmarNovaSenha" value={passwordData.confirmarNovaSenha} onChange={handlePasswordChange} required /><button type="button" className="password-toggle-button" onClick={() => setShowPasswords(!showPasswords)}>{showPasswords ? <FaEyeSlash /> : <FaEye />}</button></div></div>
-                   <div className="form-actions"><button type="submit" className="submit-button" disabled={isSubmitting}>{isSubmitting ? <FaSpinner className="spinner" /> : <FaLock />} Alterar Senha</button></div>
+                   <div className="form-actions"><button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? <FaSpinner className="spinner" /> : <FaLock />} Alterar Senha</button></div>
                 </form>
             </div>
         </div>

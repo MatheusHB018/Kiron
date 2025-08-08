@@ -79,7 +79,7 @@ function CadastroPacientePage() {
 
     return (
         <div className="page-container">
-            <div className="page-header-container">
+            <div className="page-header">
                 <div className="page-title"><FaUserPlus className="icon" /><h1>Cadastro de Paciente</h1></div>
             </div>
             <Link to="/pacientes" className="back-link"><FaArrowLeft /> Voltar para a lista</Link>
@@ -110,7 +110,7 @@ function CadastroPacientePage() {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="submit-button" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Cadastrar Paciente</>}</button>
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Cadastrar Paciente</>}</button>
                     </div>
                 </form>
             </div>

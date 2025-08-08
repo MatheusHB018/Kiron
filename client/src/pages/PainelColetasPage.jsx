@@ -72,7 +72,7 @@ function PainelColetasPage() {
           <FaCalendarCheck className="icon" />
           <h1>Painel de Coletas</h1>
         </div>
-        <Link to="/agendar-coleta" className="add-button">
+        <Link to="/agendar-coleta" className="btn btn-primary">
           + Agendar Coleta
         </Link>
       </div>

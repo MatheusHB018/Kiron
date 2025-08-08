@@ -92,7 +92,7 @@ const ListarUsuarioPage = () => {
                     <FaUserPlus className="icon" />
                     <h1>Gerenciamento de Usuários</h1>
                 </div>
-                <Link to="/cadastro-profissional" className="add-button">
+                <Link to="/cadastro-profissional" className="btn btn-primary">
                     <FaPlus /> Cadastrar Usuário
                 </Link>
             </div>

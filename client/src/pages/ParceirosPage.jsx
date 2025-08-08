@@ -118,7 +118,7 @@ function ParceirosPage() {
           <FaHandshake className="icon" />
           <h1>Gestão de Parceiros</h1>
         </div>
-        <Link to="/cadastro-parceiro" className="add-button">
+        <Link to="/cadastro-parceiro" className="btn btn-primary">
           <FaPlus /> Cadastrar Parceiro
         </Link>
       </div>

@@ -128,7 +128,7 @@ function CadastroParceiroPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaPlus className="icon" />
           <h1>Cadastro de Empresa Parceira</h1>
@@ -257,7 +257,7 @@ function CadastroParceiroPage() {
           </div>
           
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isSubmitting || isCepLoading}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading}>
               {isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Cadastrar Parceiro</>}
             </button>
           </div>

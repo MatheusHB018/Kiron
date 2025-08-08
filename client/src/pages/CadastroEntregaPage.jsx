@@ -1,10 +1,9 @@
+// client/src/pages/CadastroEntregaPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaBox, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
-import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css'; // Reutilizando o estilo do formulário
 
 function CadastroEntregaPage() {
   const navigate = useNavigate();
@@ -15,14 +14,14 @@ function CadastroEntregaPage() {
     id_paciente: '',
     id_residuo: '',
     quantidade: 1,
+    data_prevista_devolucao: '',
+    status: 'Aguardando Devolução', // Valor padrão
     observacoes: ''
   });
 
-  // Efeito para buscar pacientes e resíduos ao carregar a página
   useEffect(() => {
     async function fetchData() {
       try {
-        // Busca os dados de pacientes e resíduos em paralelo
         const [pacientesRes, residuosRes] = await Promise.all([
           fetch(`${API_URL}/pacientes`),
           fetch(`${API_URL}/residuos`)
@@ -32,7 +31,7 @@ function CadastroEntregaPage() {
         setPacientes(pacientesData);
         setResiduos(residuosData);
       } catch (error) {
-        Swal.fire('Erro!', 'Não foi possível carregar os dados necessários para o formulário.', 'error');
+        Swal.fire('Erro!', 'Não foi possível carregar os dados necessários.', 'error');
       } finally {
         setLoading(false);
       }
@@ -54,12 +53,16 @@ function CadastroEntregaPage() {
       const response = await fetch(`${API_URL}/entregas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+            ...form,
+            // Envia null se a data não for preenchida
+            data_prevista_devolucao: form.data_prevista_devolucao || null
+        }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Falha ao registrar a entrega.');
       Swal.fire('Sucesso!', 'Entrega registrada com sucesso.', 'success');
-      navigate('/entregas'); // Navega para a lista de entregas após o sucesso
+      navigate('/entregas');
     } catch (error) {
       Swal.fire('Erro!', error.message, 'error');
     }
@@ -67,53 +70,59 @@ function CadastroEntregaPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <header className="page-header">
         <div className="page-title">
           <FaBox className="icon" />
           <h1>Registrar Nova Entrega</h1>
         </div>
-        {/* O botão de voltar será para a futura lista de entregas */}
-        <Link to="/entregas" className="back-button">
-          <FaArrowLeft /> Voltar para a Lista
+        <Link to="/entregas" className="btn btn-secondary">
+          <FaArrowLeft /> Voltar
         </Link>
-      </div>
+      </header>
 
-      <div className="content-container">
-        {loading ? (
-            <p>Carregando dados do formulário...</p>
-        ) : (
+      <div className="content-box form-container">
+        {loading ? <p>Carregando...</p> : (
             <form onSubmit={handleSubmit}>
-            <div className="form-grid two-columns">
+            <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
                 <div className="form-group">
-                <label htmlFor="id_paciente">Paciente</label>
-                <select id="id_paciente" name="id_paciente" value={form.id_paciente} onChange={handleChange} required>
-                    <option value="">Selecione o paciente...</option>
-                    {pacientes.map(p => (
-                    <option key={p.id_paciente} value={p.id_paciente}>{p.nome}</option>
-                    ))}
-                </select>
+                    <label htmlFor="id_paciente">Paciente</label>
+                    <select id="id_paciente" name="id_paciente" value={form.id_paciente} onChange={handleChange} required>
+                        <option value="">Selecione...</option>
+                        {pacientes.map(p => <option key={p.id_paciente} value={p.id_paciente}>{p.nome}</option>)}
+                    </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="id_residuo">Material Entregue</label>
-                <select id="id_residuo" name="id_residuo" value={form.id_residuo} onChange={handleChange} required>
-                    <option value="">Selecione o material...</option>
-                    {residuos.map(r => (
-                    <option key={r.id_residuo} value={r.id_residuo}>{r.nome}</option>
-                    ))}
-                </select>
+                    <label htmlFor="id_residuo">Material Entregue</label>
+                    <select id="id_residuo" name="id_residuo" value={form.id_residuo} onChange={handleChange} required>
+                        <option value="">Selecione...</option>
+                        {residuos.map(r => <option key={r.id_residuo} value={r.id_residuo}>{r.nome}</option>)}
+                    </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="quantidade">Quantidade</label>
-                <input type="number" id="quantidade" name="quantidade" value={form.quantidade} onChange={handleChange} min="1" required />
+                    <label htmlFor="quantidade">Quantidade</label>
+                    <input type="number" id="quantidade" name="quantidade" value={form.quantidade} onChange={handleChange} min="1" required />
                 </div>
                 <div className="form-group">
-                <label htmlFor="observacoes">Observações (Opcional)</label>
-                <input type="text" id="observacoes" name="observacoes" value={form.observacoes} onChange={handleChange} placeholder="Ex: Kit para 30 dias" />
+                    <label htmlFor="data_prevista_devolucao">Data Prevista para Devolução</label>
+                    <input type="date" id="data_prevista_devolucao" name="data_prevista_devolucao" value={form.data_prevista_devolucao} onChange={handleChange} />
+                </div>
+                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label htmlFor="status">Status</label>
+                    <select id="status" name="status" value={form.status} onChange={handleChange} required>
+                        <option value="Aguardando Devolução">Aguardando Devolução</option>
+                        <option value="Devolvido">Devolvido</option>
+                        <option value="Vencido">Vencido</option>
+                        <option value="Entregue">Entregue (sem devolução)</option>
+                    </select>
+                </div>
+                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <label htmlFor="observacoes">Observações (Opcional)</label>
+                    <input type="text" id="observacoes" name="observacoes" value={form.observacoes} onChange={handleChange} placeholder="Ex: Kit para 30 dias" />
                 </div>
             </div>
             <div className="form-actions">
-                <button type="submit" className="submit-button">
-                <FaSave /> Salvar Entrega
+                <button type="submit" className="btn btn-primary">
+                    <FaSave /> Salvar Entrega
                 </button>
             </div>
             </form>

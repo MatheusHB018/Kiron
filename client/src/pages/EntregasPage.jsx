@@ -1,17 +1,19 @@
+// client/src/pages/EntregasPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBox, FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
 import './styles/Page.css';
-import './styles/ListPage.css';
+import './styles/ListPage.css'; // Usando o CSS correto
 
 function EntregasPage() {
+  const navigate = useNavigate();
   const [entregas, setEntregas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Função para buscar os dados da API, agora com filtro de busca
+  // ... (O restante do código JavaScript continua o mesmo)
   const fetchEntregas = useCallback(async () => {
     setLoading(true);
     try {
@@ -29,7 +31,6 @@ function EntregasPage() {
     }
   }, [searchTerm]);
 
-  // Efeito que chama a busca com debounce (espera o usuário parar de digitar)
   useEffect(() => {
     const handler = setTimeout(() => {
       fetchEntregas();
@@ -37,15 +38,14 @@ function EntregasPage() {
     return () => clearTimeout(handler);
   }, [searchTerm, fetchEntregas]);
 
-  // Função para excluir uma entrega
   const handleDelete = (id) => {
     Swal.fire({
       title: 'Você tem certeza?',
       text: "A exclusão não poderá ser revertida!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
       confirmButtonText: 'Sim, excluir!',
       cancelButtonText: 'Cancelar'
     }).then(async (result) => {
@@ -54,7 +54,7 @@ function EntregasPage() {
           const response = await fetch(`${API_URL}/entregas/${id}`, { method: 'DELETE' });
           if (!response.ok) throw new Error('Falha ao excluir a entrega.');
           Swal.fire('Excluído!', 'A entrega foi excluída com sucesso.', 'success');
-          fetchEntregas(); // Atualiza a lista
+          fetchEntregas();
         } catch (error) {
           Swal.fire('Erro!', error.message, 'error');
         }
@@ -64,66 +64,66 @@ function EntregasPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="list-page-header">
         <div className="page-title">
           <FaBox className="icon" />
           <h1>Controle de Entregas</h1>
         </div>
-        <Link to="/entregas/novo" className="new-button">
-          <FaPlus /> Registrar Entrega
+        <Link to="/entregas/novo" className="btn btn-primary">
+          <FaPlus /> Cadastrar Entrega
         </Link>
       </div>
 
-      <div className="content-container">
-        {/* Barra de Busca */}
-        <div className="search-container">
+      <div className="filter-container">
+        <div className="search-wrapper">
           <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Buscar por nome do paciente ou do material..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
           />
         </div>
-        
-        {/* Tabela de Dados */}
-        <div className="table-container">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Paciente</th>
-                <th>Material Entregue</th>
-                <th>Quantidade</th>
-                <th>Data da Entrega</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan="5" style={{ textAlign: 'center' }}>Carregando...</td></tr>
-              ) : entregas.length > 0 ? (
-                entregas.map((entrega) => (
-                  <tr key={entrega.id_entrega}>
-                    <td>{entrega.paciente_nome}</td>
-                    <td>{entrega.residuo_nome}</td>
-                    <td>{entrega.quantidade}</td>
-                    <td>{new Date(entrega.data_entrega).toLocaleString('pt-BR')}</td>
-                    <td className="actions-cell">
-                      <Link to={`/entregas/editar/${entrega.id_entrega}`} className="action-button edit">
-                        <FaEdit /> Editar
-                      </Link>
-                      <button onClick={() => handleDelete(entrega.id_entrega)} className="action-button delete">
-                        <FaTrash /> Excluir
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="5" style={{ textAlign: 'center' }}>Nenhuma entrega encontrada.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      </div>
+      
+      <div className="table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Material Entregue</th>
+              <th>Quantidade</th>
+              <th>Data da Entrega</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan="5" style={{ textAlign: 'center' }}>Carregando...</td></tr>
+            ) : entregas.length > 0 ? (
+              entregas.map((entrega) => (
+                <tr key={entrega.id_entrega}>
+                  <td>{entrega.paciente_nome}</td>
+                  <td>{entrega.residuo_nome}</td>
+                  <td>{entrega.quantidade}</td>
+                  <td>{new Date(entrega.data_entrega).toLocaleString('pt-BR')}</td>
+                  {/* ===== ÁREA CORRIGIDA ===== */}
+                  <td className="actions-cell">
+                    <button onClick={() => navigate(`/entregas/editar/${entrega.id_entrega}`)} className="btn-action btn-edit">
+                      <FaEdit /> Editar
+                    </button>
+                    <button onClick={() => handleDelete(entrega.id_entrega)} className="btn-action btn-delete">
+                      <FaTrash /> Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="5" style={{ textAlign: 'center' }}>Nenhuma entrega encontrada.</td></tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

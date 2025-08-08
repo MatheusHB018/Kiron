@@ -33,7 +33,7 @@ export default function ParceiroDetalhesPage() {
 
   return (
     <div className="page-container parceiro-detalhes">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaBuilding className="icon" />
           <h1>Detalhes do Parceiro</h1>

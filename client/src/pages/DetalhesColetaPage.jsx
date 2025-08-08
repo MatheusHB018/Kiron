@@ -23,7 +23,7 @@ function DetalhesColetaPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaCalendarCheck className="icon" />
           <h1>Detalhes da Coleta</h1>

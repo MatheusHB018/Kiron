@@ -92,7 +92,7 @@ function CadastroProfissionalPage() {
 
     return (
         <div className="page-container">
-            <div className="page-header-container">
+            <div className="page-header">
                 <div className="page-title">
                     <FaUserPlus className="icon" />
                     <h1>Cadastro de Usuários</h1>
@@ -161,7 +161,7 @@ function CadastroProfissionalPage() {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="submit-button" disabled={isSubmitting}>{isSubmitting ? <><FaSpinner className="spinner" /> A guardar...</> : <><FaSave /> Cadastrar Usuário</>}</button>
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? <><FaSpinner className="spinner" /> A guardar...</> : <><FaSave /> Cadastrar Usuário</>}</button>
                     </div>
                 </form>
             </div>

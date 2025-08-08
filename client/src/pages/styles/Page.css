@@ -6,7 +6,7 @@
 }
 
 /* Container do cabeçalho da página (Título + Botão) */
-.page-header-container {
+.page-header {
   display: flex;
   justify-content: space-between; /* Título na esquerda, botão na direita */
   align-items: center;
@@ -33,7 +33,7 @@
 }
 
 /* Container principal do conteúdo (a caixa branca) */
-.content-container {
+.content-box {
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 8px;

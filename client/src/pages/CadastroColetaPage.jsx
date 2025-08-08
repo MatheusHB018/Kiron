@@ -54,7 +54,7 @@ function CadastroColetaPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaPlus className="icon" />
           <h1>Agendar Nova Coleta</h1>
@@ -93,7 +93,7 @@ function CadastroColetaPage() {
             </div>
           </div>
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isSubmitting}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
               {isSubmitting ? <><FaSave /> Salvando...</> : <><FaSave /> Agendar Coleta</>}
             </button>
           </div>

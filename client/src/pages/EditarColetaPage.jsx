@@ -95,7 +95,7 @@ function EditarColetaPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaEdit className="icon" />
           <h1>Editar Coleta</h1>
@@ -140,7 +140,7 @@ function EditarColetaPage() {
             </div>
           </div>
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isSubmitting || !isDirty}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting || !isDirty}>
               {isSubmitting ? <><FaSave /> Salvando...</> : <><FaSave /> Salvar Alterações</>}
             </button>
           </div>

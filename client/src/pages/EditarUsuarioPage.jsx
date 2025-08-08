@@ -98,7 +98,7 @@ function EditarUsuarioPage() {
 
     return (
         <div className="page-container">
-            <div className="page-header-container"><div className="page-title"><FaUserEdit className="icon" /><h1>Editar Usuário</h1></div></div>
+            <div className="page-header"><div className="page-title"><FaUserEdit className="icon" /><h1>Editar Usuário</h1></div></div>
             <Link to="/listar-usuarios" className="back-link"><FaArrowLeft /> Voltar para a lista</Link>
             
             <div className="form-container">
@@ -121,7 +121,7 @@ function EditarUsuarioPage() {
                     </div>
 
                     <p className="form-note">A senha não pode ser alterada nesta tela.</p>
-                    <div className="form-actions"><button type="submit" className="submit-button" disabled={isSubmitting || !isDirty}>{isSubmitting ? <><FaSpinner className="spinner" /> A guardar...</> : <><FaSave /> Salvar Alterações</>}</button></div>
+                    <div className="form-actions"><button type="submit" className="btn btn-primary" disabled={isSubmitting || !isDirty}>{isSubmitting ? <><FaSpinner className="spinner" /> A guardar...</> : <><FaSave /> Salvar Alterações</>}</button></div>
                 </form>
             </div>
         </div>

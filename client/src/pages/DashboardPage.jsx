@@ -18,7 +18,7 @@ function DashboardPage() {
       </div>
 
       <div className="dashboard-cards">
-        {/* Card de Pacientes */}
+        {/* Card de Pacientes (Já estava correto) */}
         <Link to="/pacientes" className="card card-pacientes">
           <div className="card-icon">
             <FaUsers />
@@ -29,8 +29,8 @@ function DashboardPage() {
           </div>
         </Link>
 
-        {/* Card de Materiais */}
-        <Link to="/materiais" className="card card-materiais">
+        {/* Card de Materiais (CORRIGIDO) */}
+        <Link to="/entregas" className="card card-materiais">
            <div className="card-icon">
             <FaBoxOpen />
           </div>
@@ -40,8 +40,8 @@ function DashboardPage() {
           </div>
         </Link>
 
-        {/* Card de Agendamento */}
-        <Link to="/agendamento" className="card card-agendamento">
+        {/* Card de Agendamento (CORRIGIDO) */}
+        <Link to="/painel-coletas" className="card card-agendamento">
           <div className="card-icon">
             <FaCalendarAlt />
           </div>
@@ -51,7 +51,7 @@ function DashboardPage() {
           </div>
         </Link>
 
-        {/* Card de Relatórios */}
+        {/* Card de Relatórios (Já estava correto) */}
         <Link to="/relatorios" className="card card-relatorios">
           <div className="card-icon">
             <FaChartPie />
@@ -62,7 +62,7 @@ function DashboardPage() {
           </div>
         </Link>
 
-        {/* Card de Parceiros */}
+        {/* Card de Parceiros (Já estava correto) */}
         <Link to="/parceiros" className="card card-parceiros">
           <div className="card-icon">
             <FaHandshake />

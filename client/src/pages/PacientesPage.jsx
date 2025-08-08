@@ -120,7 +120,7 @@ function PacientesPage() {
                 <FaUsers className="icon" />
                 <h1>Gestão de Pacientes</h1>
             </div>
-            <Link to="/cadastro-paciente" className="add-button">
+            <Link to="/cadastro-paciente" className="btn btn-primary">
                 <FaPlus /> Cadastrar Paciente
             </Link>
         </div>

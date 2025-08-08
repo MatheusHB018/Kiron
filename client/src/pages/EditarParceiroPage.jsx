@@ -126,7 +126,7 @@ function EditarParceiroPage() {
 
   return (
     <div className="page-container">
-      <div className="page-header-container">
+      <div className="page-header">
         <div className="page-title">
           <FaEdit className="icon" />
           <h1>Editar Parceiro</h1>
@@ -170,7 +170,7 @@ function EditarParceiroPage() {
           </div>
           
           <div className="form-actions">
-            <button type="submit" className="submit-button" disabled={isSubmitting || isCepLoading || !isDirty}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading || !isDirty}>
               {isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Salvar Alterações</>}
             </button>
           </div>

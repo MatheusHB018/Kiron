@@ -107,7 +107,7 @@ function EditarPacientePage() {
 
     return (
         <div className="page-container">
-            <div className="page-header-container">
+            <div className="page-header">
                 <div className="page-title"><FaUserEdit className="icon" /><h1>Editar Paciente</h1></div>
             </div>
             <Link to="/pacientes" className="back-link"><FaArrowLeft /> Voltar para a lista</Link>
@@ -138,7 +138,7 @@ function EditarPacientePage() {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="submit-button" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Salvar Alterações</>}</button>
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Salvar Alterações</>}</button>
                     </div>
                 </form>
             </div>
