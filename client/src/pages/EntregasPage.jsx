@@ -107,6 +107,30 @@ function EntregasPage() {
     }
   };
 
+  const handleExcluirEntrega = async (id_entrega) => {
+    const result = await Swal.fire({
+      title: 'Excluir entrega?',
+      text: 'Esta ação não pode ser desfeita.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33'
+    });
+    if (!result.isConfirmed) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/entregas/${id_entrega}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Falha ao excluir');
+      setEntregas(entregas.filter(e => e.id_entrega !== id_entrega));
+      Swal.fire('Excluída!', 'Entrega removida.', 'success');
+    } catch (e) {
+      Swal.fire('Erro', e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Helper para buscar nome do paciente/resíduo
   const getPacienteNome = (id) => {
     const p = pacientes.find(x => x.id_paciente === id);
@@ -273,6 +297,23 @@ function EntregasPage() {
                         Editar
                       </button>
                       <button
+                        onClick={() => handleExcluirEntrega(e.id_entrega)}
+                        disabled={loading}
+                        className="btn-action"
+                        style={{
+                          marginRight: 6,
+                          background: '#ff4d4f',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '6px 12px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Excluir
+                      </button>
+                      <button
                         onClick={async () => {
                           const result = await Swal.fire({
                             title: 'Marcar como devolvido?',
@@ -398,6 +439,23 @@ function EntregasPage() {
                     <td className="actions-cell">
                       <button onClick={() => navigate(`/entregas/editar/${e.id_entrega}`)} className="btn-action btn-edit" style={{ marginRight: 6 }}>
                         Editar
+                      </button>
+                      <button
+                        onClick={() => handleExcluirEntrega(e.id_entrega)}
+                        disabled={loading}
+                        className="btn-action"
+                        style={{
+                          marginRight: 6,
+                          background: '#ff4d4f',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '6px 12px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Excluir
                       </button>
                     </td>
                   </tr>

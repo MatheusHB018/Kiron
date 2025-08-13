@@ -153,6 +153,16 @@ app.put('/coletas/:id/confirmar', (req, res) => {
   });
 });
 
+// Excluir coleta
+app.delete('/coletas/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM agenda_de_coleta WHERE id_agenda = ?', [id], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao excluir coleta' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Coleta não encontrada' });
+    res.json({ message: 'Coleta excluída com sucesso!' });
+  });
+});
+
 
 // --- ROTAS DE PARCEIROS ---
 app.get('/parceiros', (req, res) => {
@@ -654,6 +664,123 @@ app.delete('/entregas/:id', (req, res) => {
         if (result.affectedRows === 0) return res.status(404).json({ error: 'Entrega não encontrada' });
         res.json({ message: 'Entrega excluída com sucesso!' });
     });
+});
+
+
+// =================================================================
+// ROTAS DE RELATÓRIOS / DASHBOARD
+// =================================================================
+
+// Quantidade total entregue por tipo de resíduo
+app.get('/relatorios/residuos-quantidade', (req, res) => {
+  // Filtros opcionais de data (YYYY-MM-DD)
+  const { dataInicio, dataFim } = req.query;
+  const where = [];
+  const params = [];
+  if (dataInicio) { where.push('e.data_entrega >= ?'); params.push(dataInicio + ' 00:00:00'); }
+  if (dataFim) { where.push('e.data_entrega <= ?'); params.push(dataFim + ' 23:59:59'); }
+  // Filtrar apenas entregas consideradas válidas: status Entregue ou Devolvido
+  where.push("e.status IN ('Entregue','Devolvido')");
+  const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
+
+  const query = `
+    SELECT r.id_residuo, r.nome, SUM(e.quantidade) AS total
+    FROM entrega_materiais e
+    INNER JOIN residuo r ON e.id_residuo = r.id_residuo
+    ${whereSql}
+    GROUP BY r.id_residuo, r.nome
+    HAVING total > 0
+    ORDER BY total DESC;
+  `;
+  db.query(query, params, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erro ao gerar relatório de resíduos.' });
+    if (!rows || rows.length === 0) {
+      return res.json({ labels: [], values: [] });
+    }
+    res.json({
+      labels: rows.map(r => r.nome),
+      values: rows.map(r => Number(r.total))
+    });
+  });
+});
+
+// Distribuição (quantidade entregue) por grupo de resíduo
+app.get('/relatorios/grupo-residuos', (req, res) => {
+  const query = `
+    SELECT r.grupo, COALESCE(SUM(e.quantidade), 0) AS total
+    FROM residuo r
+    LEFT JOIN entrega_materiais e ON e.id_residuo = r.id_residuo
+    GROUP BY r.grupo
+    ORDER BY total DESC;
+  `;
+  db.query(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erro ao gerar relatório por grupo.' });
+    res.json({
+      labels: rows.map(r => r.grupo),
+      values: rows.map(r => Number(r.total))
+    });
+  });
+});
+
+// Quantidade de resíduos cadastrados por grupo (independente de entregas)
+app.get('/relatorios/grupo-residuos-cadastrados', (req, res) => {
+  const query = `
+    SELECT grupo, COUNT(*) AS qtd
+    FROM residuo
+    GROUP BY grupo
+    ORDER BY qtd DESC;
+  `;
+  db.query(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erro ao gerar relatório de resíduos cadastrados.' });
+    res.json({
+      labels: rows.map(r => r.grupo),
+      values: rows.map(r => Number(r.qtd))
+    });
+  });
+});
+
+// Status das entregas
+app.get('/relatorios/status-entregas', (req, res) => {
+  const query = `SELECT status, COUNT(*) AS total FROM entrega_materiais GROUP BY status`;
+  db.query(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erro ao gerar relatório de status.' });
+    res.json({
+      labels: rows.map(r => r.status),
+      values: rows.map(r => Number(r.total))
+    });
+  });
+});
+
+// Entregas por mês (últimos 12 meses)
+app.get('/relatorios/entregas-por-mes', (req, res) => {
+  const query = `
+    SELECT DATE_FORMAT(data_entrega, '%Y-%m') AS ano_mes, COUNT(*) AS total
+    FROM entrega_materiais
+    WHERE data_entrega >= DATE_SUB(CURDATE(), INTERVAL 11 MONTH)
+    GROUP BY ano_mes
+    ORDER BY ano_mes;
+  `;
+  db.query(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Erro ao gerar relatório mensal.' });
+
+    // Gerar lista dos últimos 12 meses (YYYY-MM)
+    const now = new Date();
+    const formato = (y, m) => `${y}-${String(m + 1).padStart(2, '0')}`; // m zero-based
+    const ultimos12 = [];
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      ultimos12.push(formato(d.getFullYear(), d.getMonth()));
+    }
+
+    const mapa = Object.fromEntries(rows.map(r => [r.ano_mes, Number(r.total)]));
+    const labels = ultimos12.map(ym => {
+      const [yy, mm] = ym.split('-');
+      return `${mm}/${yy}`;
+    });
+    const values = ultimos12.map(ym => mapa[ym] || 0);
+
+    res.json({ labels, values });
+  });
 });
 
 

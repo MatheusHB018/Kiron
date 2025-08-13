@@ -59,6 +59,30 @@ function PainelColetasPage() {
     setLoading(false);
   };
 
+  const handleExcluir = async (id_agenda) => {
+    const result = await Swal.fire({
+      title: 'Excluir coleta?',
+      text: 'Esta ação não pode ser desfeita.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33'
+    });
+    if (!result.isConfirmed) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/coletas/${id_agenda}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Falha ao excluir');
+      setColetas(coletas.filter(c => c.id_agenda !== id_agenda));
+      Swal.fire('Excluída!', 'Coleta removida.', 'success');
+    } catch (e) {
+      Swal.fire('Erro', e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Helper para buscar nome do paciente/parceiro
   const getPacienteNome = (id) => {
     const p = pacientes.find(x => x.id_paciente === id);
@@ -222,6 +246,23 @@ function PainelColetasPage() {
                       <button onClick={() => navigate(`/editar-coleta/${c.id_agenda}`)} className="btn-action btn-edit" style={{ marginRight: 6 }}>
                         Editar
                       </button>
+                      <button
+                        onClick={() => handleExcluir(c.id_agenda)}
+                        disabled={loading}
+                        className="btn-action"
+                        style={{
+                          marginRight: 6,
+                          background: '#ff4d4f',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '6px 12px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Excluir
+                      </button>
                       {c.status === 'agendada' && (
                         <button
                           onClick={async () => {
@@ -304,6 +345,23 @@ function PainelColetasPage() {
                     <td className="actions-cell">
                       <button onClick={() => navigate(`/editar-coleta/${c.id_agenda}`)} className="btn-action btn-edit" style={{ marginRight: 6 }}>
                         Editar
+                      </button>
+                      <button
+                        onClick={() => handleExcluir(c.id_agenda)}
+                        disabled={loading}
+                        className="btn-action"
+                        style={{
+                          marginRight: 6,
+                          background: '#ff4d4f',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '6px 12px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Excluir
                       </button>
                     </td>
                   </tr>
