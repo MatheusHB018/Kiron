@@ -1,5 +1,5 @@
 // client/src/pages/ResiduosPage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBoxOpen, FaPlus, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -12,8 +12,9 @@ function ResiduosPage() {
   const [residuos, setResiduos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  // ... (O restante do código JavaScript continua o mesmo)
   const fetchResiduos = useCallback(async () => {
     setLoading(true);
     try {
@@ -41,6 +42,13 @@ function ResiduosPage() {
       clearTimeout(handler);
     };
   }, [searchTerm, fetchResiduos]);
+
+  const paginatedResiduos = useMemo(()=>{
+    const start = (currentPage -1) * pageSize;
+    return residuos.slice(start, start + pageSize);
+  }, [residuos, currentPage, pageSize]);
+  const totalPages = Math.ceil(residuos.length / pageSize) || 1;
+  useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -106,8 +114,8 @@ function ResiduosPage() {
           <tbody>
             {loading ? (
               <tr><td colSpan="4" style={{ textAlign: 'center' }}>Carregando...</td></tr>
-            ) : residuos.length > 0 ? (
-              residuos.map((residuo) => (
+            ) : paginatedResiduos.length > 0 ? (
+              paginatedResiduos.map((residuo) => (
                 <tr key={residuo.id_residuo}>
                   <td>
                     <div style={{ fontWeight: 'bold' }}>{residuo.nome}</div>
@@ -131,6 +139,23 @@ function ResiduosPage() {
             )}
           </tbody>
         </table>
+        <div className="pagination-container">
+          <div className="pagination-buttons">
+            <button onClick={()=> setCurrentPage(p=> Math.max(1,p-1))} disabled={currentPage===1}>«</button>
+            {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
+              const page = i+1;
+              return <button key={page} onClick={()=>setCurrentPage(page)} className={page===currentPage? 'active':''}>{page}</button>;
+            })}
+            <button onClick={()=> setCurrentPage(p=> Math.min(totalPages,p+1))} disabled={currentPage===totalPages}>»</button>
+          </div>
+          <div>
+            <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
+            <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
+              {[5,10,20,50].map(size => <option key={size} value={size}>{size}</option>)}
+            </select>
+            <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {residuos.length}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

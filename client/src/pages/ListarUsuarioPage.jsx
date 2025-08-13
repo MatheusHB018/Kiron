@@ -12,6 +12,8 @@ const ListarUsuarioPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'nome', direction: 'ascending' });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     // Pega o ID do usuário logado do localStorage para a verificação de segurança
     const loggedInUserId = parseInt(localStorage.getItem('userId'), 10);
@@ -69,6 +71,12 @@ const ListarUsuarioPage = () => {
         );
     }, [usuarios, sortConfig, searchTerm]);
 
+    const totalPages = Math.ceil(processedUsuarios.length / pageSize) || 1;
+    const pageItems = useMemo(() => {
+        const start = (currentPage - 1) * pageSize;
+        return processedUsuarios.slice(start, start + pageSize);
+    }, [processedUsuarios, currentPage, pageSize]);
+
     const requestSort = (key) => {
         let direction = 'ascending';
         if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -81,6 +89,11 @@ const ListarUsuarioPage = () => {
         if (sortConfig.key !== name) return null;
         return sortConfig.direction === 'ascending' ? <FaArrowUp className="sort-icon" /> : <FaArrowDown className="sort-icon" />;
     };
+
+    const changePage = (p) => { if (p>=1 && p<= totalPages) setCurrentPage(p); };
+
+    // Reset página ao mudar filtros
+    useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
 
     if (loading) return <div className="page-container"><h2>A carregar...</h2></div>;
     if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
@@ -122,7 +135,7 @@ const ListarUsuarioPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {processedUsuarios.map(usuario => {
+                        {pageItems.map(usuario => {
                             const isCurrentUser = loggedInUserId === usuario.id_usuario;
                             
                             return (
@@ -154,6 +167,23 @@ const ListarUsuarioPage = () => {
                         })}
                     </tbody>
                 </table>
+                <div className="pagination-container">
+                    <div className="pagination-buttons">
+                        <button onClick={()=>changePage(currentPage-1)} disabled={currentPage===1}>«</button>
+                        {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
+                            const page = i+1;
+                            return <button key={page} onClick={()=>changePage(page)} className={page===currentPage? 'active':''}>{page}</button>;
+                        })}
+                        <button onClick={()=>changePage(currentPage+1)} disabled={currentPage===totalPages}>»</button>
+                    </div>
+                    <div>
+                        <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
+                        <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
+                            {[5,10,20,50].map(size=> <option key={size} value={size}>{size}</option>)}
+                        </select>
+                        <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {processedUsuarios.length}</span>
+                    </div>
+                </div>
             </div>
         </div>
     );

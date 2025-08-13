@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const NotificationService = require('./NotificationService'); // 1. IMPORTA O SINGLETON
+const { sendWhatsappMessage } = require('./whatsappService'); // <- serviço whatsapp
+require('dotenv').config();
 
 const app = express();
 const PORT = 3001;
@@ -32,6 +34,53 @@ const resetCodes = {};
 // Rota de teste
 app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
+});
+
+// Rota para enviar mensagem WhatsApp para paciente com base na entrega
+app.post('/whatsapp/entregas/:id/send', async (req, res) => {
+  const { id } = req.params;
+  const { mensagem } = req.body;
+  // Buscar dados da entrega + paciente
+  const query = `SELECT e.*, p.nome as paciente_nome, p.telefone as paciente_telefone, r.nome as residuo_nome
+                 FROM entrega_materiais e
+                 JOIN paciente p ON e.id_paciente = p.id_paciente
+                 JOIN residuo r ON e.id_residuo = r.id_residuo
+                 WHERE e.id_entrega = ?`;
+  db.query(query, [id], async (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar entrega.' });
+    if (results.length === 0) return res.status(404).json({ error: 'Entrega não encontrada.' });
+    const entrega = results[0];
+    if (!entrega.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
+
+    const defaultMsg = `Olá ${entrega.paciente_nome}! Aqui é do MedResiduos. O material "${entrega.residuo_nome}" entregue em ${new Date(entrega.data_entrega).toLocaleDateString('pt-BR')} está com devolução prevista para ${entrega.data_prevista_devolucao ? new Date(entrega.data_prevista_devolucao).toLocaleDateString('pt-BR') : 'N/D'}. Por favor, regularize a devolução. Qualquer dúvida responda esta mensagem.`;
+    const texto = mensagem && mensagem.trim() !== '' ? mensagem : defaultMsg;
+    const sendResult = await sendWhatsappMessage(entrega.paciente_telefone, texto);
+    if (!sendResult.ok && !sendResult.skipped) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: sendResult.error });
+    res.json({ message: sendResult.skipped ? 'Envio ignorado (configuração ausente)' : 'Mensagem enviada com sucesso', details: sendResult });
+  });
+});
+
+// Rota específica para coletas (não reutiliza entregas)
+app.post('/whatsapp/coletas/:id/send', (req, res) => {
+  const { id } = req.params;
+  const { mensagem } = req.body;
+  const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
+                 FROM agenda_de_coleta a
+                 JOIN paciente p ON a.id_paciente = p.id_paciente
+                 WHERE a.id_agenda = ?`;
+  db.query(query, [id], async (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar coleta.' });
+    if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada.' });
+    const coleta = results[0];
+    if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
+
+    const dataAgendada = coleta.data_agendada ? new Date(coleta.data_agendada).toLocaleString('pt-BR') : 'N/D';
+    const defaultMsg = `Olá ${coleta.paciente_nome}! Lembramos da coleta agendada para ${dataAgendada}. Por favor, confirme a realização ou entre em contacto para reagendar.`;
+    const texto = mensagem && mensagem.trim() !== '' ? mensagem : defaultMsg;
+    const sendResult = await sendWhatsappMessage(coleta.paciente_telefone, texto);
+    if (!sendResult.ok && !sendResult.skipped) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: sendResult.error });
+    res.json({ message: sendResult.skipped ? 'Envio ignorado (configuração ausente)' : 'Mensagem enviada com sucesso', details: sendResult });
+  });
 });
 
 // --- ROTA PARA VISUALIZAR NOTIFICAÇÕES (PARA DEMONSTRAÇÃO) ---

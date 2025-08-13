@@ -135,6 +135,47 @@ function PainelColetasPage() {
                 >
                   Confirmar coleta
                 </button>
+                <button
+                  onClick={async () => {
+                    const { value: customMsg } = await Swal.fire({
+                      title: 'Enviar mensagem WhatsApp',
+                      input: 'textarea',
+                      inputLabel: 'Mensagem (deixe em branco para padrão)',
+                      inputPlaceholder: 'Escreva uma mensagem opcional...',
+                      showCancelButton: true,
+                      confirmButtonText: 'Enviar',
+                      cancelButtonText: 'Cancelar'
+                    });
+                    if (customMsg !== undefined) {
+                      try {
+                        const resp = await fetch(`${API_URL}/whatsapp/coletas/${n.id_agenda}/send`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ mensagem: customMsg })
+                        });
+                        const data = await resp.json();
+                        if (!resp.ok) throw new Error(data.error || 'Falha ao enviar WhatsApp');
+                        Swal.fire('Ok', data.message, 'success');
+                      } catch (err) {
+                        Swal.fire('Erro', err.message, 'error');
+                      }
+                    }
+                  }}
+                  disabled={loading}
+                  style={{
+                    marginLeft: 8,
+                    background: '#25D366',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '6px 16px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(37,211,102,0.3)',
+                  }}
+                >
+                  WhatsApp
+                </button>
               </li>
             );
           })}

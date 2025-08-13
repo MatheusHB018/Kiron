@@ -14,6 +14,8 @@ function PacientesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'nome', direction: 'ascending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     fetchPacientes();
@@ -97,6 +99,14 @@ function PacientesPage() {
     );
   }, [pacientes, searchTerm, sortConfig]);
 
+  const totalPages = Math.ceil(processedPacientes.length / pageSize) || 1;
+  const pageItems = useMemo(()=>{
+    const start = (currentPage -1) * pageSize;
+    return processedPacientes.slice(start, start + pageSize);
+  }, [processedPacientes, currentPage, pageSize]);
+
+  useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
+
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -149,7 +159,7 @@ function PacientesPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {processedPacientes.map((paciente) => (
+                    {pageItems.map((paciente) => (
                         <tr key={paciente.id_paciente}>
                             <td>{paciente.nome}</td>
                             <td>{formatarCPF(paciente.cpf)}</td>
@@ -163,6 +173,23 @@ function PacientesPage() {
                     ))}
                 </tbody>
             </table>
+            <div className="pagination-container">
+              <div className="pagination-buttons">
+                <button onClick={()=> setCurrentPage(p=> Math.max(1,p-1))} disabled={currentPage===1}>«</button>
+                {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
+                  const page = i+1;
+                  return <button key={page} onClick={()=>setCurrentPage(page)} className={page===currentPage? 'active':''}>{page}</button>;
+                })}
+                <button onClick={()=> setCurrentPage(p=> Math.min(totalPages,p+1))} disabled={currentPage===totalPages}>»</button>
+              </div>
+              <div>
+                <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
+                <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
+                  {[5,10,20,50].map(size => <option key={size} value={size}>{size}</option>)}
+                </select>
+                <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {processedPacientes.length}</span>
+              </div>
+            </div>
         </div>
     </div>
   );

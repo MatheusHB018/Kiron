@@ -165,3 +165,45 @@
   margin-top: 2rem;
   text-align: right;
 }
+
+/* ==========================================================================
+   PAGINAÇÃO PADRONIZADA
+   ========================================================================== */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.pagination-buttons button {
+  min-width: 36px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.pagination-buttons button.active {
+  background: #1d72b8;
+  color: #fff;
+  border-color: #1d72b8;
+}
+
+.pagination-buttons button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.page-size-select {
+  margin-left: 8px;
+  padding: 4px 6px;
+}

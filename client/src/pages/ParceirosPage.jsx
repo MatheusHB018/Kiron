@@ -14,6 +14,8 @@ function ParceirosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'nome', direction: 'ascending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     fetchParceiros();
@@ -95,6 +97,14 @@ function ParceirosPage() {
     );
   }, [parceiros, sortConfig, searchTerm]);
 
+  const totalPages = Math.ceil(processedParceiros.length / pageSize) || 1;
+  const pageItems = useMemo(()=>{
+    const start = (currentPage -1) * pageSize;
+    return processedParceiros.slice(start, start + pageSize);
+  }, [processedParceiros, currentPage, pageSize]);
+
+  useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
+
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -148,10 +158,10 @@ function ParceirosPage() {
             </tr>
           </thead>
           <tbody>
-            {processedParceiros.length === 0 ? (
+            {pageItems.length === 0 ? (
               <tr><td colSpan="5" style={{ textAlign: 'center' }}>Nenhum parceiro encontrado.</td></tr>
             ) : (
-              processedParceiros.map(parceiro => (
+              pageItems.map(parceiro => (
                 <tr key={parceiro.id_parceiro}>
                   <td>{parceiro.nome}</td>
                   <td>{parceiro.cnpj}</td>
@@ -177,6 +187,23 @@ function ParceirosPage() {
             )}
           </tbody>
         </table>
+        <div className="pagination-container">
+          <div className="pagination-buttons">
+            <button onClick={()=> setCurrentPage(p=> Math.max(1,p-1))} disabled={currentPage===1}>«</button>
+            {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
+              const page = i+1;
+              return <button key={page} onClick={()=>setCurrentPage(page)} className={page===currentPage? 'active':''}>{page}</button>;
+            })}
+            <button onClick={()=> setCurrentPage(p=> Math.min(totalPages,p+1))} disabled={currentPage===totalPages}>»</button>
+          </div>
+          <div>
+            <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
+            <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
+              {[5,10,20,50].map(size => <option key={size} value={size}>{size}</option>)}
+            </select>
+            <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {processedParceiros.length}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
