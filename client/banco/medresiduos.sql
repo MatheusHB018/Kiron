@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08/08/2025 às 03:22
--- Versão do servidor: 10.4.28-MariaDB
--- Versão do PHP: 8.2.4
+-- Tempo de geração: 14-Ago-2025 às 21:53
+-- Versão do servidor: 10.4.27-MariaDB
+-- versão do PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `agenda_de_coleta`
+-- Estrutura da tabela `agenda_de_coleta`
 --
 
 CREATE TABLE `agenda_de_coleta` (
@@ -36,23 +36,21 @@ CREATE TABLE `agenda_de_coleta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `agenda_de_coleta`
+-- Extraindo dados da tabela `agenda_de_coleta`
 --
 
 INSERT INTO `agenda_de_coleta` (`id_agenda`, `id_paciente`, `id_parceiro`, `data_agendada`, `status`) VALUES
-(1, 8, 2, '2025-07-22 01:00:00', 'cancelada'),
-(2, 9, 5, '2025-07-22 16:28:00', 'realizada'),
-(3, 4, 2, '2025-07-31 16:36:00', 'cancelada'),
-(4, 13, 4, '2025-08-09 16:37:00', 'agendada'),
-(5, 14, 6, '2025-08-05 20:40:00', 'agendada'),
-(6, 12, 2, '2025-07-10 17:40:00', 'agendada'),
-(7, 4, 6, '2025-08-06 10:00:00', 'cancelada'),
-(8, 13, 4, '2025-08-01 11:00:00', 'realizada');
+(1, 3, 3, '2025-08-05 14:00:00', 'realizada'),
+(2, 4, 3, '2025-08-10 10:00:00', 'realizada'),
+(3, 1, 3, '2025-08-20 09:30:00', 'agendada'),
+(4, 5, 3, '2025-08-25 11:00:00', 'agendada'),
+(5, 2, 3, '2025-08-12 15:00:00', 'cancelada'),
+(6, 11, 4, '2025-08-14 16:00:00', 'agendada');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `entrega_materiais`
+-- Estrutura da tabela `entrega_materiais`
 --
 
 CREATE TABLE `entrega_materiais` (
@@ -67,16 +65,23 @@ CREATE TABLE `entrega_materiais` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `entrega_materiais`
+-- Extraindo dados da tabela `entrega_materiais`
 --
 
 INSERT INTO `entrega_materiais` (`id_entrega`, `id_paciente`, `id_residuo`, `quantidade`, `data_entrega`, `observacoes`, `status`, `data_prevista_devolucao`) VALUES
-(10, 8, 4, 10, '2025-08-07 22:07:01', 'Kit 10 dias', 'Aguardando Devolução', '2025-08-18');
+(1, 1, 1, 30, '2025-06-10 10:00:00', 'Kit mensal de agulhas', 'Devolvido', '2025-07-10'),
+(2, 2, 5, 50, '2025-06-15 11:30:00', 'Fitas de glicemia', 'Devolvido', '2025-07-15'),
+(3, 3, 4, 100, '2025-07-01 09:00:00', 'Lancetas para 1 mês', 'Aguardando Devolução', '2025-08-01'),
+(4, 4, 1, 30, '2025-07-05 14:00:00', 'Kit mensal de agulhas', 'Aguardando Devolução', '2025-08-05'),
+(5, 5, 7, 5, '2025-07-20 16:00:00', 'Frascos de insulina', 'Aguardando Devolução', '2025-08-20'),
+(6, 6, 3, 1, '2025-08-01 10:20:00', 'Kit de curativos grande', 'Aguardando Devolução', '2025-08-31'),
+(7, 1, 9, 10, '2025-08-05 11:00:00', 'Ampolas de vitamina', 'Aguardando Devolução', '2025-09-05'),
+(8, 7, 2, 30, '2025-08-10 08:30:00', 'Seringas descartáveis', 'Entregue', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `paciente`
+-- Estrutura da tabela `paciente`
 --
 
 CREATE TABLE `paciente` (
@@ -96,26 +101,26 @@ CREATE TABLE `paciente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `paciente`
+-- Extraindo dados da tabela `paciente`
 --
 
 INSERT INTO `paciente` (`id_paciente`, `nome`, `cpf`, `telefone`, `email`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `estado`, `data_nascimento`) VALUES
-(4, 'Manoela Pinheiro da Silva', '48767759823', '18996816585', 'manoelaps2022@gmail.com', '19200009', 'Rua Angelo Salvatori', '125', 'ao lado do hotel almanara', 'Centro', 'Pirapozinho', 'SP', '2006-03-29'),
-(5, 'João da Silva', '11122233344', '11987654321', 'joao.silva@email.com', '01311000', 'Avenida Paulista', '1578', 'Andar 10', 'Bela Vista', 'São Paulo', 'SP', '1980-05-15'),
-(6, 'Maria Oliveira', '22233344455', '21912345678', 'maria.oliveira@email.com', '22071000', 'Avenida Atlântica', '1702', 'Apto 501', 'Copacabana', 'Rio de Janeiro', 'RJ', '1992-11-20'),
-(7, 'Carlos Pereira', '33344455566', '18999887766', 'carlos.pereira@email.com', '19015020', 'Avenida Washington Luiz', '2500', NULL, 'Jardim Paulista', 'Presidente Prudente', 'SP', '1975-02-10'),
-(8, 'Ana Costa', '44455566677', '18988776655', 'ana.costa@email.com', '19200000', 'Rua Sete de Setembro', '450', 'Casa', 'Centro', 'Pirapozinho', 'SP', '2001-07-30'),
-(9, 'Pedro Martins', '55566677788', '31977665544', 'pedro.martins@email.com', '30112010', 'Avenida do Contorno', '2905', 'Sala 3', 'Santa Efigênia', 'Belo Horizonte', 'MG', '1988-09-01'),
-(10, 'Lúcia Ferreira', '66677788899', '71966554433', 'lucia.ferreira@email.com', '40020000', 'Avenida Sete de Setembro', '1234', NULL, 'Centro', 'Salvador', 'BA', '1995-03-25'),
-(11, 'Marcos Almeida', '77788899900', '81955443322', 'marcos.almeida@email.com', '50030000', 'Avenida Marquês de Olinda', '290', 'Pista Local', 'Recife', 'Recife', 'PE', '1969-12-07'),
-(12, 'Sofia Ribeiro', '88899900011', '41944332211', 'sofia.ribeiro@email.com', '80050350', 'Avenida Sete de Setembro', '2775', 'Loja 15', 'Rebouças', 'Curitiba', 'PR', '2003-01-18'),
-(13, 'Daniel Carvalho', '99900011122', '51933221100', 'daniel.carvalho@email.com', '90010191', 'Rua dos Andradas', '1001', 'Sobreloja', 'Centro Histórico', 'Porto Alegre', 'RS', '1978-06-22'),
-(14, 'Beatriz Santos', '00011122233', '62922110099', 'beatriz.santos@email.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1999-08-14');
+(1, 'João da Silva', '11122233301', '18997112233', 'joao.silva@email.com', NULL, NULL, NULL, NULL, NULL, 'Presidente Prudente', 'SP', '1985-05-20'),
+(2, 'Maria Oliveira', '22233344402', '18996223344', 'maria.oliveira@email.com', NULL, NULL, NULL, NULL, NULL, 'Pirapozinho', 'SP', '1992-11-15'),
+(3, 'Carlos Pereira', '33344455503', '18991334455', 'carlos.pereira@email.com', NULL, NULL, NULL, NULL, NULL, 'Álvares Machado', 'SP', '1978-02-10'),
+(4, 'Ana Costa', '44455566604', '18996816585', 'ana.costa@email.com', '', '', '', '', '', 'Presidente Prudente', 'SP', '2001-07-30'),
+(5, 'Pedro Martins', '55566677705', '18981556677', 'pedro.martins@email.com', NULL, NULL, NULL, NULL, NULL, 'Regente Feijó', 'SP', '1995-09-01'),
+(6, 'Juliana Santos', '66677788806', '18997667788', 'juliana.santos@email.com', NULL, NULL, NULL, NULL, NULL, 'Presidente Prudente', 'SP', '1988-12-25'),
+(7, 'Lucas Ferreira', '77788899907', '18996778899', 'lucas.ferreira@email.com', NULL, NULL, NULL, NULL, NULL, 'Pirapozinho', 'SP', '1999-03-12'),
+(8, 'Beatriz Lima', '88899900008', '18991889900', 'beatriz.lima@email.com', NULL, NULL, NULL, NULL, NULL, 'Presidente Prudente', 'SP', '1980-06-05'),
+(9, 'Gabriel Souza', '99900011109', '18988990011', 'gabriel.souza@email.com', NULL, NULL, NULL, NULL, NULL, 'Álvares Machado', 'SP', '2003-10-18'),
+(10, 'Sofia Almeida', '12312312310', '18981112233', 'sofia.almeida@email.com', NULL, NULL, NULL, NULL, NULL, 'Regente Feijó', 'SP', '1996-01-22'),
+(11, 'Manoela Pinheiro da Silva', '48767759823', '18996816585', 'manoelaps2022@gmail.com', '19200009', 'Rua Angelo Salvatori', '125', '', 'Centro', 'Pirapozinho', 'SP', '2006-03-29');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `parceiro`
+-- Estrutura da tabela `parceiro`
 --
 
 CREATE TABLE `parceiro` (
@@ -138,22 +143,20 @@ CREATE TABLE `parceiro` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `parceiro`
+-- Extraindo dados da tabela `parceiro`
 --
 
 INSERT INTO `parceiro` (`id_parceiro`, `nome`, `cnpj`, `inscricao_estadual`, `responsavel`, `observacoes`, `tipo`, `telefone`, `email`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `estado`) VALUES
-(2, 'Farmais Pirapozinho', '12.345.678/0001-01', '555.123.456.789', 'Carlos Medeiros', 'Ponto de coleta de medicamentos vencidos.', 'farmacia', '(18) 3269-1020', 'pirapozinho@farmais.com.br', '19200-000', 'Rua Rui Barbosa', '789', 'Ao lado do mercado', 'Centro', 'Pirapozinho', 'SP'),
-(4, 'Drogaria Nissei', '34.567.890/0001-03', '666.777.888.999', 'Fernanda Lima', 'Não aceita perfurocortantes.', 'farmacia', '(18) 3222-3040', 'prudente.centro@nissei.com.br', '19010-000', 'Avenida Coronel José Soares Marcondes', '1120', '', 'Centro', 'Presidente Prudente', 'SP'),
-(5, 'UBS Dr. Vila Real', '45.678.901/0001-04', 'Isento', 'Dra. Helena Martins', 'Ponto de descarte para a comunidade do bairro.', 'ubs', '(18) 3269-5566', 'ubs.vilareal@pirapozinho.sp.gov.br', '19200-000', 'Rua das Flores', '150', 'Posto de Saúde', 'Jardim Bela Vista', 'Pirapozinho', 'SP'),
-(6, 'Rede Farma Certa', '56.789.012/0001-05', '999.888.777.666', 'Ricardo Almeida', 'Coleta de segunda a sexta, horário comercial.', 'farmacia', '(18) 3221-5060', 'parquedopovo@farmacerta.com.br', '19060-000', 'Avenida Quatorze de Setembro', '2345', '', 'Parque do Povo', 'Presidente Prudente', 'SP'),
-(7, 'Droga Raia - Parque do Povo', '61.585.865/0146-93', '111.222.333.444', 'Juliana Lima', 'Ponto de coleta oficial Descarte-Certo', 'farmacia', '(18) 3908-1234', 'ppo.drogaraia@email.com', '19060-050', 'Av. Onze de Maio', '1500', '', 'Parque do Povo', 'Presidente Prudente', 'SP'),
-(8, 'UBS Jardim Guanabara', '46.382.759/0001-91', 'Isento', 'Dr. Ricardo Mendes', 'Atende a zona leste da cidade', 'ubs', '(18) 3905-4321', 'ubs.guanabara@presidenteprudente.sp.gov.br', '19033-040', 'Rua Doutor Gurgel', '822', '', 'Jardim Guanabara', 'Presidente Prudente', 'SP'),
-(9, 'Farmácia São Paulo - Centro', '55.444.333/0001-22', '987.654.321.000', 'Márcio Campos', 'Coleta de perfurocortantes e medicamentos líquidos', 'farmacia', '(18) 3221-9876', 'centro.saopaulo@farmacia.com', '19010-061', 'Rua Tenente Nicolau Maffei', '550', '', 'Centro', 'Presidente Prudente', 'SP');
+(1, 'Farmácia Central de Prudente', '11.222.333/0001-44', NULL, 'Sr. Carlos', NULL, 'farmacia', '1832231122', 'contato@farmaciacentral.com', NULL, NULL, NULL, NULL, NULL, 'Presidente Prudente', 'SP'),
+(2, 'UBS Ana Jacinta', '22.333.444/0001-55', NULL, 'Enf. Maria', NULL, 'ubs', '1839092233', 'ubs.anajacinta@prudente.sp.gov.br', NULL, NULL, NULL, NULL, NULL, 'Presidente Prudente', 'SP'),
+(3, 'Coleta Segura Ambiental', '33.444.555/0001-66', NULL, 'Sra. Beatriz', NULL, 'empresa_coleta', '1839064455', 'comercial@coletasegura.com', NULL, NULL, NULL, NULL, NULL, 'Álvares Machado', 'SP'),
+(4, 'Drogaria Confiança Pirapozinho', '44.555.666/0001-77', NULL, 'Sr. Ricardo', NULL, 'farmacia', '1832691020', 'contato@confiancapira.com', NULL, NULL, NULL, NULL, NULL, 'Pirapozinho', 'SP'),
+(5, 'Posto de Saúde Central (Regente)', '55.666.777/0001-88', NULL, 'Dr. Roberto', NULL, 'ubs', '1832791122', 'saude@regentefeijo.sp.gov.br', NULL, NULL, NULL, NULL, NULL, 'Regente Feijó', 'SP');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `residuo`
+-- Estrutura da tabela `residuo`
 --
 
 CREATE TABLE `residuo` (
@@ -167,24 +170,25 @@ CREATE TABLE `residuo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `residuo`
+-- Extraindo dados da tabela `residuo`
 --
 
 INSERT INTO `residuo` (`id_residuo`, `nome`, `descricao`, `grupo`, `risco_especifico`, `estado_fisico`, `acondicionamento`) VALUES
-(2, 'Curativos e Gazes', 'Utilizados em ferimentos com sangue', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
-(3, 'Frascos de Medicamento', 'Frascos de vidro de medicação líquida', 'B - Químico', 'Químico', 'Líquido', 'Galão Rígido'),
-(4, 'Agulha de Insulina', 'Utilizado por paciente diabetico', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)'),
-(5, 'Lancetas para Glicemia', 'Usadas para medir nível de açúcar no sangue', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)'),
-(6, 'Fitas de Glicemia', 'Tiras reagentes com resíduo de sangue', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
-(7, 'Frasco de Insulina', 'Frasco de vidro com sobras de medicamento', 'B - Químico', 'Químico', 'Líquido', 'Galão Rígido'),
-(8, 'Algodão e Gazes com Sangue', 'Material de curativo utilizado em pacientes', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
-(9, 'Seringa para Insulina (sem agulha)', 'Corpo plástico da seringa após uso', 'D - Comum', 'Nenhum', 'Sólido', 'Saco Preto'),
-(10, 'Ampolas de Vidro', 'Recipiente de medicamento quebrado após o uso', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)');
+(1, 'Agulhas de Insulina 4mm', 'Agulhas para aplicação de insulina subcutânea', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)'),
+(2, 'Seringas Descartáveis 5ml', 'Utilizadas para administração de medicamentos', 'D - Comum', 'Nenhum', 'Sólido', 'Saco Preto'),
+(3, 'Curativos com Sangue', 'Gazes e algodão utilizados em ferimentos', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
+(4, 'Lancetas para Glicemia', 'Utilizadas para perfurar a pele e medir glicose', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)'),
+(5, 'Fitas Reagentes de Glicemia', 'Tiras com resíduo de sangue para medição de glicose', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
+(6, 'Frasco de Soro Fisiológico', 'Frasco plástico com sobras de soro', 'D - Comum', 'Nenhum', 'Líquido', 'Saco Preto'),
+(7, 'Frasco de Insulina Vazio', 'Frasco de vidro com resíduo de medicamento', 'B - Químico', 'Químico', 'Líquido', 'Galão Rígido'),
+(8, 'Luvas de Procedimento Usadas', 'Luvas de látex ou nitrílicas', 'A - Infectante', 'Biológico', 'Sólido', 'Saco Branco Leitoso'),
+(9, 'Ampolas de Vitamina B12', 'Fragmentos de vidro de ampolas de medicamento', 'E - Perfurocortante', 'Perfurocortante', 'Sólido', 'Caixa para Perfurocortante (Descarpack)'),
+(10, 'Medicamentos Vencidos (Comprimidos)', 'Cartelas de comprimidos com prazo de validade expirado', 'B - Químico', 'Químico', 'Sólido', 'Galão Rígido');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `usuario`
+-- Estrutura da tabela `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -203,19 +207,20 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `usuario`
+-- Extraindo dados da tabela `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nome`, `email`, `senha`, `tipo`, `cep`, `logradouro`, `numero`, `complemento`, `bairro`, `cidade`, `uf`) VALUES
 (8, 'Manoela Pinheiro da Silva', 'manoela2903@outlook.com', '$2b$10$cy6YqZ7w3PdejvlBZHsk5exZ7hiqUBnc/s6h17lMep65xP9dx6FKm', 'admin', '19200009', 'Rua Angelo Salvatori', '125', 'Ao Lado do Hotel Almanara', 'Centro', 'Pirapozinho', 'SP'),
-(10, 'Gustavo Henrique Bispo Costa', 'gustavobispocosta5521@gmail.com', '$2b$10$eyBqAjIehZIXtgi0OSEYO.J6w.iUV8CacfghHcc7MDZ2UvRVP67z2', 'admin', '19220222', 'Rua José Braz da Silva', '4', 'Casa com Sobrado', 'Parque dos Ingás II', 'Narandiba', 'SP');
+(10, 'Gustavo Henrique Bispo Costa', 'gustavobispocosta5521@gmail.com', '$2b$10$eyBqAjIehZIXtgi0OSEYO.J6w.iUV8CacfghHcc7MDZ2UvRVP67z2', 'admin', '19220222', 'Rua José Braz da Silva', '4', 'Casa com Sobrado', 'Parque dos Ingás II', 'Narandiba', 'SP'),
+(12, 'Matheus Henrique da Conceição Bispo', 'matheusbispo@gmail.com', '$2b$10$hw7isRBQTTk1Bp3tdiUtROmrBoDrzsyhZxUBWjoihIUL0PyH7EGf2', 'admin', '19200009', 'Rua Angelo Salvatori', '125', '', 'Centro', 'Pirapozinho', 'SP');
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices de tabela `agenda_de_coleta`
+-- Índices para tabela `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
   ADD PRIMARY KEY (`id_agenda`),
@@ -223,7 +228,7 @@ ALTER TABLE `agenda_de_coleta`
   ADD KEY `id_parceiro` (`id_parceiro`);
 
 --
--- Índices de tabela `entrega_materiais`
+-- Índices para tabela `entrega_materiais`
 --
 ALTER TABLE `entrega_materiais`
   ADD PRIMARY KEY (`id_entrega`),
@@ -231,59 +236,59 @@ ALTER TABLE `entrega_materiais`
   ADD KEY `fk_entrega_residuo` (`id_residuo`);
 
 --
--- Índices de tabela `paciente`
+-- Índices para tabela `paciente`
 --
 ALTER TABLE `paciente`
   ADD PRIMARY KEY (`id_paciente`),
   ADD UNIQUE KEY `cpf` (`cpf`);
 
 --
--- Índices de tabela `parceiro`
+-- Índices para tabela `parceiro`
 --
 ALTER TABLE `parceiro`
   ADD PRIMARY KEY (`id_parceiro`),
   ADD UNIQUE KEY `cnpj` (`cnpj`);
 
 --
--- Índices de tabela `residuo`
+-- Índices para tabela `residuo`
 --
 ALTER TABLE `residuo`
   ADD PRIMARY KEY (`id_residuo`);
 
 --
--- Índices de tabela `usuario`
+-- Índices para tabela `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
 -- AUTO_INCREMENT de tabela `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
-  MODIFY `id_agenda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_agenda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `entrega_materiais`
 --
 ALTER TABLE `entrega_materiais`
-  MODIFY `id_entrega` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_entrega` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `parceiro`
 --
 ALTER TABLE `parceiro`
-  MODIFY `id_parceiro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_parceiro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `residuo`
@@ -295,21 +300,21 @@ ALTER TABLE `residuo`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- Restrições para tabelas despejadas
+-- Restrições para despejos de tabelas
 --
 
 --
--- Restrições para tabelas `agenda_de_coleta`
+-- Limitadores para a tabela `agenda_de_coleta`
 --
 ALTER TABLE `agenda_de_coleta`
   ADD CONSTRAINT `agenda_de_coleta_ibfk_1` FOREIGN KEY (`id_paciente`) REFERENCES `paciente` (`id_paciente`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `agenda_de_coleta_ibfk_2` FOREIGN KEY (`id_parceiro`) REFERENCES `parceiro` (`id_parceiro`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Restrições para tabelas `entrega_materiais`
+-- Limitadores para a tabela `entrega_materiais`
 --
 ALTER TABLE `entrega_materiais`
   ADD CONSTRAINT `fk_entrega_paciente` FOREIGN KEY (`id_paciente`) REFERENCES `paciente` (`id_paciente`) ON DELETE CASCADE ON UPDATE CASCADE,

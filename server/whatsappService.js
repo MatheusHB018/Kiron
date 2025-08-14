@@ -21,6 +21,7 @@ if (!hasConfig()) {
   console.warn('[WhatsappService] Configuração ausente.');
 }
 
+// O NOME CORRETO DA FUNÇÃO ESTÁ AQUI
 async function sendTemplateMessage(toNumberRaw, templateName, options = {}) {
   const { headerImageUrl, params = [], languageCode = 'pt_BR' } = options;
 
@@ -86,5 +87,5 @@ async function sendTemplateMessage(toNumberRaw, templateName, options = {}) {
   }
 }
 
-// ESTA LINHA É A MAIS IMPORTANTE PARA A CORREÇÃO
+// A EXPORTAÇÃO CORRETA ESTÁ AQUI
 module.exports = { sendTemplateMessage };

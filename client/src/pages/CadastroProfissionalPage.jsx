@@ -55,56 +55,63 @@ function CadastroProfissionalPage() {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // client/src/pages/CadastroProfissionalPage.jsx
 
-        if (formData.senha !== formData.confirmarSenha) {
-            Swal.fire('Atenção', 'As senhas não coincidem. Por favor, tente novamente.', 'warning');
-            return;
-        }
-        if (formData.senha.length < 6) {
-            Swal.fire('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'warning');
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        // Usar o Factory Method para criar o objeto padronizado
-        const usuario = EntityFactory.create('usuario', {
-            ...formData,
-            tipo: formData.tipoUsuario, // Mapear tipoUsuario para tipo
-            uf: formData.uf,
-            cep: formData.cep.replace(/\D/g, '') // Limpar CEP
-        });
+    if (formData.senha !== formData.confirmarSenha) {
+        Swal.fire('Atenção', 'As senhas não coincidem. Por favor, tente novamente.', 'warning');
+        return;
+    }
+    if (formData.senha.length < 6) {
+        Swal.fire('Atenção', 'A senha deve ter no mínimo 6 caracteres.', 'warning');
+        return;
+    }
 
-        // Validar usando o factory
-        const validacao = EntityFactory.validate('usuario', usuario);
-        if (!validacao.isValid) {
-            Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
-            return;
-        }
-
-        setIsSubmitting(true);
-        try {
-            await cadastrarUsuario(usuario);
-            Swal.fire({
-                title: 'Sucesso!',
-                text: 'Usuário cadastrado com sucesso.',
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false,
-                timerProgressBar: true
-            }).then(() => {
-                navigate('/listar-usuarios');
-            });
-        } catch (err) {
-            Swal.fire({
-                title: 'Erro!',
-                text: err.message || 'Ocorreu um erro ao cadastrar o usuário.',
-                icon: 'error'
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
+    // --- CORREÇÃO APLICADA AQUI ---
+    // Criamos um objeto de dados exatamente como o backend espera,
+    // garantindo que o campo se chame 'tipoUsuario'.
+    const dadosParaApi = {
+        nome: formData.nome,
+        email: formData.email,
+        senha: formData.senha,
+        tipoUsuario: formData.tipoUsuario, // <-- O campo agora tem o nome correto
+        cep: formData.cep.replace(/\D/g, ''),
+        logradouro: formData.logradouro,
+        numero: formData.numero,
+        complemento: formData.complemento,
+        bairro: formData.bairro,
+        cidade: formData.cidade,
+        uf: formData.uf
     };
+    // ------------------------------------
+
+    setIsSubmitting(true);
+    try {
+        // Enviamos o objeto corrigido para a API
+        await cadastrarUsuario(dadosParaApi);
+        Swal.fire({
+            title: 'Sucesso!',
+            text: 'Usuário cadastrado com sucesso.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+            timerProgressBar: true
+        }).then(() => {
+            navigate('/listar-usuarios');
+        });
+    } catch (err) {
+        // O erro do backend (400 Bad Request) será capturado e exibido aqui
+        Swal.fire({
+            title: 'Erro!',
+            text: err.message || 'Ocorreu um erro ao cadastrar o usuário.',
+            icon: 'error'
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
 
     return (
         <div className="page-container">

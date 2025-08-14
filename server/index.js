@@ -1,13 +1,13 @@
 // server/index.js
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const NotificationService = require('./NotificationService'); // 1. IMPORTA O SINGLETON
-const whatsappService = require('./whatsappService'); // Importa o módulo inteiro
-require('dotenv').config();
+const NotificationService = require('./NotificationService');
+const whatsappService = require('./whatsappService');
 
 const app = express();
 const PORT = 3001;
@@ -36,39 +36,36 @@ app.get('/', (req, res) => {
   res.json({ message: 'API do MedResiduos a funcionar!' });
 });
 
-// Rota para enviar mensagem WhatsApp para paciente com base na entrega
-// server/index.js
 
-// Rota para avisar de ENTREGA VENCIDA
-app.post('/whatsapp/entregas/:id/send', async (req, res) => {
+// Rota para enviar mensagem WhatsApp para paciente com base na entrega (MODO DE TESTE COM HELLO_WORLD)
+app.post('/whatsapp/entregas/:id/send', (req, res) => {
   const { id } = req.params;
-  const query = `SELECT e.*, p.nome as paciente_nome, p.telefone as paciente_telefone, r.nome as residuo_nome
+  const query = `SELECT p.telefone as paciente_telefone
                  FROM entrega_materiais e
                  JOIN paciente p ON e.id_paciente = p.id_paciente
-                 JOIN residuo r ON e.id_residuo = r.id_residuo
                  WHERE e.id_entrega = ?`;
   db.query(query, [id], async (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erro ao buscar entrega.' });
+    if (err) return res.status(500).json({ error: 'Erro ao buscar dados da entrega.' });
     if (results.length === 0) return res.status(404).json({ error: 'Entrega não encontrada.' });
     const entrega = results[0];
     if (!entrega.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
 
+    console.log('--- MODO DE TESTE (ENTREGAS): Enviando template hello_world ---');
+    
     const options = {
-      params: [
-        entrega.paciente_nome,
-        entrega.residuo_nome,
-        new Date(entrega.data_entrega).toLocaleDateString('pt-BR')
-      ]
+        languageCode: 'en_US',
+        params: []
     };
 
-    const result = await whatsappService.sendTemplateMessage(entrega.paciente_telefone, 'aviso_descarte_atrasado', options);
-
+    const result = await whatsappService.sendTemplateMessage(entrega.paciente_telefone, 'hello_world', options);
+    
     if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
-    res.json({ message: 'Mensagem de descarte atrasado enviada.', details: result });
+    res.json({ message: 'Mensagem de teste de entrega enviada.', details: result });
   });
 });
 
-// Rota para lembrar de COLETA AGENDADA
+
+// Rota para lembrar de COLETA AGENDADA (MODO DE TESTE COM HELLO_WORLD)
 app.post('/whatsapp/coletas/:id/send', (req, res) => {
   const { id } = req.params;
   const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
@@ -80,50 +77,23 @@ app.post('/whatsapp/coletas/:id/send', (req, res) => {
     if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada.' });
     const coleta = results[0];
     if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
-
+    
+    console.log('--- MODO DE TESTE (COLETAS): Enviando template hello_world ---');
+    
     const options = {
-        params: [
-            coleta.paciente_nome,
-            new Date(coleta.data_agendada).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
-        ]
+        languageCode: 'en_US',
+        params: []
     };
-
-    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'lembrete_coleta_proxima', options);
-
+    
+    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'hello_world', options);
+    
     if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
     res.json({ message: 'Mensagem de lembrete de coleta enviada.', details: result });
   });
 });
 
-// Rota específica para coletas (MODO DE TESTE COM HELLO_WORLD)
-// app.post('/whatsapp/coletas/:id/send', (req, res) => {
-//   const { id } = req.params;
-//   const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
-//                  FROM agenda_de_coleta a
-//                  JOIN paciente p ON a.id_paciente = p.id_paciente
-//                  WHERE a.id_agenda = ?`;
-//   db.query(query, [id], async (err, results) => {
-//     if (err) return res.status(500).json({ error: 'Erro ao buscar coleta.' });
-//     if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada.' });
-//     const coleta = results[0];
-//     if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
 
-//     // --- INÍCIO DA MUDANÇA PARA O TESTE ---
-//     console.log('--- MODO DE TESTE: Enviando template hello_world ---');
-
-//     const options = {
-//         languageCode: 'en_US', // O template hello_world é em inglês
-//         params: []             // Ele não tem variáveis (parâmetros)
-//     };
-
-//     // Chamamos a função com o nome do template 'hello_world'
-//    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'hello_world', options);
-//     // --- FIM DA MUDANÇA PARA O TESTE ---
-
-//     if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
-//     res.json({ message: 'Mensagem de lembrete de coleta enviada.', details: result });
-//   });
-// });
+// --- O RESTANTE DO SEU CÓDIGO PERMANECE IGUAL ---
 
 // --- ROTA PARA VISUALIZAR NOTIFICAÇÕES (PARA DEMONSTRAÇÃO) ---
 app.get('/notificacoes', (req, res) => {
@@ -161,7 +131,6 @@ app.post('/coletas', (req, res) => {
   db.query(query, [id_paciente, id_parceiro, data_agendada, 'agendada'], (err, result) => {
     if (err) return res.status(500).json({ error: 'Erro ao agendar coleta' });
     
-    // 2. USA O SINGLETON
     NotificationService.addNotification(
       'NOVA_COLETA',
       `Nova coleta agendada para o paciente ID ${id_paciente}`,
@@ -195,7 +164,6 @@ app.put('/coletas/:id/confirmar', (req, res) => {
   });
 });
 
-// Excluir coleta
 app.delete('/coletas/:id', (req, res) => {
   const { id } = req.params;
   db.query('DELETE FROM agenda_de_coleta WHERE id_agenda = ?', [id], (err, result) => {
