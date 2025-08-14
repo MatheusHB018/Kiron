@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const NotificationService = require('./NotificationService'); // 1. IMPORTA O SINGLETON
-const { sendWhatsappMessage } = require('./whatsappService'); // <- serviço whatsapp
+const whatsappService = require('./whatsappService'); // Importa o módulo inteiro
 require('dotenv').config();
 
 const app = express();
@@ -37,10 +37,11 @@ app.get('/', (req, res) => {
 });
 
 // Rota para enviar mensagem WhatsApp para paciente com base na entrega
+// server/index.js
+
+// Rota para avisar de ENTREGA VENCIDA
 app.post('/whatsapp/entregas/:id/send', async (req, res) => {
   const { id } = req.params;
-  const { mensagem } = req.body;
-  // Buscar dados da entrega + paciente
   const query = `SELECT e.*, p.nome as paciente_nome, p.telefone as paciente_telefone, r.nome as residuo_nome
                  FROM entrega_materiais e
                  JOIN paciente p ON e.id_paciente = p.id_paciente
@@ -52,18 +53,24 @@ app.post('/whatsapp/entregas/:id/send', async (req, res) => {
     const entrega = results[0];
     if (!entrega.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
 
-    const defaultMsg = `Olá ${entrega.paciente_nome}! Aqui é do MedResiduos. O material "${entrega.residuo_nome}" entregue em ${new Date(entrega.data_entrega).toLocaleDateString('pt-BR')} está com devolução prevista para ${entrega.data_prevista_devolucao ? new Date(entrega.data_prevista_devolucao).toLocaleDateString('pt-BR') : 'N/D'}. Por favor, regularize a devolução. Qualquer dúvida responda esta mensagem.`;
-    const texto = mensagem && mensagem.trim() !== '' ? mensagem : defaultMsg;
-    const sendResult = await sendWhatsappMessage(entrega.paciente_telefone, texto);
-    if (!sendResult.ok && !sendResult.skipped) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: sendResult.error });
-    res.json({ message: sendResult.skipped ? 'Envio ignorado (configuração ausente)' : 'Mensagem enviada com sucesso', details: sendResult });
+    const options = {
+      params: [
+        entrega.paciente_nome,
+        entrega.residuo_nome,
+        new Date(entrega.data_entrega).toLocaleDateString('pt-BR')
+      ]
+    };
+
+    const result = await whatsappService.sendTemplateMessage(entrega.paciente_telefone, 'aviso_descarte_atrasado', options);
+
+    if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
+    res.json({ message: 'Mensagem de descarte atrasado enviada.', details: result });
   });
 });
 
-// Rota específica para coletas (não reutiliza entregas)
+// Rota para lembrar de COLETA AGENDADA
 app.post('/whatsapp/coletas/:id/send', (req, res) => {
   const { id } = req.params;
-  const { mensagem } = req.body;
   const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
                  FROM agenda_de_coleta a
                  JOIN paciente p ON a.id_paciente = p.id_paciente
@@ -74,14 +81,49 @@ app.post('/whatsapp/coletas/:id/send', (req, res) => {
     const coleta = results[0];
     if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
 
-    const dataAgendada = coleta.data_agendada ? new Date(coleta.data_agendada).toLocaleString('pt-BR') : 'N/D';
-    const defaultMsg = `Olá ${coleta.paciente_nome}! Lembramos da coleta agendada para ${dataAgendada}. Por favor, confirme a realização ou entre em contacto para reagendar.`;
-    const texto = mensagem && mensagem.trim() !== '' ? mensagem : defaultMsg;
-    const sendResult = await sendWhatsappMessage(coleta.paciente_telefone, texto);
-    if (!sendResult.ok && !sendResult.skipped) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: sendResult.error });
-    res.json({ message: sendResult.skipped ? 'Envio ignorado (configuração ausente)' : 'Mensagem enviada com sucesso', details: sendResult });
+    const options = {
+        params: [
+            coleta.paciente_nome,
+            new Date(coleta.data_agendada).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+        ]
+    };
+
+    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'lembrete_coleta_proxima', options);
+
+    if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
+    res.json({ message: 'Mensagem de lembrete de coleta enviada.', details: result });
   });
 });
+
+// Rota específica para coletas (MODO DE TESTE COM HELLO_WORLD)
+// app.post('/whatsapp/coletas/:id/send', (req, res) => {
+//   const { id } = req.params;
+//   const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
+//                  FROM agenda_de_coleta a
+//                  JOIN paciente p ON a.id_paciente = p.id_paciente
+//                  WHERE a.id_agenda = ?`;
+//   db.query(query, [id], async (err, results) => {
+//     if (err) return res.status(500).json({ error: 'Erro ao buscar coleta.' });
+//     if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada.' });
+//     const coleta = results[0];
+//     if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
+
+//     // --- INÍCIO DA MUDANÇA PARA O TESTE ---
+//     console.log('--- MODO DE TESTE: Enviando template hello_world ---');
+
+//     const options = {
+//         languageCode: 'en_US', // O template hello_world é em inglês
+//         params: []             // Ele não tem variáveis (parâmetros)
+//     };
+
+//     // Chamamos a função com o nome do template 'hello_world'
+//    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'hello_world', options);
+//     // --- FIM DA MUDANÇA PARA O TESTE ---
+
+//     if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
+//     res.json({ message: 'Mensagem de lembrete de coleta enviada.', details: result });
+//   });
+// });
 
 // --- ROTA PARA VISUALIZAR NOTIFICAÇÕES (PARA DEMONSTRAÇÃO) ---
 app.get('/notificacoes', (req, res) => {
