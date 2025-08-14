@@ -21,7 +21,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 function RelatoriosPage() {
   const [data, setData] = useState({
     residuos: null,
-    grupo: null,
+    entregas_status: null,
     entregas: null,
     cadastrados: null
   });
@@ -34,16 +34,66 @@ function RelatoriosPage() {
       try {
         const responses = await Promise.all([
           fetch(`${API_URL}/relatorios/residuos-quantidade`),
-          fetch(`${API_URL}/relatorios/grupo-residuos`),
+          fetch(`${API_URL}/entregas`),
           fetch(`${API_URL}/relatorios/entregas-por-mes`),
           fetch(`${API_URL}/relatorios/grupo-residuos-cadastrados`)
         ]);
 
         const jsonResponses = await Promise.all(responses.map(r => r.json()));
 
+        // Processar dados das entregas para o gráfico de status
+        const entregas = jsonResponses[1];
+        const statusCounts = {
+          'Devolvido': 0,
+          'Aguardando Devolução': 0,
+          'Entregue': 0,
+          'Vencido': 0
+        };
+
+        console.log('Dados das entregas:', entregas); // Debug
+
+        // Processar entregas
+        entregas.forEach(entrega => {
+          console.log('Processando entrega:', entrega); // Debug
+          
+          if (entrega.status === 'Devolvido') {
+            statusCounts['Devolvido']++;
+          } else if (entrega.status === 'Entregue') {
+            statusCounts['Entregue']++;
+          } else if (entrega.status === 'Aguardando Devolução') {
+            // Verificar se está vencido
+            const dataAtual = new Date();
+            const dataDevolucao = new Date(entrega.data_prevista_devolucao);
+            
+            console.log('Data atual:', dataAtual); // Debug
+            console.log('Data devolução:', dataDevolucao); // Debug
+            console.log('Está vencido?', dataAtual > dataDevolucao); // Debug
+            
+            if (dataAtual > dataDevolucao) {
+              statusCounts['Vencido']++;
+              console.log('Entrega vencida encontrada!', entrega); // Debug
+            } else {
+              statusCounts['Aguardando Devolução']++;
+            }
+          } else {
+            // Capturar outros status que possam existir
+            console.log('Status não mapeado:', entrega.status); // Debug
+            if (entrega.status && entrega.status.toLowerCase().includes('vencid')) {
+              statusCounts['Vencido']++;
+            }
+          }
+        });
+
+        console.log('Status counts:', statusCounts); // Debug
+
+        const statusData = {
+          labels: Object.keys(statusCounts),
+          values: Object.values(statusCounts)
+        };
+
         setData({
           residuos: jsonResponses[0],
-          grupo: jsonResponses[1],
+          entregas_status: statusData,
           entregas: jsonResponses[2],
           cadastrados: jsonResponses[3]
         });
@@ -142,14 +192,56 @@ function RelatoriosPage() {
                   datasets: [{
                     label: 'Quantidade',
                     data: data.residuos.values,
-                    backgroundColor: '#4bc0c0'
+                    backgroundColor: [
+                      '#4bc0c0', // Azul água
+                      '#ff6b9d', // Rosa
+                      '#45b7d1', // Azul
+                      '#f9ca24', // Amarelo
+                      '#6c5ce7', // Roxo
+                      '#fd79a8', // Rosa claro
+                      '#e17055', // Laranja
+                      '#00b894', // Verde
+                      '#0984e3', // Azul escuro
+                      '#a29bfe', // Lilás
+                      '#fdcb6e', // Amarelo claro
+                      '#ff7675', // Vermelho claro
+                      '#74b9ff', // Azul médio
+                      '#55a3ff', // Azul claro
+                      '#26de81', // Verde claro
+                      '#fc5c65'  // Vermelho
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
                   }]
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
-                  scales: { y: { beginAtZero: true } },
+                  plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          const label = context.label || '';
+                          const value = context.parsed.y || 0;
+                          return `${label}: ${value} entregas`;
+                        }
+                      }
+                    }
+                  },
+                  scales: { 
+                    y: { 
+                      beginAtZero: true,
+                      grid: {
+                        color: '#e9ecef'
+                      }
+                    },
+                    x: {
+                      grid: {
+                        display: false
+                      }
+                    }
+                  },
                   animation: { duration: 0 } // Remove animações para impressão
                 }}
               />
@@ -159,21 +251,48 @@ function RelatoriosPage() {
 
         {/* Gráfico 2 */}
         <div className="chart-card">
-          <h2>Distribuição por Grupo</h2>
+          <h2>Status das Entregas</h2>
           <div className="chart-container">
-            {data.grupo ? (
+            {data.entregas_status ? (
               <Pie
                 data={{
-                  labels: data.grupo.labels,
+                  labels: data.entregas_status.labels,
                   datasets: [{
-                    data: data.grupo.values,
-                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0']
+                    data: data.entregas_status.values,
+                    backgroundColor: [
+                      '#28a745', // Verde para Devolvido
+                      '#ffc107', // Amarelo para Aguardando Devolução
+                      '#17a2b8', // Azul para Entregue
+                      '#dc3545'  // Vermelho para Vencido
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                   }]
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
-                  animation: { duration: 0 }
+                  animation: { duration: 0 },
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        padding: 20,
+                        usePointStyle: true
+                      }
+                    },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          const label = context.label || '';
+                          const value = context.parsed || 0;
+                          const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                          const percentage = ((value / total) * 100).toFixed(1);
+                          return `${label}: ${value} (${percentage}%)`;
+                        }
+                      }
+                    }
+                  }
                 }}
               />
             ) : <p>Sem dados disponíveis</p>}
@@ -191,14 +310,54 @@ function RelatoriosPage() {
                   datasets: [{
                     label: 'Tipos',
                     data: data.cadastrados.values,
-                    backgroundColor: '#ff9f40'
+                    backgroundColor: [
+                      '#ff6b6b', // Vermelho
+                      '#4ecdc4', // Verde água
+                      '#45b7d1', // Azul
+                      '#f9ca24', // Amarelo
+                      '#6c5ce7', // Roxo
+                      '#fd79a8', // Rosa
+                      '#e17055', // Laranja
+                      '#00b894', // Verde
+                      '#0984e3', // Azul escuro
+                      '#a29bfe', // Lilás
+                      '#fdcb6e', // Amarelo claro
+                      '#fd79a8'  // Rosa claro
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
                   }]
                 }}
                 options={{
                   indexAxis: 'y',
                   responsive: true,
                   maintainAspectRatio: false,
-                  animation: { duration: 0 }
+                  animation: { duration: 0 },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          const label = context.label || '';
+                          const value = context.parsed.x || 0;
+                          return `${label}: ${value} tipos cadastrados`;
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    x: { 
+                      beginAtZero: true,
+                      grid: {
+                        color: '#e9ecef'
+                      }
+                    },
+                    y: {
+                      grid: {
+                        display: false
+                      }
+                    }
+                  }
                 }}
               />
             ) : <p>Sem dados disponíveis</p>}

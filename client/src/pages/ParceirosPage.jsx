@@ -47,6 +47,32 @@ function ParceirosPage() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Você tem certeza?',
+      text: "A exclusão não poderá ser revertida!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`${API_URL}/parceiros/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Falha ao excluir.');
+        
+        Swal.fire('Excluído!', 'O parceiro foi excluído com sucesso.', 'success');
+        fetchParceiros();
+      } catch (error) {
+        Swal.fire('Erro!', error.message, 'error');
+      }
+    }
+  };
+
   const processedParceiros = useMemo(() => {
     let sortableItems = [...parceiros];
 
@@ -261,9 +287,9 @@ function ParceirosPage() {
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
-              Anterior
+              «
             </button>
-            {Array.from({ length: totalPages }).map((_, i) => {
+            {Array.from({ length: totalPages }).slice(0, 10).map((_, i) => {
               const page = i + 1;
               return (
                 <button
@@ -279,11 +305,11 @@ function ParceirosPage() {
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
-              Próxima
+              »
             </button>
           </div>
           <div>
-            <label>Itens por página: </label>
+            <label style={{ fontSize: '0.85rem' }}>Itens por página: </label>
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
@@ -293,6 +319,7 @@ function ParceirosPage() {
                 <option key={size} value={size}>{size}</option>
               ))}
             </select>
+            <span style={{ marginLeft: 8, fontSize: '0.8rem' }}>Total: {processedParceiros.length}</span>
           </div>
         </div>
       </div>

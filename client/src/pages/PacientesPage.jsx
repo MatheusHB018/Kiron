@@ -1,5 +1,5 @@
 // client/src/pages/PacientesPage.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaPrint } from 'react-icons/fa';
@@ -14,6 +14,8 @@ function PacientesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchPacientes = async () => {
@@ -139,6 +141,17 @@ function PacientesPage() {
     paciente.cpf?.includes(searchTerm)
   );
 
+  const paginatedPacientes = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredPacientes.slice(start, start + pageSize);
+  }, [filteredPacientes, currentPage, pageSize]);
+
+  const totalPages = Math.ceil(filteredPacientes.length / pageSize) || 1;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, pageSize]);
+
   if (loading) return <div className="page-container"><h2>Carregando...</h2></div>;
   if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
 
@@ -159,14 +172,15 @@ function PacientesPage() {
         </div>
       </div>
 
-      <div className="search-and-filters">
-        <div className="search-container">
+      <div className="filter-container">
+        <div className="search-wrapper">
           <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Buscar por nome ou CPF..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
           />
         </div>
       </div>
@@ -180,30 +194,31 @@ function PacientesPage() {
               <th>Telefone</th>
               <th>Email</th>
               <th>Cidade</th>
-              <th className="actions">Ações</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {filteredPacientes.length > 0 ? (
-              filteredPacientes.map((paciente) => (
+              paginatedPacientes.map((paciente) => (
                 <tr key={paciente.id_paciente}>
                   <td>{paciente.nome}</td>
                   <td>{formatarCPF(paciente.cpf)}</td>
                   <td>{formatarTelefone(paciente.telefone)}</td>
                   <td>{paciente.email || '-'}</td>
                   <td>{paciente.cidade || '-'}</td>
-                  <td className="actions">
+                  <td className="actions-cell">
                     <Link
                       to={`/editar-paciente/${paciente.id_paciente}`}
-                      className="btn btn-edit"
+                      className="btn-action btn-edit"
+                      style={{ textDecoration: 'none' }}
                     >
-                      <FaEdit />
+                      <FaEdit /> Editar
                     </Link>
                     <button
                       onClick={() => handleDelete(paciente.id_paciente)}
-                      className="btn btn-delete"
+                      className="btn-action btn-delete"
                     >
-                      <FaTrash />
+                      <FaTrash /> Excluir
                     </button>
                   </td>
                 </tr>
@@ -217,6 +232,46 @@ function PacientesPage() {
             )}
           </tbody>
         </table>
+
+        <div className="pagination-container">
+          <div className="pagination-buttons">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+              disabled={currentPage === 1}
+            >
+              «
+            </button>
+            {Array.from({ length: totalPages }).slice(0, 10).map((_, i) => {
+              const page = i + 1;
+              return (
+                <button 
+                  key={page} 
+                  onClick={() => setCurrentPage(page)} 
+                  className={page === currentPage ? 'active' : ''}
+                >
+                  {page}
+                </button>
+              );
+            })}
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+              disabled={currentPage === totalPages}
+            >
+              »
+            </button>
+          </div>
+          <div>
+            <label style={{ fontSize: '0.85rem' }}>Itens por página: </label>
+            <select 
+              value={pageSize} 
+              onChange={e => setPageSize(Number(e.target.value))} 
+              className="page-size-select"
+            >
+              {[5, 10, 20, 50].map(size => <option key={size} value={size}>{size}</option>)}
+            </select>
+            <span style={{ marginLeft: 8, fontSize: '0.8rem' }}>Total: {filteredPacientes.length}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
