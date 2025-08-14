@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaArrowUp, FaArrowDown } from 'react-icons/fa';
-
+import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaArrowUp, FaArrowDown, FaPrint } from 'react-icons/fa';
 import { API_URL } from '../services/api';
 import './styles/Page.css';
-import './styles/ListPage.css'; // Reutilizando o mesmo CSS
+import './styles/ListPage.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function ParceirosPage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function ParceirosPage() {
   const [sortConfig, setSortConfig] = useState({ key: 'nome', direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const tableRef = useRef(null);
 
   useEffect(() => {
     fetchParceiros();
@@ -36,33 +38,6 @@ function ParceirosPage() {
     }
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Você tem certeza?',
-      text: "Esta ação e todos os dados de coleta associados serão apagados permanentemente!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Sim, apagar!',
-      cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await fetch(`${API_URL}/parceiros/${id}`, { method: 'DELETE' });
-          if (!res.ok) {
-            const errData = await res.json();
-            throw new Error(errData.error || 'Erro ao excluir parceiro');
-          }
-          fetchParceiros();
-          Swal.fire('Apagado!', 'O parceiro foi removido.', 'success');
-        } catch (err) {
-          Swal.fire('Erro!', err.message, 'error');
-        }
-      }
-    });
-  };
-
   const formatPartnerType = (type) => {
     switch (type) {
       case 'empresa_coleta': return 'Empresa de Coleta';
@@ -71,12 +46,11 @@ function ParceirosPage() {
       default: return type;
     }
   };
-  
+
   const processedParceiros = useMemo(() => {
     let sortableItems = [...parceiros];
 
-    // Ordenação
-    if (sortConfig.key !== null) {
+    if (sortConfig.key) {
       sortableItems.sort((a, b) => {
         const valA = a[sortConfig.key] || '';
         const valB = b[sortConfig.key] || '';
@@ -86,24 +60,89 @@ function ParceirosPage() {
       });
     }
 
-    // Busca (Filtro CORRIGIDO)
     if (!searchTerm) return sortableItems;
     
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return sortableItems.filter(p =>
-      (p.nome && p.nome.toLowerCase().startsWith(lowerCaseSearchTerm)) ||
-      (p.cnpj && p.cnpj.replace(/[^\d]/g, '').includes(lowerCaseSearchTerm)) || // Permite buscar CNPJ com ou sem formatação
-      (p.cidade && p.cidade.toLowerCase().startsWith(lowerCaseSearchTerm))
+      (p.nome && p.nome.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      (p.cnpj && p.cnpj.replace(/[^\d]/g, '').includes(lowerCaseSearchTerm)) ||
+      (p.cidade && p.cidade.toLowerCase().includes(lowerCaseSearchTerm))
     );
   }, [parceiros, sortConfig, searchTerm]);
 
-  const totalPages = Math.ceil(processedParceiros.length / pageSize) || 1;
-  const pageItems = useMemo(()=>{
-    const start = (currentPage -1) * pageSize;
+  const handlePrint = async () => {
+    if (loading) {
+      Swal.fire('Aguarde', 'Os dados ainda estão sendo carregados', 'info');
+      return;
+    }
+
+    if (processedParceiros.length === 0) {
+      Swal.fire('Sem dados', 'Não há parceiros para gerar o relatório', 'warning');
+      return;
+    }
+
+    const printDiv = document.createElement('div');
+    printDiv.style.position = 'absolute';
+    printDiv.style.left = '-9999px';
+    printDiv.style.width = '794px';
+    printDiv.style.padding = '20px';
+    printDiv.style.backgroundColor = 'white';
+
+    printDiv.innerHTML = `
+      <h1 style="text-align: center; margin-bottom: 20px;">Relatório de Parceiros</h1>
+      <p style="text-align: center; margin-bottom: 30px;">Gerado em: ${new Date().toLocaleDateString()}</p>
+      <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="background-color: #f2f2f2;">Nome</th>
+            <th style="background-color: #f2f2f2;">CNPJ</th>
+            <th style="background-color: #f2f2f2;">Cidade</th>
+            <th style="background-color: #f2f2f2;">Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${processedParceiros.map(parceiro => `
+            <tr>
+              <td>${parceiro.nome}</td>
+              <td>${parceiro.cnpj}</td>
+              <td>${parceiro.cidade || 'N/A'}</td>
+              <td>${formatPartnerType(parceiro.tipo)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    document.body.appendChild(printDiv);
+
+    try {
+      const canvas = await html2canvas(printDiv, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pdf.internal.pageSize.getWidth() - 40;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 20, 40, imgWidth, imgHeight);
+      pdf.save('relatorio_parceiros.pdf');
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+      Swal.fire('Erro', 'Não foi possível gerar o PDF', 'error');
+    } finally {
+      document.body.removeChild(printDiv);
+    }
+  };
+
+  const totalPages = Math.ceil(processedParceiros.length / pageSize);
+  const pageItems = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
     return processedParceiros.slice(start, start + pageSize);
   }, [processedParceiros, currentPage, pageSize]);
-
-  useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -118,7 +157,7 @@ function ParceirosPage() {
     return sortConfig.direction === 'ascending' ? <FaArrowUp className="sort-icon" /> : <FaArrowDown className="sort-icon" />;
   };
 
-  if (loading) return <div className="page-container"><h2>A carregar...</h2></div>;
+  if (loading) return <div className="page-container"><h2>Carregando...</h2></div>;
   if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
 
   return (
@@ -128,9 +167,14 @@ function ParceirosPage() {
           <FaHandshake className="icon" />
           <h1>Gestão de Parceiros</h1>
         </div>
-        <Link to="/cadastro-parceiro" className="btn btn-primary">
-          <FaPlus /> Cadastrar Parceiro
-        </Link>
+        <div>
+          <button onClick={handlePrint} className="btn btn-secondary" style={{ marginRight: '10px' }}>
+            <FaPrint /> Imprimir PDF
+          </button>
+          <Link to="/cadastro-parceiro" className="btn btn-primary">
+            <FaPlus /> Cadastrar Parceiro
+          </Link>
+        </div>
       </div>
 
       <div className="filter-container">
@@ -146,20 +190,38 @@ function ParceirosPage() {
         </div>
       </div>
 
-      <div className="table-container">
+      <div className="table-container" ref={tableRef}>
         <table className="data-table">
           <thead>
             <tr>
-              <th style={{ width: '30%' }}><button type="button" onClick={() => requestSort('nome')} className="sortable-header">Nome {getSortIcon('nome')}</button></th>
-              <th style={{ width: '20%' }}><button type="button" onClick={() => requestSort('cnpj')} className="sortable-header">CNPJ {getSortIcon('cnpj')}</button></th>
-              <th style={{ width: '20%' }}><button type="button" onClick={() => requestSort('cidade')} className="sortable-header">Cidade {getSortIcon('cidade')}</button></th>
-              <th style={{ width: '15%' }}><button type="button" onClick={() => requestSort('tipo')} className="sortable-header">Tipo {getSortIcon('tipo')}</button></th>
-              <th style={{ width: '15%' }}>Ações</th>
+              <th>
+                <button type="button" onClick={() => requestSort('nome')} className="sortable-header">
+                  Nome {getSortIcon('nome')}
+                </button>
+              </th>
+              <th>
+                <button type="button" onClick={() => requestSort('cnpj')} className="sortable-header">
+                  CNPJ {getSortIcon('cnpj')}
+                </button>
+              </th>
+              <th>
+                <button type="button" onClick={() => requestSort('cidade')} className="sortable-header">
+                  Cidade {getSortIcon('cidade')}
+                </button>
+              </th>
+              <th>
+                <button type="button" onClick={() => requestSort('tipo')} className="sortable-header">
+                  Tipo {getSortIcon('tipo')}
+                </button>
+              </th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {pageItems.length === 0 ? (
-              <tr><td colSpan="5" style={{ textAlign: 'center' }}>Nenhum parceiro encontrado.</td></tr>
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center' }}>Nenhum parceiro encontrado</td>
+              </tr>
             ) : (
               pageItems.map(parceiro => (
                 <tr key={parceiro.id_parceiro}>
@@ -171,14 +233,19 @@ function ParceirosPage() {
                     <button
                       onClick={() => navigate(`/detalhes-parceiro/${parceiro.id_parceiro}`)}
                       className="btn-action btn-details"
-                      style={{ marginRight: 6 }}
                     >
                       <FaSearch /> Detalhes
                     </button>
-                    <button onClick={() => navigate(`/editar-parceiro/${parceiro.id_parceiro}`)} className="btn-action btn-edit">
+                    <button
+                      onClick={() => navigate(`/editar-parceiro/${parceiro.id_parceiro}`)}
+                      className="btn-action btn-edit"
+                    >
                       <FaEdit /> Editar
                     </button>
-                    <button onClick={() => handleDelete(parceiro.id_parceiro)} className="btn-action btn-delete">
+                    <button
+                      onClick={() => handleDelete(parceiro.id_parceiro)}
+                      className="btn-action btn-delete"
+                    >
                       <FaTrash /> Excluir
                     </button>
                   </td>
@@ -187,21 +254,45 @@ function ParceirosPage() {
             )}
           </tbody>
         </table>
+
         <div className="pagination-container">
           <div className="pagination-buttons">
-            <button onClick={()=> setCurrentPage(p=> Math.max(1,p-1))} disabled={currentPage===1}>«</button>
-            {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
-              const page = i+1;
-              return <button key={page} onClick={()=>setCurrentPage(page)} className={page===currentPage? 'active':''}>{page}</button>;
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </button>
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const page = i + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={page === currentPage ? 'active' : ''}
+                >
+                  {page}
+                </button>
+              );
             })}
-            <button onClick={()=> setCurrentPage(p=> Math.min(totalPages,p+1))} disabled={currentPage===totalPages}>»</button>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Próxima
+            </button>
           </div>
           <div>
-            <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
-            <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
-              {[5,10,20,50].map(size => <option key={size} value={size}>{size}</option>)}
+            <label>Itens por página: </label>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="page-size-select"
+            >
+              {[5, 10, 20, 50].map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
             </select>
-            <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {processedParceiros.length}</span>
           </div>
         </div>
       </div>

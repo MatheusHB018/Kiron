@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { API_URL } from '../services/api';
 import './styles/RelatoriosPage.css';
 import { Bar, Pie } from 'react-chartjs-2';
@@ -12,149 +12,220 @@ import {
   Legend,
   ArcElement
 } from 'chart.js';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { FaPrint } from 'react-icons/fa';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 function RelatoriosPage() {
-  const [residuosData, setResiduosData] = useState(null);
-  const [grupoData, setGrupoData] = useState(null);
-  const [entregasPorMes, setEntregasPorMes] = useState(null);
-  const [grupoCadastradoData, setGrupoCadastradoData] = useState(null);
-  const [erro, setErro] = useState(null);
+  const [data, setData] = useState({
+    residuos: null,
+    grupo: null,
+    entregas: null,
+    cadastrados: null
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
-    async function carregar() {
+    const fetchData = async () => {
       try {
-        const [r1, r2, r3, r4] = await Promise.all([
-          fetch(`${API_URL}/relatorios/residuos-quantidade`).then(r => r.json()),
-          fetch(`${API_URL}/relatorios/grupo-residuos`).then(r => r.json()),
-          fetch(`${API_URL}/relatorios/entregas-por-mes`).then(r => r.json()),
-          fetch(`${API_URL}/relatorios/grupo-residuos-cadastrados`).then(r => r.json()),
+        const responses = await Promise.all([
+          fetch(`${API_URL}/relatorios/residuos-quantidade`),
+          fetch(`${API_URL}/relatorios/grupo-residuos`),
+          fetch(`${API_URL}/relatorios/entregas-por-mes`),
+          fetch(`${API_URL}/relatorios/grupo-residuos-cadastrados`)
         ]);
-        setResiduosData(r1);
-        setGrupoData(r2);
-        setEntregasPorMes(r3);
-        setGrupoCadastradoData(r4);
-      } catch (e) {
-        setErro('Falha ao carregar relatórios.');
+
+        const jsonResponses = await Promise.all(responses.map(r => r.json()));
+
+        setData({
+          residuos: jsonResponses[0],
+          grupo: jsonResponses[1],
+          entregas: jsonResponses[2],
+          cadastrados: jsonResponses[3]
+        });
+      } catch (err) {
+        setError('Erro ao carregar dados dos relatórios');
       } finally {
         setLoading(false);
       }
-    }
-    carregar();
+    };
+
+    fetchData();
   }, []);
 
+  const handlePrint = async () => {
+    const input = contentRef.current;
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    
+    // Configurações para melhor qualidade
+    const options = {
+      scale: 2,
+      quality: 1,
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      scrollX: 0,
+      scrollY: 0
+    };
+
+    // Ajustes temporários para impressão
+    const originalStyles = {
+      display: input.style.display,
+      flexDirection: input.style.flexDirection,
+      flexWrap: input.style.flexWrap,
+      gap: input.style.gap
+    };
+
+    input.style.display = 'block';
+    input.style.flexDirection = 'column';
+    input.style.flexWrap = 'nowrap';
+    input.style.gap = '20px';
+
+    try {
+      const canvas = await html2canvas(input, options);
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      
+      // Calcula dimensões mantendo proporção
+      const pdfWidth = pdf.internal.pageSize.getWidth() - 40;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      // Adiciona cabeçalho
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(18);
+      pdf.text('Relatório de Estatísticas', 40, 30);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(12);
+      pdf.text(`Gerado em: ${new Date().toLocaleDateString()}`, 40, 50);
+
+      // Adiciona conteúdo
+      pdf.addImage(imgData, 'PNG', 20, 70, pdfWidth, pdfHeight);
+      
+      pdf.save('relatorio_estatisticas.pdf');
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+      setError('Falha ao gerar o PDF');
+    } finally {
+      // Restaura estilos originais
+      input.style.display = originalStyles.display;
+      input.style.flexDirection = originalStyles.flexDirection;
+      input.style.flexWrap = originalStyles.flexWrap;
+      input.style.gap = originalStyles.gap;
+    }
+  };
+
+  if (loading) return <div className="loading">Carregando dados...</div>;
+  if (error) return <div className="error">{error}</div>;
+
   return (
-    <div className="relatorios-wrapper">
-      <div className="relatorios-header">
-        <h1>Relatórios</h1>
-        {loading && <span className="info-inline">Carregando...</span>}
-        {erro && <span className="erro-inline">{erro}</span>}
+    <div className="relatorios-container">
+      <div className="header">
+        <h1>Relatórios Estatísticos</h1>
+        <button onClick={handlePrint} className="print-btn">
+          <FaPrint /> Exportar PDF
+        </button>
       </div>
-      <div className="charts-grid">
+
+      <div className="charts-grid" ref={contentRef}>
+        {/* Gráfico 1 */}
         <div className="chart-card">
-          <h2>Resíduos entregues (quantidade)</h2>
-          <div className="chart-inner">
-            {residuosData && residuosData.labels?.length > 0 ? (
+          <h2>Resíduos Entregues</h2>
+          <div className="chart-container">
+            {data.residuos ? (
               <Bar
                 data={{
-                  labels: residuosData.labels,
-                  datasets: [
-                    {
-                      label: 'Quantidade Entregue',
-                      data: residuosData.values,
-                      backgroundColor: '#4bc0c0'
-                    }
-                  ]
+                  labels: data.residuos.labels,
+                  datasets: [{
+                    label: 'Quantidade',
+                    data: data.residuos.values,
+                    backgroundColor: '#4bc0c0'
+                  }]
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
                   plugins: { legend: { display: false } },
-                  scales: { y: { beginAtZero: true } }
+                  scales: { y: { beginAtZero: true } },
+                  animation: { duration: 0 } // Remove animações para impressão
                 }}
               />
-            ) : (
-              <p className="placeholder">Sem dados</p>
-            )}
+            ) : <p>Sem dados disponíveis</p>}
           </div>
         </div>
+
+        {/* Gráfico 2 */}
         <div className="chart-card">
-          <h2>Distribuição por grupo (entregas)</h2>
-          <div className="chart-inner">
-            {grupoData && grupoData.labels?.length > 0 ? (
+          <h2>Distribuição por Grupo</h2>
+          <div className="chart-container">
+            {data.grupo ? (
               <Pie
                 data={{
-                  labels: grupoData.labels,
-                  datasets: [
-                    {
-                      label: 'Grupo',
-                      data: grupoData.values,
-                      backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0']
-                    }
-                  ]
+                  labels: data.grupo.labels,
+                  datasets: [{
+                    data: data.grupo.values,
+                    backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0']
+                  }]
                 }}
-                options={{ responsive: true, maintainAspectRatio: false }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  animation: { duration: 0 }
+                }}
               />
-            ) : (
-              <p className="placeholder">Sem dados</p>
-            )}
+            ) : <p>Sem dados disponíveis</p>}
           </div>
         </div>
+
+        {/* Gráfico 3 */}
         <div className="chart-card">
-          <h2>Resíduos cadastrados por grupo</h2>
-          <div className="chart-inner">
-            {grupoCadastradoData && grupoCadastradoData.labels?.length > 0 ? (
+          <h2>Resíduos Cadastrados</h2>
+          <div className="chart-container">
+            {data.cadastrados ? (
               <Bar
                 data={{
-                  labels: grupoCadastradoData.labels,
-                  datasets: [
-                    {
-                      label: 'Tipos Cadastrados',
-                      data: grupoCadastradoData.values,
-                      backgroundColor: '#ff9f40'
-                    }
-                  ]
+                  labels: data.cadastrados.labels,
+                  datasets: [{
+                    label: 'Tipos',
+                    data: data.cadastrados.values,
+                    backgroundColor: '#ff9f40'
+                  }]
                 }}
                 options={{
                   indexAxis: 'y',
                   responsive: true,
                   maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
-                  scales: { x: { beginAtZero: true } }
+                  animation: { duration: 0 }
                 }}
               />
-            ) : (
-              <p className="placeholder">Sem dados</p>
-            )}
+            ) : <p>Sem dados disponíveis</p>}
           </div>
         </div>
+
+        {/* Gráfico 4 */}
         <div className="chart-card">
-          <h2>Entregas por mês (12M)</h2>
-          <div className="chart-inner">
-            {entregasPorMes && entregasPorMes.labels?.length > 0 ? (
+          <h2>Entregas por Mês</h2>
+          <div className="chart-container">
+            {data.entregas ? (
               <Bar
                 data={{
-                  labels: entregasPorMes.labels,
-                  datasets: [
-                    {
-                      label: 'Entregas',
-                      data: entregasPorMes.values,
-                      backgroundColor: '#9966ff'
-                    }
-                  ]
+                  labels: data.entregas.labels,
+                  datasets: [{
+                    label: 'Entregas',
+                    data: data.entregas.values,
+                    backgroundColor: '#9966ff'
+                  }]
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
-                  scales: { y: { beginAtZero: true } }
+                  animation: { duration: 0 }
                 }}
               />
-            ) : (
-              <p className="placeholder">Sem dados</p>
-            )}
+            ) : <p>Sem dados disponíveis</p>}
           </div>
         </div>
       </div>

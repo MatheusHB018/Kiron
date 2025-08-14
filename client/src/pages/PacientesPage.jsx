@@ -1,30 +1,40 @@
 // client/src/pages/PacientesPage.jsx
-import React, { useEffect, useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { FaUsers, FaPlus, FaSearch, FaEdit, FaTrash, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaPrint } from 'react-icons/fa';
 import { API_URL } from '../services/api';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import './styles/Page.css';
 import './styles/ListPage.css';
 
 function PacientesPage() {
-  const navigate = useNavigate();
   const [pacientes, setPacientes] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'nome', direction: 'ascending' });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    const fetchPacientes = async () => {
+      try {
+        const response = await fetch(`${API_URL}/pacientes`);
+        if (!response.ok) throw new Error('Erro ao carregar pacientes');
+        const data = await response.json();
+        setPacientes(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPacientes();
   }, []);
 
   const formatarCPF = (cpf) => {
     if (!cpf) return '';
-    const digitsOnly = cpf.replace(/\D/g, '');
-    return digitsOnly.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
   };
 
   const formatarTelefone = (telefone) => {
@@ -33,164 +43,181 @@ function PacientesPage() {
     if (digitsOnly.length === 11) {
       return digitsOnly.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
     }
-    if (digitsOnly.length === 10) {
-      return digitsOnly.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    }
     return telefone;
   };
 
-  const fetchPacientes = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch(`${API_URL}/pacientes`);
-      if (!res.ok) throw new Error('Erro ao buscar pacientes');
-      const data = await res.json();
-      setPacientes(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Você tem certeza?',
-      text: "O paciente e todos os seus dados associados serão apagados permanentemente!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Sim, apagar!',
-      cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await fetch(`${API_URL}/pacientes/${id}`, { method: 'DELETE' });
-          if (!res.ok) throw new Error((await res.json()).error || 'Erro ao excluir');
-          fetchPacientes();
-          Swal.fire('Apagado!', 'O paciente foi removido.', 'success');
-        } catch (err) {
-          Swal.fire('Erro!', err.message, 'error');
-        }
+  const handleDelete = async (id) => {
+    if (window.confirm('Tem certeza que deseja excluir este paciente?')) {
+      try {
+        const response = await fetch(`${API_URL}/pacientes/${id}`, {
+          method: 'DELETE',
+        });
+        if (!response.ok) throw new Error('Erro ao excluir paciente');
+        setPacientes(pacientes.filter(paciente => paciente.id_paciente !== id));
+      } catch (err) {
+        setError(err.message);
       }
-    });
+    }
   };
 
-  const processedPacientes = useMemo(() => {
-    let sortableItems = [...pacientes];
+  const handlePrint = async () => {
+    if (loading) {
+      Swal.fire('Aguarde', 'Os dados ainda estão sendo carregados', 'info');
+      return;
+    }
 
-    if (sortConfig.key) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
-        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'ascending' ? 1 : -1;
-        return 0;
+    if (filteredPacientes.length === 0) {
+      Swal.fire('Sem dados', 'Não há pacientes para gerar o relatório', 'warning');
+      return;
+    }
+
+    const printDiv = document.createElement('div');
+    printDiv.style.position = 'absolute';
+    printDiv.style.left = '-9999px';
+    printDiv.style.width = '794px';
+    printDiv.style.padding = '20px';
+    printDiv.style.backgroundColor = 'white';
+
+    printDiv.innerHTML = `
+      <h1 style="text-align: center; margin-bottom: 20px; font-family: Arial, sans-serif; color: #333;">
+        Relatório de Pacientes
+      </h1>
+      <p style="text-align: center; margin-bottom: 30px; font-family: Arial, sans-serif; color: #666;">
+        Gerado em: ${new Date().toLocaleDateString('pt-BR')}
+      </p>
+      <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+        <thead>
+          <tr>
+            <th  style="background-color: #f2f2f2; left;">Nome</th>
+            <th  style="background-color: #f2f2f2; left;">CPF</th>
+            <th  style="background-color: #f2f2f2;left;">Telefone</th>
+            <th  style="background-color: #f2f2f2;text-align: left;">Email</th>
+            <th  style="background-color: #f2f2f2; text-align: left;">Cidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filteredPacientes.map(paciente => `
+            <tr>
+              <td style="border: 1px solid #ddd; padding: 8px;">${paciente.nome}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${formatarCPF(paciente.cpf)}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${formatarTelefone(paciente.telefone)}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${paciente.email || '-'}</td>
+              <td style="border: 1px solid #ddd; padding: 8px;">${paciente.cidade || '-'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    document.body.appendChild(printDiv);
+
+    try {
+      const canvas = await html2canvas(printDiv, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        backgroundColor: '#ffffff'
       });
+
+      const pdf = new jsPDF('p', 'pt', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pdf.internal.pageSize.getWidth() - 40;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 20, 40, imgWidth, imgHeight);
+      pdf.save('relatorio_pacientes.pdf');
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+      Swal.fire('Erro', 'Não foi possível gerar o PDF', 'error');
+    } finally {
+      document.body.removeChild(printDiv);
     }
-
-    if (!searchTerm) return sortableItems;
-
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-
-    // LÓGICA DE FILTRO ATUALIZADA: Busca apenas pelo início do nome
-    return sortableItems.filter(p =>
-      p.nome && p.nome.toLowerCase().startsWith(lowerCaseSearchTerm)
-    );
-  }, [pacientes, searchTerm, sortConfig]);
-
-  const totalPages = Math.ceil(processedPacientes.length / pageSize) || 1;
-  const pageItems = useMemo(()=>{
-    const start = (currentPage -1) * pageSize;
-    return processedPacientes.slice(start, start + pageSize);
-  }, [processedPacientes, currentPage, pageSize]);
-
-  useEffect(()=>{ setCurrentPage(1); }, [searchTerm, pageSize]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
   };
 
-  const getSortIcon = (name) => {
-    if (sortConfig.key !== name) return null;
-    return sortConfig.direction === 'ascending' ? <FaArrowUp className="sort-icon" /> : <FaArrowDown className="sort-icon" />;
-  };
+  const filteredPacientes = pacientes.filter(paciente =>
+    paciente.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    paciente.cpf?.includes(searchTerm)
+  );
 
   if (loading) return <div className="page-container"><h2>Carregando...</h2></div>;
   if (error) return <div className="page-container"><p className="error-message">{error}</p></div>;
 
   return (
     <div className="page-container">
-        <div className="list-page-header">
-            <div className="page-title">
-                <FaUsers className="icon" />
-                <h1>Gestão de Pacientes</h1>
-            </div>
-            <Link to="/cadastro-paciente" className="btn btn-primary">
-                <FaPlus /> Cadastrar Paciente
-            </Link>
+      <div className="list-page-header">
+        <div className="page-title">
+          <FaHandshake className="icon" />
+          <h1>Gestão de Pacientes</h1>
         </div>
+        <div>
+          <button onClick={handlePrint} className="btn btn-secondary" style={{ marginRight: '10px' }}>
+            <FaPrint /> Imprimir PDF
+          </button>
+          <Link to="/cadastro-paciente" className="btn btn-primary">
+            <FaPlus /> Cadastrar Paciente
+          </Link>
+        </div>
+      </div>
 
-        <div className="filter-container">
-            <div className="search-wrapper">
-                <FaSearch className="search-icon" />
-                <input
-                    type="text"
-                    placeholder="Buscar por nome..." // Placeholder atualizado
-                    className="search-input"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
+      <div className="search-and-filters">
+        <div className="search-container">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar por nome ou CPF..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
+      </div>
 
-        <div className="table-container">
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th><button type="button" onClick={() => requestSort('nome')} className="sortable-header">Nome {getSortIcon('nome')}</button></th>
-                        <th><button type="button" onClick={() => requestSort('cpf')} className="sortable-header">CPF {getSortIcon('cpf')}</button></th>
-                        <th>Telefone</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {pageItems.map((paciente) => (
-                        <tr key={paciente.id_paciente}>
-                            <td>{paciente.nome}</td>
-                            <td>{formatarCPF(paciente.cpf)}</td>
-                            <td>{formatarTelefone(paciente.telefone)}</td>
-                            <td className="actions-cell">
-                                <button onClick={() => navigate(`/pacientes/${paciente.id_paciente}`)} className="btn-action btn-details"><FaSearch /> Detalhes</button>
-                                <button onClick={() => navigate(`/editar-paciente/${paciente.id_paciente}`)} className="btn-action btn-edit"><FaEdit /> Editar</button>
-                                <button onClick={() => handleDelete(paciente.id_paciente)} className="btn-action btn-delete"><FaTrash /> Excluir</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="pagination-container">
-              <div className="pagination-buttons">
-                <button onClick={()=> setCurrentPage(p=> Math.max(1,p-1))} disabled={currentPage===1}>«</button>
-                {Array.from({length: totalPages}).slice(0,10).map((_,i)=>{
-                  const page = i+1;
-                  return <button key={page} onClick={()=>setCurrentPage(page)} className={page===currentPage? 'active':''}>{page}</button>;
-                })}
-                <button onClick={()=> setCurrentPage(p=> Math.min(totalPages,p+1))} disabled={currentPage===totalPages}>»</button>
-              </div>
-              <div>
-                <label style={{fontSize:'0.85rem'}}>Itens por página: </label>
-                <select value={pageSize} onChange={e=>setPageSize(Number(e.target.value))} className="page-size-select">
-                  {[5,10,20,50].map(size => <option key={size} value={size}>{size}</option>)}
-                </select>
-                <span style={{marginLeft:8,fontSize:'0.8rem'}}>Total: {processedPacientes.length}</span>
-              </div>
-            </div>
-        </div>
+      <div className="table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Telefone</th>
+              <th>Email</th>
+              <th>Cidade</th>
+              <th className="actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPacientes.length > 0 ? (
+              filteredPacientes.map((paciente) => (
+                <tr key={paciente.id_paciente}>
+                  <td>{paciente.nome}</td>
+                  <td>{formatarCPF(paciente.cpf)}</td>
+                  <td>{formatarTelefone(paciente.telefone)}</td>
+                  <td>{paciente.email || '-'}</td>
+                  <td>{paciente.cidade || '-'}</td>
+                  <td className="actions">
+                    <Link
+                      to={`/editar-paciente/${paciente.id_paciente}`}
+                      className="btn btn-edit"
+                    >
+                      <FaEdit />
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(paciente.id_paciente)}
+                      className="btn btn-delete"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="no-results">
+                  Nenhum paciente encontrado
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
