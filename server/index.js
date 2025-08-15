@@ -37,35 +37,57 @@ app.get('/', (req, res) => {
 });
 
 
-// Rota para enviar mensagem WhatsApp para paciente com base na entrega (MODO DE TESTE COM HELLO_WORLD)
+// Array com os seus números de telefone verificados para a demonstração
+const telefonesParaDemonstracao = [
+  '+5518996797457', 
+  '+5518996816585', 
+  '+5518997222271'
+];
+
+// Rota para avisar de ENTREGA VENCIDA (Envia para os 3 números com a imagem correta)
 app.post('/whatsapp/entregas/:id/send', (req, res) => {
   const { id } = req.params;
-  const query = `SELECT p.telefone as paciente_telefone
+  const query = `SELECT e.*, p.nome as paciente_nome
                  FROM entrega_materiais e
                  JOIN paciente p ON e.id_paciente = p.id_paciente
                  WHERE e.id_entrega = ?`;
   db.query(query, [id], async (err, results) => {
-    if (err) return res.status(500).json({ error: 'Erro ao buscar dados da entrega.' });
+    if (err) return res.status(500).json({ error: 'Erro ao buscar entrega.' });
     if (results.length === 0) return res.status(404).json({ error: 'Entrega não encontrada.' });
-    const entrega = results[0];
-    if (!entrega.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
-
-    console.log('--- MODO DE TESTE (ENTREGAS): Enviando template hello_world ---');
     
+    const entrega = results[0];
+    
+    console.log(`--- Disparando notificação de ENTREGA para ${telefonesParaDemonstracao.length} números ---`);
+
     const options = {
-        languageCode: 'en_US',
-        params: []
+      headerImageUrl: 'https://i.imgur.com/WRkXyKz.png', // <-- SEU LINK CORRETO
+      params: [
+        entrega.paciente_nome
+      ]
     };
 
-    const result = await whatsappService.sendTemplateMessage(entrega.paciente_telefone, 'hello_world', options);
-    
-    if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
-    res.json({ message: 'Mensagem de teste de entrega enviada.', details: result });
+    try {
+      const promessasDeEnvio = telefonesParaDemonstracao.map(telefone => 
+        whatsappService.sendTemplateMessage(telefone, 'aviso_descarte_atrasado', options)
+      );
+      
+      const resultados = await Promise.all(promessasDeEnvio);
+      
+      const falhas = resultados.filter(r => !r.ok);
+      if (falhas.length > 0) {
+        console.error("Algumas mensagens falharam ao enviar:", falhas);
+        return res.status(500).json({ error: 'Falha ao enviar uma ou mais mensagens do WhatsApp', details: falhas });
+      }
+
+      res.json({ message: `Mensagens de descarte atrasado enviadas para ${resultados.length} números.` });
+    } catch (error) {
+      console.error("Erro inesperado ao enviar mensagens de entrega:", error);
+      res.status(500).json({ error: 'Erro inesperado no servidor.' });
+    }
   });
 });
 
-
-// Rota para lembrar de COLETA AGENDADA (MODO DE TESTE COM HELLO_WORLD)
+// Rota para lembrar de COLETA AGENDADA (Envia para os 3 números com a imagem correta)
 app.post('/whatsapp/coletas/:id/send', (req, res) => {
   const { id } = req.params;
   const query = `SELECT a.*, p.nome as paciente_nome, p.telefone as paciente_telefone
@@ -75,25 +97,39 @@ app.post('/whatsapp/coletas/:id/send', (req, res) => {
   db.query(query, [id], async (err, results) => {
     if (err) return res.status(500).json({ error: 'Erro ao buscar coleta.' });
     if (results.length === 0) return res.status(404).json({ error: 'Coleta não encontrada.' });
-    const coleta = results[0];
-    if (!coleta.paciente_telefone) return res.status(400).json({ error: 'Paciente sem telefone cadastrado.' });
     
-    console.log('--- MODO DE TESTE (COLETAS): Enviando template hello_world ---');
+    const coleta = results[0];
+
+    console.log(`--- Disparando notificação de COLETA para ${telefonesParaDemonstracao.length} números ---`);
     
     const options = {
-        languageCode: 'en_US',
-        params: []
+        headerImageUrl: 'https://i.imgur.com/kddgzcR.png', // <-- SEU LINK CORRETO
+        params: [
+            coleta.paciente_nome,
+            new Date(coleta.data_agendada).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+        ]
     };
     
-    const result = await whatsappService.sendTemplateMessage(coleta.paciente_telefone, 'hello_world', options);
-    
-    if (!result.ok) return res.status(500).json({ error: 'Falha ao enviar WhatsApp', details: result.error });
-    res.json({ message: 'Mensagem de lembrete de coleta enviada.', details: result });
+    try {
+      const promessasDeEnvio = telefonesParaDemonstracao.map(telefone => 
+        whatsappService.sendTemplateMessage(telefone, 'lembrete_coleta_proxima', options)
+      );
+      
+      const resultados = await Promise.all(promessasDeEnvio);
+      
+      const falhas = resultados.filter(r => !r.ok);
+      if (falhas.length > 0) {
+        console.error("Algumas mensagens falharam ao enviar:", falhas);
+        return res.status(500).json({ error: 'Falha ao enviar uma ou mais mensagens do WhatsApp', details: falhas });
+      }
+
+      res.json({ message: `Mensagens de lembrete de coleta enviadas para ${resultados.length} números.` });
+    } catch (error) {
+      console.error("Erro inesperado ao enviar mensagens de coleta:", error);
+      res.status(500).json({ error: 'Erro inesperado no servidor.' });
+    }
   });
 });
-
-
-// --- O RESTANTE DO SEU CÓDIGO PERMANECE IGUAL ---
 
 // --- ROTA PARA VISUALIZAR NOTIFICAÇÕES (PARA DEMONSTRAÇÃO) ---
 app.get('/notificacoes', (req, res) => {
