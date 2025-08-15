@@ -1,109 +1,74 @@
 # MedResiduos - Sistema de Gestão de Descarte de Resíduos de Saúde
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 
-Repositório do protótipo do projeto **MedResiduos**, uma plataforma web para o controle, rastreabilidade e orientação do descarte de resíduos de saúde por pacientes em tratamento domiciliar.
+## 📄 Sobre o Projeto
 
-## 📄 Índice
+O **MedResiduos** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, do curso de Análise e Desenvolvimento de Sistemas da Fatec Presidente Prudente. O projeto visa criar uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o controle, a rastreabilidade e a orientação para o descarte correto de resíduos de saúde.
 
-- [📖Sobre o Projeto](#-sobre-o-projeto)
-- [✨ Funcionalidades](#-funcionalidades)
-- [🌱 Alinhamento ESG](#-alinhamento-esg)
-- [🛠️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-- [🚀 Como Executar](#-como-executar)
-- [🏛️ Padrões de Projeto](#️-padrões-de-projeto)
-- [👥 Equipe](#-equipe)
+A solução atende às demandas de hospitais e unidades de saúde, promovendo boas práticas ambientais, sociais e de governança (ESG), conforme o regulamento do Hackathon.
 
----
+## ✨ Principais Funcionalidades
 
-## 📖 Sobre o Projeto
+A plataforma oferece um conjunto robusto de funcionalidades para a gestão completa do ciclo de vida dos resíduos de saúde:
 
-O projeto **MedResiduos** propõe uma solução para um problema crítico de saúde pública e meio ambiente: o descarte incorreto de resíduos de saúde gerados em tratamentos domiciliares. Materiais como agulhas, seringas, fitas de glicemia e frascos de medicamentos, quando descartados de forma inadequada, apresentam sérios riscos de contaminação e impactos ambientais.
-
-Nossa plataforma web visa conectar hospitais, unidades de saúde, pacientes e empresas de coleta para garantir a rastreabilidade e o descarte correto desses materiais, desde a entrega ao paciente até o recolhimento e tratamento final.
-
-### Problemas Abordados
-- Descarte incorreto de resíduos de saúde por pacientes (agulhas, seringas, etc.).
-- Falta de rastreabilidade dos materiais após saírem das unidades de saúde.
-- Riscos à saúde coletiva e impactos ambientais.
-- Baixo controle sobre o fornecimento e uso dos materiais distribuídos.
-
----
-
-## ✨ Funcionalidades
-
-O sistema foi projetado com as seguintes funcionalidades-chave:
-
--   **Gestão de Pacientes:** Cadastro e monitoramento de pacientes que recebem insumos médicos.
--   **Controle de Materiais:** Registro da retirada de materiais e geração de histórico por paciente.
--   **Notificações Automáticas:** Envio de alertas por WhatsApp, SMS ou e-mail para pacientes com descarte pendente, ausência de retirada ou descarte inadequado.
--   **Rede de Parceiros:** Cadastro e gerenciamento de pontos de descarte parceiros, como farmácias, UBS e empresas especializadas.
--   **Agendamento de Coleta:** Permite agendar a próxima coleta de resíduos com as empresas parceiras.
--   **Módulo Educativo:** Oferece orientações sobre o descarte correto e conteúdos de conscientização ambiental.
--   **Relatórios ESG:** Geração de relatórios de sustentabilidade para as instituições de saúde.
--   **Canal de Comunicação:** Permite o contato direto entre a unidade de saúde e os pacientes para acompanhamento.
-
----
+* 📊 **Dashboard Interativo:** Visualização rápida de dados chave, como coletas agendadas, entregas de materiais vencidas e gráficos de desempenho.
+* 👤 **Gestão de Pacientes:** CRUD completo para registrar e acompanhar os pacientes que recebem materiais.
+* 🧪 **Gestão de Resíduos:** Cadastro detalhado dos tipos de resíduos (agulhas, seringas, medicamentos vencidos) conforme a classificação da ANVISA.
+* 🤝 **Gestão de Parceiros:** Cadastro de empresas de coleta, farmácias e UBSs parceiras.
+* 📦 **Controle de Entregas:** Rastreamento dos materiais entregues aos pacientes, com datas de devolução previstas.
+* 🗓️ **Agenda de Coletas:** Agendamento centralizado das coletas de resíduos, associando pacientes e parceiros.
+* 📱 **Notificações via WhatsApp:** Integração com a API do WhatsApp Business para enviar lembretes e alertas automáticos aos pacientes sobre coletas e devoluções.
+* 🔒 **Autenticação e Segurança:** Sistema de login com JWT (JSON Web Tokens) para garantir a segurança dos dados.
 
 ## 🌱 Alinhamento ESG
 
-O projeto está totalmente alinhado com as práticas de ESG (Environmental, Social, and Governance):
+O projeto foi construído sobre os três pilares ESG:
 
--   **Ambiental:** Reduz o impacto ambiental do descarte incorreto e promove a conformidade com as normas da ANVISA.
--   **Social:** Aumenta a segurança da comunidade, conscientiza os pacientes e reduz os riscos de contaminação.
--   **Governança:** Oferece transparência e controle total sobre o ciclo de vida dos resíduos de saúde, melhorando a gestão para as instituições.
+* **🌍 Ambiental (E):** Garante que resíduos perigosos não contaminem o lixo comum, promovendo o descarte correto e a conformidade com as normas ambientais.
+* **❤️ Social (S):** Educa os pacientes sobre o descarte seguro, reduzindo riscos à saúde coletiva e acidentes na comunidade.
+* **🏛️ Governança (G):** Oferece às unidades de saúde uma ferramenta de gestão com rastreabilidade, transparência e controle de processos.
 
----
+## 🚀 Stack Tecnológica
 
-## 🛠️ Tecnologias Utilizadas
+* **Frontend:** React (com Vite), utilizando a Context API para gestão de estado global.
+* **Backend:** Node.js com Express.
+* **Base de Dados:** MySQL.
+* **Notificações:** WhatsApp Business Cloud API.
+* **Autenticação:** JWT (JSON Web Tokens).
 
-A seção a seguir descreve as tecnologias usadas no desenvolvimento do projeto.
+## 📐 Padrões de Projeto Aplicados
 
--   **Frontend:** `React`
--   **Backend:** `Node.js + Express`
--   **Banco de Dados:** `MYSQL`
+Conforme solicitado no escopo do projeto, foram utilizados os seguintes padrões de projeto:
 
----
+* **Singleton:** Aplicado no `NotificationService.js` para criar uma instância única e centralizada que gere todas as notificações do sistema em tempo real.
+* **Factory Method:** Utilizado no `EntityFactory.js` para permitir a criação flexível de diferentes objetos do sistema (como Usuários, Pacientes, Resíduos) sem acoplar o código principal a classes concretas.
 
-## 🚀 Como Executar
+## ⚙️ Como Executar o Projeto Localmente
 
-Siga os passos abaixo para executar o projeto em seu ambiente local.
+### Pré-requisitos
+* Node.js
+* NPM ou Yarn
+* Um servidor de base de dados MySQL (como o XAMPP)
 
-1.  **Clone o repositório:**
-    ```sh
-    git clone [https://github.com/Ma2903/MedResiduos.git](https://github.com/Ma2903/MedResiduos.git)
+### Backend
+1.  Navegue até à pasta `server`: `cd server`
+2.  Instale as dependências: `npm install`
+3.  Crie um ficheiro `.env` na raiz da pasta `server` e adicione as suas credenciais da API do WhatsApp:
     ```
-2.  **Navegue até o diretório do projeto:**
-    ```sh
-    cd MedResiduos
+    WHATSAPP_TOKEN=SEU_TOKEN_AQUI
+    WHATSAPP_PHONE_ID=SEU_ID_DE_TELEFONE_AQUI
     ```
-3.  **Navegue até o diretório do Front-End:**
-    ```sh
-    cd client
-    ```
-4.  **Instale as dependências:**
-    ```sh
-    npm install
-    ```
-5.  **Inicie o servidor:**
-    ```sh
-    npm run dev
-    ```
+4.  Inicie o servidor: `npm run dev`
+5.  A API estará a funcionar em `http://localhost:3001`.
 
----
+### Frontend
+1.  Num novo terminal, navegue até à pasta `client`: `cd client`
+2.  Instale as dependências: `npm install`
+3.  Inicie a aplicação: `npm run dev`
+4.  A aplicação estará acessível em `http://localhost:5173`.
 
-## 🏛️ Padrões de Projeto
+## 👥 Membros da Equipa
 
-Para garantir um código flexível, escalável e de fácil manutenção, utilizamos os seguintes padrões de projeto:
-
--   **Singleton:** Aplicado para garantir uma instância única no gerenciamento centralizado de notificações e agendamentos, evitando conflitos e mantendo a consistência.
--   **Factory Method:** Utilizado para permitir a criação flexível de diferentes tipos de objetos (Resíduo, Paciente, Coleta) sem acoplar o código cliente às classes concretas.
-
----
-
-## 👥 Equipe
-
-Este projeto foi desenvolvido por:
-
--   Gustavo Henrique Bispo Costa
--   Ian Gabriel de Abreu Barbosa
--   Manoela Pinheiro da Silva
+* Gustavo Henrique Bispo Costa
+* Ian Gabriel Abreu Barbosa
+* Manoela Pinheiro da Silva
+* Matheus Henrique da Conceição Bispo
