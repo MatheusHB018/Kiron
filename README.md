@@ -1,85 +1,102 @@
+# ♻️ MedResiduos - Gestão Inteligente de Resíduos de Saúde
+
+![Status do Projeto](https://img.shields.io/badge/status-concluído-brightgreen.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 ## 📄 Sobre o Projeto
 
-O **MedResiduos** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, do curso de Análise e Desenvolvimento de Sistemas da Fatec Presidente Prudente. O projeto visa criar uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o controle, a rastreabilidade e a orientação para o descarte correto de resíduos de saúde.
-
-A solução atende às demandas de hospitais e unidades de saúde, promovendo boas práticas ambientais, sociais e de governança (ESG), conforme o regulamento do Hackathon.
+O **MedResiduos** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, da Fatec Presidente Prudente. O projeto cria uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o **controle, a rastreabilidade e o descarte correto** de resíduos de saúde, em linha com as melhores práticas **ESG** (Ambiental, Social e Governança).
 
 ## ✨ Principais Funcionalidades
 
-A plataforma oferece um conjunto robusto de funcionalidades para a gestão completa do ciclo de vida dos resíduos de saúde:
-
-- **Dashboard interativo:** Visualização rápida de dados chave, como coletas agendadas, entregas de materiais vencidas e gráficos de desempenho.
-- **Gestão de pacientes:** CRUD completo para registrar e acompanhar os pacientes que recebem materiais.
-- **Gestão de resíduos:** Cadastro detalhado dos tipos de resíduos (agulhas, seringas, medicamentos vencidos) conforme a classificação da ANVISA.
-- **Gestão de parceiros:** Cadastro de empresas de coleta, farmácias e UBSs parceiras.
-- **Controle de entregas:** Rastreamento dos materiais entregues aos pacientes, com datas de devolução previstas.
-- **Agenda de coletas:** Agendamento centralizado das coletas de resíduos, associando pacientes e parceiros.
-- **Notificações via WhatsApp:** Integração com a API do WhatsApp Business para enviar lembretes e alertas automáticos aos pacientes sobre coletas e devoluções.
-- **Autenticação e segurança:** Sistema de login com JWT (JSON Web Tokens) para garantir a segurança dos dados.
+- **📊 Dashboard Interativo:** Visualização rápida de coletas, entregas vencidas e gráficos de desempenho.
+- **👥 Gestão de Pacientes:** CRUD completo para registro e acompanhamento de pacientes.
+- **🗑️ Gestão de Resíduos:** Cadastro detalhado de resíduos conforme a classificação da ANVISA.
+- **🤝 Gestão de Parceiros:** Cadastro de empresas de coleta, farmácias e UBSs.
+- **📦 Controle de Entregas:** Rastreamento de materiais entregues a pacientes, com controle de devolução.
+- **🗓️ Agenda de Coletas:** Agendamento centralizado de coletas, associando pacientes e parceiros.
+- **📱 Notificações via WhatsApp:** Alertas automáticos para pacientes sobre coletas e devoluções.
+- **🔐 Autenticação Segura:** Sistema de login com JWT (JSON Web Tokens).
 
 ## 🌱 Alinhamento ESG
 
-O projeto foi construído sobre os três pilares ESG:
+- **🌳 Ambiental (E):** Garante o descarte correto de resíduos perigosos, evitando a contaminação do lixo comum.
+- **🧑‍🤝‍🧑 Social (S):** Educa pacientes sobre o descarte seguro, reduzindo riscos à saúde coletiva.
+- **🏛️ Governança (G):** Oferece rastreabilidade, transparência e controle de processos para as unidades de saúde.
 
-- **Ambiental (E):** Garante que resíduos perigosos não contaminem o lixo comum, promovendo o descarte correto e a conformidade com as normas ambientais.
-- **Social (S):** Educa os pacientes sobre o descarte seguro, reduzindo riscos à saúde coletiva e acidentes na comunidade.
-- **Governança (G):** Oferece às unidades de saúde uma ferramenta de gestão com rastreabilidade, transparência e controle de processos.
+## 🚀 Tecnologias Utilizadas
 
-## 🚀 Stack Tecnológica
-
-- **Frontend:** React (com Vite), utilizando a Context API para gestão de estado global.
-- **Backend:** Node.js com Express.
-- **Base de dados:** MySQL.
-- **Notificações:** WhatsApp Business Cloud API.
-- **Autenticação:** JWT (JSON Web Tokens).
+| Categoria   | Tecnologia                                                                                                                                                                                                                                  |
+|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Frontend** | ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)                                             |
+| **Backend** | ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)                      |
+| **Banco de Dados** | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)                                                                                                                                       |
+| **Notificações** | ![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)                                                                                                                               |
+| **Autenticação** | ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)                                                                                                                                         |
 
 ## 📐 Padrões de Projeto Aplicados
+- **Singleton:** Implementado no `NotificationService.js` para uma instância única e centralizada de gerenciamento de notificações.
+- **Factory Method:** Utilizado no `EntityFactory.js` para desacoplar a criação de objetos (Usuários, Pacientes, etc.), permitindo maior flexibilidade.
 
-Conforme solicitado no escopo do projeto, foram utilizados os seguintes padrões de projeto:
+## ⚙️ Como Executar o Projeto
 
-- **Singleton:** Aplicado no `NotificationService.js` para criar uma instância única e centralizada que gere todas as notificações do sistema em tempo real.
-- **Factory Method:** Utilizado no `EntityFactory.js` para permitir a criação flexível de diferentes objetos do sistema (como Usuários, Pacientes, Resíduos) sem acoplar o código principal a classes concretas.
+Siga os passos abaixo para rodar o projeto em sua máquina local.
 
-## ⚙️ Como Executar o Projeto Localmente
+#### **Pré-requisitos**
+-   [Node.js](https://nodejs.org/en/) (versão 18 ou superior)
+-   [NPM](https://www.npmjs.com/) ou [Yarn](https://yarnpkg.com/)
+-   Um servidor MySQL (Ex: XAMPP, Docker).
 
-### Pré-requisitos
+---
 
-- **Node.js:** Ambiente de execução JavaScript.
-- **NPM ou Yarn:** Gerenciador de pacotes.
-- **Servidor MySQL:** Exemplo: XAMPP.
+#### **1. Configuração do Banco de Dados**
+-   Crie um banco de dados chamado `medresiduos`.
+-   Importe o arquivo `client/banco/medresiduos.sql` para criar as tabelas e popular os dados iniciais.
+-   Ajuste as credenciais de acesso no arquivo `server/db.js` se necessário.
 
-### Backend
+---
 
-1. **Aceder à pasta server:**
-   `cd server`
-2. **Instalar as dependências:**
-   `npm install`
-3. **Criar o ficheiro .env com credenciais do WhatsApp:**
-   ```
-   WHATSAPP_TOKEN=SEU_TOKEN_AQUI
-   WHATSAPP_PHONE_ID=SEU_ID_DE_TELEFONE_AQUI
-   ```
-4. **Iniciar o servidor:**
-   `npm run dev`
-5. **A API estará disponível em:** `http://localhost:3001`
+#### **2. Backend (`/server`)**
+```bash
+# Navegue até a pasta do servidor
+cd server
 
-### Frontend
+# Instale as dependências
+npm install
 
-1. **Aceder à pasta client:**
-   `cd client`
-2. **Instalar as dependências:**
-   `npm install`
-3. **Iniciar a aplicação:**
-   `npm run dev`
-4. **A aplicação estará acessível em:** `http://localhost:5173`
+# Crie um arquivo .env na raiz de /server e adicione suas credenciais
+WHATSAPP_TOKEN=SEU_TOKEN_DA_API_DO_WHATSAPP
+WHATSAPP_PHONE_ID=SEU_ID_DE_TELEFONE_DE_ORIGEM
 
-## 🎯 Público-Alvo
+# Inicie o servidor em modo de desenvolvimento
+npm run dev
 
-UBSs, hospitais, clínicas e demais unidades de saúde que necessitam controlar e monitorar o descarte de resíduos provenientes de pacientes em tratamento domiciliar, garantindo rastreabilidade, segurança e conformidade com as normas ambientais e sanitárias vigentes.
+# O servidor estará rodando em http://localhost:3001
+```
 
-## 👥 Membros da Equipe
+---
 
-- **Integrante:** Gustavo Henrique Bispo Costa
-- **Integrante:** Ian Gabriel Abreu Barbosa
-- **Integrante:** Manoela Pinheiro da Silva
-- **Integrante:** Matheus Henrique da Conceição Bispo
+#### **3. Frontend (`/client`)**
+```bash
+# Em um novo terminal, navegue até a pasta do cliente
+cd client
+
+# Instale as dependências
+npm install
+
+# Inicie a aplicação
+npm run dev
+
+# A aplicação estará disponível em http://localhost:5173
+```
+
+## 👥 Equipe do Projeto
+
+-   **Gustavo Henrique Bispo Costa**
+-   **Ian Gabriel Abreu Barbosa**
+-   **Manoela Pinheiro da Silva**
+-   **Matheus Henrique da Conceição Bispo**
+
+## 📜 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
