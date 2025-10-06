@@ -1,4 +1,4 @@
-# ♻️ MedResiduos - Gestão Inteligente de Resíduos de Saúde
+# ♻️ Kiron - Gestão Inteligente de Resíduos de Saúde
 
 ![Status do Projeto](https://img.shields.io/badge/status-concluído-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
