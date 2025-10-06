@@ -15,13 +15,13 @@ const transporter = nodemailer.createTransport({
 
 export const sendPasswordResetCode = async (email, code) => {
     const mailOptions = {
-        from: '"MedResiduos" <manoelaps2022@gmail.com>',
+        from: '"Kiron" <manoelaps2022@gmail.com>',
         to: email,
         subject: "Seu Código de Redefinição de Senha",
         html: `
             <div style="font-family: sans-serif; text-align: center;">
                 <h2>Redefinição de Senha</h2>
-                <p>Você solicitou uma redefinição de senha para sua conta no MedResiduos.</p>
+                <p>Você solicitou uma redefinição de senha para sua conta no Kiron.</p>
                 <p>Use o código abaixo para criar uma nova senha:</p>
                 <div style="font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px; padding: 10px; background-color: #f0f0f0; border-radius: 5px;">
                     ${code}

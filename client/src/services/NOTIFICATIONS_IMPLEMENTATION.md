@@ -2,7 +2,7 @@
 
 ## 📋 Visão Geral
 
-Foi implementado um sistema de notificações para alertar sobre entregas vencidas e coletas atrasadas, seguindo o mesmo padrão usado no sistema MedResiduos. O sistema usa o `EntityFactory` para processar os dados e calcular automaticamente os status.
+Foi implementado um sistema de notificações para alertar sobre entregas vencidas e coletas atrasadas, seguindo o mesmo padrão usado no sistema Kiron. O sistema usa o `EntityFactory` para processar os dados e calcular automaticamente os status.
 
 ## 🚨 Notificações Implementadas
 

@@ -4,7 +4,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root', // ajuste conforme seu usuário do MySQL
   password: '', // ajuste conforme sua senha do MySQL
-  database: 'medresiduos',
+  database: 'kiron',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

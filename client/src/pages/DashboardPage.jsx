@@ -14,7 +14,7 @@ function DashboardPage() {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <h1>Painel de Controle</h1>
-        <p>Bem-vindo(a) ao MedResíduos! Selecione um módulo abaixo para começar.</p>
+        <p>Bem-vindo(a) ao Kiron! Selecione um módulo abaixo para começar.</p>
       </div>
 
       <div className="dashboard-cards">

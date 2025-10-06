@@ -3,9 +3,13 @@
 ![Status do Projeto](https://img.shields.io/badge/status-concluído-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
+> **"Kiron: Cuidando da saúde de hoje, e do meio ambiente de amanhã."**
+
 ## 📄 Sobre o Projeto
 
-O **Kiron** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, da Fatec Presidente Prudente. O projeto cria uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o **controle, a rastreabilidade e o descarte correto** de resíduos de saúde, em linha com as melhores práticas **ESG** (Ambiental, Social e Governança).
+O **Kiron** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, da Fatec Presidente Prudente. O projeto cria uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o **controle, a rastreabilidade e o descarte correto** de resíduos de saúde, operando de forma **eficiente e ambientalmente responsável**.
+
+Nossa marca representa a **interconexão** e a **rede de processos** que o sistema Kiron utiliza para mapear e gerenciar resíduos de saúde, simbolizando a **jornada circular** do descarte consciente. Com foco em **confiança, segurança, sustentabilidade e profissionalismo**, o Kiron está alinhado com as melhores práticas **ESG** (Ambiental, Social e Governança).
 
 ## ✨ Principais Funcionalidades
 
@@ -50,8 +54,8 @@ Siga os passos abaixo para rodar o projeto em sua máquina local.
 ---
 
 #### **1. Configuração do Banco de Dados**
--   Crie um banco de dados chamado `medresiduos`.
--   Importe o arquivo `client/banco/medresiduos.sql` para criar as tabelas e popular os dados iniciais.
+-   Crie um banco de dados chamado `kiron`.
+-   Importe o arquivo `client/banco/kiron.sql` para criar as tabelas e popular os dados iniciais.
 -   Ajuste as credenciais de acesso no arquivo `server/db.js` se necessário.
 
 ---

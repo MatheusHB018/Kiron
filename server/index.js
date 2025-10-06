@@ -12,7 +12,7 @@ const whatsappService = require('./whatsappService');
 const app = express();
 const PORT = 3001;
 const SALT_ROUNDS = 10;
-const JWT_SECRET = 'MedResiduosSecretKey'; 
+const JWT_SECRET = 'KironSecretKey'; 
 
 // Middlewares
 app.use(cors());
@@ -33,7 +33,7 @@ const resetCodes = {};
 
 // Rota de teste
 app.get('/', (req, res) => {
-  res.json({ message: 'API do MedResiduos a funcionar!' });
+  res.json({ message: 'API do Kiron a funcionar!' });
 });
 
 

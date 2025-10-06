@@ -5,7 +5,7 @@ function Footer() {
   return (
     // A classe "footer-container" conecta este HTML ao nosso CSS
     <footer className="footer-container">
-      <p>&copy; 2025 MedResiduos. Todos os direitos reservados.</p>
+      <p>&copy; 2025 Kiron. Todos os direitos reservados.</p>
     </footer>
   );
 }

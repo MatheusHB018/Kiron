@@ -1,9 +1,9 @@
 /**
- * Factory Method para criação de objetos do sistema MedResiduos
- * 
+ * Factory Method para criação de objetos do sistema Kiron
+ *
  * Este factory centraliza a criação de objetos para as principais entidades
  * do sistema, garantindo consistência de dados e validações básicas.
- * 
+ *
  * Entidades suportadas:
  * - Paciente
  * - Parceiro

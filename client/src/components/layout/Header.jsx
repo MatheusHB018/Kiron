@@ -48,8 +48,8 @@ function Header() {
     <header className="header-container">
       <NavLink to="/dashboard" className="header-logo-link">
         <div className="header-logo">
-          <img src="/logotipo.png" alt="MedResíduos Logo" />
-          <span>MedResíduos</span>
+          <img src="/logotipo.png" alt="Kiron Logo" />
+          <span>Kiron</span>
         </div>
       </NavLink>
 
