@@ -5,7 +5,7 @@
 
 ## 📄 Sobre o Projeto
 
-O **MedResiduos** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, da Fatec Presidente Prudente. O projeto cria uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o **controle, a rastreabilidade e o descarte correto** de resíduos de saúde, em linha com as melhores práticas **ESG** (Ambiental, Social e Governança).
+O **Kiron** é uma plataforma web desenvolvida como solução para o desafio **Tech4Health**, da Fatec Presidente Prudente. O projeto cria uma ponte entre pacientes em tratamento domiciliar, unidades de saúde e empresas de coleta, garantindo o **controle, a rastreabilidade e o descarte correto** de resíduos de saúde, em linha com as melhores práticas **ESG** (Ambiental, Social e Governança).
 
 ## ✨ Principais Funcionalidades
 
