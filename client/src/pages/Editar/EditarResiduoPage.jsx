@@ -3,8 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaBoxOpen, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../services/api';
-import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css'; // Reutilizando o estilo
+import '../styles/Page.css';
+import '../styles/CadastroProfissionalPage.css'; // Reutilizando o estilo
 
 function EditarResiduoPage() {
   const { id } = useParams();

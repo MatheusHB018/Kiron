@@ -5,8 +5,8 @@ import { FaUserPlus, FaSave, FaEye, FaEyeSlash, FaArrowLeft, FaSpinner, FaUser, 
 import Swal from 'sweetalert2';
 import { cadastrarUsuario } from '../../services/api';
 import EntityFactory from '../../services/EntityFactory';
-import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css';
+import '../styles/Page.css';
+import '../styles/CadastroProfissionalPage.css';
 
 function CadastroProfissionalPage() {
     const [formData, setFormData] = useState({

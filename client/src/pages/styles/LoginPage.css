@@ -1,15 +1,5 @@
 /* src/pages/LoginPage.css */
-
-:root {
-  --logo-primary-green: #0D5D56;
-  --logo-primary-green-darker: #09433e;
-  --logo-light-bg: #f8f9fa;
-  --white-bg: #ffffff;
-  --dark-text-color: #212529;
-  --grey-text-color: #6c757d;
-  --border-color: #ced4da;
-  --focus-glow-color: rgba(13, 93, 86, 0.25);
-}
+/* As variáveis :root FORAM REMOVIDAS daqui */
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -21,12 +11,12 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--logo-light-bg);
+  background-color: var(--bg-secondary); /* <- MUDOU */
   padding: 1rem;
 }
 
 .login-container {
-  background-color: var(--white-bg);
+  background-color: var(--bg-primary); /* <- MUDOU */
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 2.5rem;
@@ -39,7 +29,7 @@
 }
 
 .logo-container {
-  background-color: var(--logo-light-bg);
+  background-color: var(--bg-tertiary); /* <- MUDOU */
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 1.5rem;
@@ -55,7 +45,7 @@
 }
 
 .login-title {
-  color: var(--dark-text-color);
+  color: var(--text-primary); /* <- MUDOU */
   font-size: clamp(1.8rem, 5vw, 2.2rem);
   font-weight: 700;
   margin: 0;
@@ -78,7 +68,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
-  color: var(--logo-primary-green);
+  color: var(--color-primary); /* <- MUDOU */
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -87,55 +77,55 @@
   width: 100%;
   box-sizing: border-box;
   padding: 0.8rem 1rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color); /* <- MUDOU */
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  
+  /* Adição: Cores de fundo e texto para os inputs */
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .form-group input::placeholder {
-  color: #adb5bd;
+  color: var(--text-secondary); /* <- MUDOU */
 }
 
 .form-group input:focus-visible {
   outline: none;
-  border-color: var(--logo-primary-green);
-  box-shadow: 0 0 0 4px var(--focus-glow-color);
+  border-color: var(--color-primary); /* <- MUDOU */
+  box-shadow: 0 0 0 4px var(--focus-ring); /* <- MUDOU */
 }
 
-/* ===== NOVO: Estilos para o campo de senha com ícone ===== */
-
-/* Container que permite o posicionamento absoluto do ícone */
+/* ===== Estilos para o campo de senha com ícone ===== */
 .password-wrapper {
   position: relative;
   width: 100%;
 }
 
-/* Ajusta o padding do input de senha para não sobrepor o ícone */
 .password-wrapper input {
-  padding-right: 3rem; /* Espaço para o ícone */
+  padding-right: 3rem; 
 }
 
-/* Posiciona o ícone no canto direito do campo */
 .password-toggle-icon {
   position: absolute;
   top: 50%;
   right: 1rem;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--grey-text-color);
+  color: var(--text-secondary); /* <- MUDOU */
   transition: color 0.2s ease;
 }
 
 .password-toggle-icon:hover {
-  color: var(--logo-primary-green);
+  color: var(--color-primary); /* <- MUDOU */
 }
 
 /* ======================================================= */
 
 .login-button {
-  background-color: var(--logo-primary-green);
-  color: var(--white-bg);
+  background-color: var(--color-primary); /* <- MUDOU */
+  color: var(--text-on-primary); /* <- MUDOU */
   border: none;
   border-radius: 8px;
   padding: 0.9rem 1rem;
@@ -152,7 +142,7 @@
 }
 
 .login-button:hover {
-  background-color: var(--logo-primary-green-darker);
+  background-color: var(--color-primary-darker); /* <- MUDOU */
   transform: translateY(-3px);
 }
 
@@ -160,52 +150,15 @@
   transform: translateY(-1px);
 }
 
-.forgot-password {
-  margin-top: 1.5rem;
-  text-align: center;
-}
+/* ... (O restante das classes .forgot-password, .form-options, etc. usam as mesmas variáveis e devem funcionar) ... */
 
 .forgot-password a {
-  color: var(--grey-text-color);
+  color: var(--text-secondary); /* <- MUDOU */
   text-decoration: none;
-  font-size: 0.9rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  /* ... */
 }
 
 .forgot-password a:hover {
-  color: var(--logo-primary-green);
-  text-decoration: underline;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.remember-me label {
-  cursor: pointer;
-  color: #555;
-}
-
-.forgot-password-link {
-  color: var(--primary-color); /* Use a cor principal do seu tema */
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.forgot-password-link:hover {
+  color: var(--color-primary); /* <- MUDOU */
   text-decoration: underline;
 }

@@ -4,33 +4,37 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Layouts e Componentes
 import MainLayout from './components/layout/MainLayout.jsx';
 import AdminRoute from './components/auth/AdminRoute.jsx';
-import CadastroParceiroPage from './pages/CadastroParceiroPage.jsx';
-import EditarParceiroPage from './pages/EditarParceiroPage.jsx';
 import ParceiroDetalhesPage from './pages/ParceiroDetalhesPage.jsx';
 
-// Páginas
+// Cadastros
+import CadastroParceiroPage from './pages/Cadastros/CadastroParceiroPage.jsx';
+import CadastroResiduoPage from './pages/Cadastros/CadastroResiduoPage.jsx';
+import CadastroColetaPage from './pages/Cadastros/CadastroColetaPage.jsx';
+import CadastroProfissionalPage from './pages/Cadastros/CadastroProfissionalPage.jsx';
+import CadastroPacientePage from './pages/Cadastros/CadastroPacientePage.jsx'; 
+import CadastroEntregaPage from './pages/Cadastros/CadastroEntregaPage.jsx';
+
+// Editar
+import EditarParceiroPage from './pages/Editar/EditarParceiroPage.jsx';
+import EditarResiduoPage from './pages/Editar/EditarResiduoPage.jsx';
+import EditarColetaPage from './pages/Editar/EditarColetaPage.jsx';
+import EditarUsuarioPage from './pages/Editar/EditarUsuarioPage.jsx';
+import EditarPacientePage from './pages/Editar/EditarPacientePage.jsx';
+import EditarEntregaPage from './pages/Editar/EditarEntregaPage.jsx'; 
+
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import PacientesPage from './pages/PacientesPage.jsx';
 import PacienteDetalhesPage from './pages/PacienteDetalhesPage.jsx';
 import ResiduosPage from './pages/ResiduosPage.jsx';
-import CadastroResiduoPage from './pages/CadastroResiduoPage.jsx';
-import EditarResiduoPage from './pages/EditarResiduoPage.jsx';
 import PainelColetasPage from './pages/PainelColetasPage.jsx';
-import CadastroColetaPage from './pages/CadastroColetaPage.jsx';
-import EditarColetaPage from './pages/EditarColetaPage.jsx';
 import DetalhesColetaPage from './pages/DetalhesColetaPage.jsx';
 import RelatoriosPage from './pages/RelatoriosPage.jsx';
 import ParceirosPage from './pages/ParceirosPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
 import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
-import CadastroProfissionalPage from './pages/CadastroProfissionalPage.jsx';
-import EditarUsuarioPage from './pages/EditarUsuarioPage.jsx';
-import CadastroPacientePage from './pages/CadastroPacientePage.jsx'; 
-import EditarPacientePage from './pages/EditarPacientePage.jsx';
-import CadastroEntregaPage from './pages/CadastroEntregaPage.jsx';
 import EntregasPage from './pages/EntregasPage.jsx';
-import EditarEntregaPage from './pages/EditarEntregaPage.jsx'; // Importa a nova página
+
 
 function App() {
   return (
