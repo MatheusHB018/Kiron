@@ -6,7 +6,7 @@ import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash, FaTimes } from 
 
 import './styles/LoginPage.css';
 import './styles/ForgotPassword.css';
-import Logo from '/logotipo.png';
+import Logo from '/Logo.png';
 import { login } from '../services/api';
 import ForgotPasswordFlow from '../components/auth/ForgotPasswordFlow'; // Importa o novo componente
 

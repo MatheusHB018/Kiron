@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserPlus, FaSave, FaEye, FaEyeSlash, FaArrowLeft, FaSpinner, FaUser, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { cadastrarUsuario } from '../services/api';
-import EntityFactory from '../services/EntityFactory';
+import { cadastrarUsuario } from '../../services/api';
+import EntityFactory from '../../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 

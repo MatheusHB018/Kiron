@@ -1,14 +1,13 @@
-// client/src/pages/CadastroResiduoPage.jsx
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaBoxOpen, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { API_URL } from '../services/api';
-import EntityFactory from '../services/EntityFactory';
+import { API_URL } from '../../services/api';
 import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css';
+import './styles/CadastroProfissionalPage.css'; // Reutilizando o estilo
 
-function CadastroResiduoPage() {
+function EditarResiduoPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     nome: '',
@@ -18,6 +17,25 @@ function CadastroResiduoPage() {
     estado_fisico: '',
     acondicionamento: ''
   });
+  const [loading, setLoading] = useState(true);
+
+  const fetchResiduo = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/residuos/${id}`);
+      if (!response.ok) throw new Error('Resíduo não encontrado.');
+      const data = await response.json();
+      setForm(data);
+    } catch (error) {
+      Swal.fire('Erro', error.message, 'error');
+      navigate('/residuos');
+    } finally {
+      setLoading(false);
+    }
+  }, [id, navigate]);
+
+  useEffect(() => {
+    fetchResiduo();
+  }, [fetchResiduo]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,38 +43,31 @@ function CadastroResiduoPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Usar o Factory Method para criar o objeto padronizado
-    const residuo = EntityFactory.create('residuo', form);
-    
-    // Validar usando o factory
-    const validacao = EntityFactory.validate('residuo', residuo);
-    if (!validacao.isValid) {
-      Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
-      return;
-    }
-    
     try {
-      const response = await fetch(`${API_URL}/residuos`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/residuos/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(residuo),
+        body: JSON.stringify(form),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Falha ao cadastrar o tipo de resíduo.');
-      Swal.fire('Sucesso!', 'Tipo de resíduo cadastrado com sucesso.', 'success');
+      if (!response.ok) throw new Error(data.error || 'Falha ao atualizar o tipo de resíduo.');
+      Swal.fire('Sucesso!', 'Tipo de resíduo atualizado com sucesso.', 'success');
       navigate('/residuos');
     } catch (error) {
       Swal.fire('Erro!', error.message, 'error');
     }
   };
 
+  if (loading) {
+    return <div className="page-container">Carregando...</div>;
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
         <div className="page-title">
           <FaBoxOpen className="icon" />
-          <h1>Novo Tipo de Resíduo</h1>
+          <h1>Editar Tipo de Resíduo</h1>
         </div>
         <Link to="/residuos" className="back-button">
           <FaArrowLeft /> Voltar para a Lista
@@ -69,11 +80,11 @@ function CadastroResiduoPage() {
           <div className="form-grid two-columns">
             <div className="form-group">
               <label htmlFor="nome">Nome do Material/Resíduo</label>
-              <input type="text" id="nome" name="nome" value={form.nome} onChange={handleChange} placeholder="Ex: Agulha de Insulina, Curativo" required />
+              <input type="text" id="nome" name="nome" value={form.nome} onChange={handleChange} required />
             </div>
              <div className="form-group">
               <label htmlFor="descricao">Descrição (Opcional)</label>
-              <input type="text" id="descricao" name="descricao" value={form.descricao} onChange={handleChange} placeholder="Ex: Utilizado por paciente diabético" />
+              <input type="text" id="descricao" name="descricao" value={form.descricao || ''} onChange={handleChange} />
             </div>
           </div>
           
@@ -124,7 +135,7 @@ function CadastroResiduoPage() {
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary">
-              <FaSave /> Salvar
+              <FaSave /> Salvar Alterações
             </button>
           </div>
         </form>
@@ -133,4 +144,4 @@ function CadastroResiduoPage() {
   );
 }
 
-export default CadastroResiduoPage;
+export default EditarResiduoPage;

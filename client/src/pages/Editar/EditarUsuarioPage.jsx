@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaArrowLeft, FaSpinner, FaSave, FaUser, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { getUsuarioById, updateUsuario } from '../services/api';
+import { getUsuarioById, updateUsuario } from '../../services/api';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 

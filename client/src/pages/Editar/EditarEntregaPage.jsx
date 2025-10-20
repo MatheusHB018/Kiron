@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaBox, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { API_URL } from '../services/api';
+import { API_URL } from '../../services/api';
 
 function EditarEntregaPage() {
   const { id } = useParams();

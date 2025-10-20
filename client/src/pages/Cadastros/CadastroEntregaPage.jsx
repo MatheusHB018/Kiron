@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaBox, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { API_URL } from '../services/api';
-import EntityFactory from '../services/EntityFactory';
+import { API_URL } from '../../services/api';
+import EntityFactory from '../../services/EntityFactory';
 
 function CadastroEntregaPage() {
   const navigate = useNavigate();

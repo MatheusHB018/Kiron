@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaPlus, FaSave, FaArrowLeft, FaCalendarCheck } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { API_URL } from '../services/api';
-import EntityFactory from '../services/EntityFactory';
+import { API_URL } from '../../services/api';
+import EntityFactory from '../../services/EntityFactory';
 import './styles/Page.css';
 
 

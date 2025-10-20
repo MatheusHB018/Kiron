@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import EntityFactory from '../services/EntityFactory';
+import EntityFactory from '../../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css'; // Pode reutilizar os estilos
 

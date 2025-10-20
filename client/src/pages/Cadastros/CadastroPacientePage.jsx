@@ -1,53 +1,25 @@
-// client/src/pages/EditarPacientePage.jsx
-import { useEffect, useState, useRef } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { FaUserEdit, FaArrowLeft, FaSpinner, FaSave, FaUser, FaIdCard, FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
+// client/src/pages/CadastroPacientePage.jsx
+import { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUserPlus, FaSave, FaArrowLeft, FaSpinner, FaUser, FaIdCard, FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { InputMask } from '@react-input/mask'; // ATUALIZADO: Importar da nova biblioteca
-import { API_URL } from '../services/api';
+import { API_URL } from '../../services/api';
+import EntityFactory from '../../services/EntityFactory';
 import './styles/Page.css';
 import './styles/CadastroProfissionalPage.css';
 
-function EditarPacientePage() {
-    const { id } = useParams();
-    const navigate = useNavigate();
+function CadastroPacientePage() {
     const [formData, setFormData] = useState({
-        nome: '', cpf: '', data_nascimento: '', telefone: '', email: '',
+        nome: '', cpf: '', telefone: '', email: '', data_nascimento: '',
         cep: '', logradouro: '', numero: '', complemento: '',
         bairro: '', cidade: '', estado: ''
     });
-    const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isCepLoading, setIsCepLoading] = useState(false);
+    const navigate = useNavigate();
     const numeroRef = useRef(null);
-
-    useEffect(() => {
-        const fetchPaciente = async () => {
-            try {
-                const response = await fetch(`${API_URL}/pacientes/${id}`);
-                if (!response.ok) throw new Error('Paciente não encontrado');
-                const data = await response.json();
-                
-                const formattedDate = data.data_nascimento ? new Date(data.data_nascimento).toISOString().split('T')[0] : '';
-
-                setFormData({
-                    nome: data.nome || '', cpf: data.cpf || '', 
-                    data_nascimento: formattedDate,
-                    telefone: data.telefone || '', email: data.email || '', 
-                    cep: data.cep || '', logradouro: data.logradouro || '',
-                    numero: data.numero || '', complemento: data.complemento || '', 
-                    bairro: data.bairro || '', cidade: data.cidade || '', 
-                    estado: data.estado || ''
-                });
-            } catch (error) {
-                Swal.fire('Erro', error.message, 'error').then(() => navigate('/pacientes'));
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPaciente();
-    }, [id, navigate]);
 
     const handleChange = (e) => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -56,18 +28,19 @@ function EditarPacientePage() {
     const handleCepChange = async (e) => {
         const cep = e.target.value.replace(/\D/g, '');
         setFormData(prev => ({ ...prev, cep: e.target.value }));
+
         if (cep.length === 8) {
             setIsCepLoading(true);
             try {
                 const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-                if (!data.erro) {
+                if (data.erro) {
+                    Swal.fire('CEP não encontrado', 'Por favor, verifique o CEP.', 'warning');
+                } else {
                     setFormData(prev => ({
                         ...prev, logradouro: data.logradouro, bairro: data.bairro,
-                        cidade: data.localidade, estado: data.uf
+                        cidade: data.localidade, estado: data.uf,
                     }));
                     numeroRef.current.focus();
-                } else {
-                    Swal.fire('CEP não encontrado', 'Por favor, verifique o CEP.', 'warning');
                 }
             } catch (error) {
                 Swal.fire('Erro', 'Não foi possível buscar o CEP.', 'error');
@@ -80,22 +53,35 @@ function EditarPacientePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const dataToSend = {
+        
+        // Usar o Factory Method para criar o objeto padronizado
+        const paciente = EntityFactory.create('paciente', {
             ...formData,
             cpf: formData.cpf.replace(/\D/g, ''),
             telefone: formData.telefone.replace(/\D/g, ''),
             cep: formData.cep.replace(/\D/g, ''),
             data_nascimento: formData.data_nascimento || null
-        };
+        });
+        
+        // Validar usando o factory
+        const validacao = EntityFactory.validate('paciente', paciente);
+        if (!validacao.isValid) {
+            Swal.fire('Atenção!', validacao.errors.join(', '), 'warning');
+            setIsSubmitting(false);
+            return;
+        }
+        
         try {
-            const response = await fetch(`${API_URL}/pacientes/${id}`, {
-                method: 'PUT',
+            const response = await fetch(`${API_URL}/pacientes`, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSend)
+                body: JSON.stringify(paciente)
             });
-            if (!response.ok) throw new Error((await response.json()).error || 'Falha ao atualizar');
-            Swal.fire('Sucesso!', 'Paciente atualizado com sucesso.', 'success')
-              .then(() => navigate('/pacientes'));
+            if (!response.ok) throw new Error((await response.json()).error || 'Falha ao cadastrar');
+            Swal.fire({
+                title: 'Sucesso!', text: 'Paciente cadastrado com sucesso.', icon: 'success',
+                timer: 2000, showConfirmButton: false, timerProgressBar: true
+            }).then(() => navigate('/pacientes'));
         } catch (err) {
             Swal.fire('Erro!', err.message, 'error');
         } finally {
@@ -103,22 +89,20 @@ function EditarPacientePage() {
         }
     };
 
-    if (loading) return <div className="page-container"><h2>Carregando...</h2></div>;
-
     return (
         <div className="page-container">
             <div className="page-header">
-                <div className="page-title"><FaUserEdit className="icon" /><h1>Editar Paciente</h1></div>
+                <div className="page-title"><FaUserPlus className="icon" /><h1>Cadastro de Paciente</h1></div>
             </div>
             <Link to="/pacientes" className="back-link"><FaArrowLeft /> Voltar para a lista</Link>
 
             <div className="form-container">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
                     <div className="form-section"><h3>Informações Pessoais</h3></div>
                     <div className="form-grid">
                         <div className="form-group"><label>Nome Completo</label><div className="input-with-icon"><FaUser className="input-icon" /><input type="text" name="nome" placeholder="Digite o nome completo" value={formData.nome} onChange={handleChange} required /></div></div>
                         {/* ATUALIZADO: Usando o novo InputMask */}
-                        <div className="form-group"><label>CPF</label><div className="input-with-icon"><FaIdCard className="input-icon" /><InputMask mask="___.___.___-__" replacement={{ _: /\d/ }} name="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} required className="form-group-input"/></div></div>
+                        <div className="form-group"><label>CPF</label><div className="input-with-icon"><FaIdCard className="input-icon" /><InputMask mask="___.___.___-__" replacement={{ _: /\d/ }} name="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} required className="form-group-input" /></div></div>
                         <div className="form-group"><label>Data de Nascimento</label><div className="input-with-icon"><FaCalendarAlt className="input-icon" /><input type="date" name="data_nascimento" value={formData.data_nascimento} onChange={handleChange} /></div></div>
                         {/* ATUALIZADO: Usando o novo InputMask */}
                         <div className="form-group"><label>Telefone</label><div className="input-with-icon"><FaPhone className="input-icon" /><InputMask mask="(__) _____-____" replacement={{ _: /\d/ }} name="telefone" placeholder="(00) 00000-0000" value={formData.telefone} onChange={handleChange} className="form-group-input"/></div></div>
@@ -126,7 +110,7 @@ function EditarPacientePage() {
                     </div>
 
                     <div className="form-section"><h3>Endereço</h3></div>
-                     <div className="form-grid three-columns">
+                    <div className="form-grid three-columns">
                         {/* ATUALIZADO: Usando o novo InputMask */}
                         <div className="form-group"><label>CEP</label><div className="input-with-icon"><InputMask mask="_____-___" replacement={{ _: /\d/ }} name="cep" placeholder="00000-000" value={formData.cep} onChange={handleCepChange} className="form-group-input" />{isCepLoading && <FaSpinner className="spinner input-icon-right" />}</div></div>
                         <div className="form-group span-2"><label>Logradouro</label><div className="input-with-icon"><FaMapMarkerAlt className="input-icon" /><input type="text" name="logradouro" placeholder="Avenida, Rua..." value={formData.logradouro} readOnly /></div></div>
@@ -138,7 +122,7 @@ function EditarPacientePage() {
                     </div>
 
                     <div className="form-actions">
-                        <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Salvar Alterações</>}</button>
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting || isCepLoading}>{isSubmitting ? <><FaSpinner className="spinner" /> Salvando...</> : <><FaSave /> Cadastrar Paciente</>}</button>
                     </div>
                 </form>
             </div>
@@ -146,4 +130,4 @@ function EditarPacientePage() {
     );
 }
 
-export default EditarPacientePage;
+export default CadastroPacientePage;
