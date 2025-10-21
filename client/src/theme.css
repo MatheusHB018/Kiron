@@ -8,7 +8,7 @@
 
   /* Cores de Fundo (Background) */
   --bg-primary: #ffffff;    /* Fundo de "cartões" e containers */
-  --bg-secondary: #e7e8f2;  /* Fundo principal da página (do seu logo) */
+  --bg-secondary: #e7e7e9;  /* Fundo principal da página (do seu logo) */
   --bg-tertiary: #f8f9fa;   /* Um cinza neutro para fundos sutis (ex: logo) */
 
   /* Cores de Texto (Text) */
@@ -28,19 +28,19 @@
 [data-theme="dark"] {
   /* Cores da Marca (Brand) */
   /* Verde mais claro para garantir contraste com texto branco */
-  --color-primary: #008a50;
-  --color-primary-darker: #006f40; /* O verde original vira o "hover" */
-  --color-accent: #5d93ff;         /* Um azul mais claro para links */
+  --color-primary: #025230;
+  --color-primary-darker: #025230; /* O verde original vira o "hover" */
+  --color-accent: #002c71;         /* Um azul mais claro para links */
   --focus-ring: rgba(0, 138, 80, 0.25);
 
   /* Cores de Fundo (Background) */
-  --bg-primary: #002359;    /* Fundo do cartão (azul mais claro) */
-  --bg-secondary: #001f4f;  /* Fundo da página (azul mais escuro) */
+  --bg-primary: #031531;    /* Fundo do cartão (azul mais claro) */
+  --bg-secondary: #000c1d;  /* Fundo da página (azul mais escuro) */
   --bg-tertiary: #002c71;   /* Fundo do logo (o Azul Kiron original) */
 
   /* Cores de Texto (Text) */
   --text-primary: #e7e8f2;    /* Texto principal (Fundo Claro Kiron) */
-  --text-secondary: #aeb8d1;  /* Texto de apoio (cinza-azulado claro) */
+  --text-secondary: #5a6d8c;  /* Texto de apoio (cinza-azulado claro) */
   --text-on-primary: #ffffff; /* Texto sobre botões verdes (branco) */
 
   /* Cores de Borda e Divisores */

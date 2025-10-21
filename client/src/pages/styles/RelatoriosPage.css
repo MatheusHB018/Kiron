@@ -16,6 +16,7 @@
   margin-bottom: 30px;
   padding-bottom: 15px;
   border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
+  color: var(--text-primary);
 }
 
 .relatorios-header h1 {
@@ -23,7 +24,7 @@
   font-size: 1.8rem;
   /* Gradiente com as cores do TEMA */
   background: linear-gradient(90deg, var(--color-primary-darker), var(--color-primary)); /* <-- MUDOU */
-  -webkit-background-clip: text;
+  color: var(--text-primary);
   color: transparent;
   font-weight: 600;
 }
