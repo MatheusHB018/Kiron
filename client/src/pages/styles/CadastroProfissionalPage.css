@@ -3,7 +3,7 @@
 .form-container {
   max-width: 700px;
   margin: 2rem auto 0 auto;
-  background-color: #fff;
+  background-color: var(--bg-primary); /* <-- MUDOU */
   padding: 2.5rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -31,7 +31,7 @@
 .form-group label {
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #37474f;
+  color: var(--text-primary); /* <-- MUDOU */
   font-size: 0.9rem;
 }
 
@@ -39,19 +39,20 @@
 .form-group select {
   width: 100%;
   padding: 0.8rem 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color); /* <-- MUDOU */
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #f9fafb;
+  background-color: var(--bg-secondary); /* <-- MUDOU */
+  color: var(--text-primary); /* <-- ADICIONADO para modo escuro */
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #00A99D;
-  box-shadow: 0 0 0 3px rgba(0, 169, 157, 0.2);
-  background-color: #fff;
+  border-color: var(--color-primary); /* <-- MUDOU */
+  box-shadow: 0 0 0 3px var(--focus-ring); /* <-- MUDOU */
+  background-color: var(--bg-primary); /* <-- MUDOU */
 }
 
 .form-actions {
@@ -59,12 +60,14 @@
   text-align: right;
 }
 
-.btn btn-primary {
+/* Note: A selector ".btn btn-primary" is invalid. 
+   Assuming you use className="btn btn-primary", the correct selector is ".btn.btn-primary" */
+.btn.btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background-color: #00A99D;
-  color: white;
+  background-color: var(--color-primary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
   border: none;
   padding: 0.9rem 2rem;
   border-radius: 8px;
@@ -74,13 +77,14 @@
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-.btn btn-primary:hover {
-  background-color: #00897b;
+.btn.btn-primary:hover {
+  background-color: var(--color-primary-darker); /* <-- MUDOU */
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* --- MENSAGENS DE ERRO E SUCESSO --- */
+/* Cores semânticas (sucesso/erro) são mantidas, pois não são parte do tema principal */
 .form-message {
   padding: 1rem;
   margin-bottom: 1.5rem;
@@ -100,8 +104,7 @@
   color: #388e3c;
 }
 
-/* Adicionar ao final de CadastroProfissionalPage.css */
-
+/* --- ESTILOS DO CAMPO DE SENHA --- */
 .password-input-wrapper {
   position: relative;
   width: 100%;
@@ -109,7 +112,7 @@
 
 .password-input-wrapper input {
   width: 100%;
-  padding-right: 40px; /* Deixa espaço para o ícone */
+  padding-right: 40px;
 }
 
 .password-toggle-button {
@@ -124,62 +127,57 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--text-secondary); /* <-- MUDOU */
 }
 
 .password-toggle-button:hover {
-  color: #00796b;
+  color: var(--color-primary); /* <-- MUDOU */
 }
 
+/* --- ESTILOS DE INPUT COM ÍCONE --- */
 .input-with-icon {
   position: relative;
   width: 100%;
 }
 
-/* Estilo do ícone dentro do input */
 .input-icon {
   position: absolute;
   top: 50%;
   left: 15px;
   transform: translateY(-50%);
-  color: #9e9e9e; /* Cinza para o ícone */
-  pointer-events: none; /* Garante que o clique vai para o input */
+  color: var(--text-secondary); /* <-- MUDOU */
+  pointer-events: none;
 }
 
-/* Adiciona um preenchimento à esquerda no input para não sobrepor o ícone */
 .input-with-icon input {
   padding-left: 40px !important;
 }
 
-/* Adicione ou modifique estas classes no seu arquivo de estilo */
-
-/* Adiciona um título para separar seções do formulário */
+/* --- TÍTULOS DE SEÇÃO NO FORMULÁRIO --- */
 .form-section-title {
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-size: 1.1rem;
-  color: #334e68; /* Um azul-acinzentado escuro */
-  border-bottom: 1px solid #e0e0e0;
+  color: var(--text-primary); /* <-- MUDOU */
+  border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
   padding-bottom: 0.5rem;
 }
 
-/* Define um grid com 4 colunas */
+/* --- ESTRUTURA DE GRID E RESPONSIVIDADE --- */
+/* (Nenhuma mudança de cor aqui) */
+
 .form-grid.four-columns {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem; /* Aumenta o espaçamento entre os campos */
+  gap: 1.5rem;
 }
 
-/* --- Ajustes para Responsividade --- */
-
-/* Em telas menores (tablets), o grid de 4 colunas vira 2 colunas */
 @media (max-width: 1024px) {
   .form-grid.four-columns {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Em telas de celular, tudo vira uma coluna só */
 @media (max-width: 768px) {
   .form-grid.two-columns,
   .form-grid.four-columns {

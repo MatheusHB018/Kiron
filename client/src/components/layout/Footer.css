@@ -2,17 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
 
 .footer-container {
-  /* Fundo gradiente idêntico ao do Header para consistência visual */
-  background: linear-gradient(90deg, #004d40, #00796b);
+  /* Fundo gradiente agora usa as variáveis de tema */
+  background: linear-gradient(90deg, var(--color-primary-darker), var(--color-primary));
   
-  color: #e0f2f1; /* Cor de texto clara para bom contraste com o fundo verde */
+  /* Cor do texto sobre o fundo primário */
+  color: var(--text-on-primary); 
+  
   text-align: center;
   padding: 1.5rem 2rem;
   width: 100%;
   font-family: 'Poppins', sans-serif;
   
-  /* Borda superior para uma separação elegante do conteúdo */
-  border-top: 3px solid #00A99D;
+  /* Borda superior agora usa a cor primária do tema */
+  border-top: 3px solid var(--color-primary);
+  
+  /* Sombra pode ser mantida, ou podemos criar uma variável de sombra no futuro */
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 

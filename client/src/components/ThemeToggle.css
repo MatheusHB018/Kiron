@@ -1,0 +1,29 @@
+/* src/components/ThemeToggle.css */
+
+.theme-toggle-button {
+  background-color: transparent;
+  border: 1px solid var(--border-color); /* Usa nossas variáveis de tema! */
+  color: var(--text-secondary); /* Usa nossas variáveis de tema! */
+  
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Deixa redondo */
+  cursor: pointer;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-button:hover {
+  color: var(--color-primary); /* Usa nossas variáveis de tema! */
+  border-color: var(--color-primary);
+  background-color: var(--bg-tertiary);
+}
+
+.theme-toggle-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

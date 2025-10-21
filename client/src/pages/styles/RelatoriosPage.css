@@ -1,104 +1,165 @@
-.relatorios-wrapper{padding:10px;display:flex;flex-direction:column;gap:12px;font-family:system-ui,-apple-system,"Segoe UI",Roboto}.relatorios-header{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.relatorios-header h1{margin:0;font-size:1.8rem;background:linear-gradient(90deg,#006d77,#249c92);-webkit-background-clip:text;color:transparent;font-weight:600}
-.info-inline{font-size:.85rem;color:#555}
-.erro-inline{font-size:.85rem;color:#c0392b;font-weight:600}
-.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:360px;gap:18px;align-content:start}
-.chart-card{position:relative;background:#ffffff;border:1px solid #e0e5ea;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;box-shadow:0 2px 4px rgba(0,0,0,.04),0 8px 24px -6px rgba(0,0,0,.06);height:360px;overflow:hidden}
-.chart-card h2{margin:0 0 10px;font-size:1.05rem;font-weight:600;color:#19363b;display:flex;align-items:center;gap:8px;letter-spacing:.3px}
-.chart-inner{flex:1;position:relative;min-height:0}
-.chart-card canvas{width:100%!important;height:100%!important}
-.placeholder{margin:0;color:#7d8589;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex:1;font-style:italic}
-@media (max-width:1200px){.charts-grid{grid-template-columns:repeat(auto-fit,minmax(340px,1fr));grid-auto-rows:340px}}
-@media (max-height:780px){.chart-card{min-height:320px}}
-@media (max-height:650px){.chart-card{min-height:280px}
+.relatorios-wrapper,
+.relatorios-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, 'Arial', sans-serif;
 }
 
-.relatorios-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .print-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 15px;
-    background: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .print-btn:hover {
-    background: #1a252f;
-  }
-  
+.relatorios-header,
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
+}
+
+.relatorios-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  /* Gradiente com as cores do TEMA */
+  background: linear-gradient(90deg, var(--color-primary-darker), var(--color-primary)); /* <-- MUDOU */
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+.info-inline {
+  font-size: .85rem;
+  color: var(--text-secondary); /* <-- MUDOU */
+}
+
+.erro-inline,
+.error {
+  font-size: .85rem;
+  color: #c0392b; /* Cor de erro (semântica) mantida */
+  font-weight: 600;
+  text-align: center;
+  padding: 50px;
+}
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background: var(--text-secondary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.print-btn:hover {
+  background: var(--text-primary); /* <-- MUDOU */
+}
+
+.charts-grid {
+  display: grid;
+  /* Usando a versão responsiva (auto-fit) */
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-auto-rows: 360px;
+  gap: 25px;
+  align-content: start;
+}
+
+.chart-card {
+  position: relative;
+  background: var(--bg-primary); /* <-- MUDOU */
+  border: 1px solid var(--border-color); /* <-- MUDOU */
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  height: 360px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-5px);
+}
+
+.chart-card h2 {
+  margin: 0 0 15px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary); /* <-- MUDOU */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: .3px;
+}
+
+.chart-inner,
+.chart-container {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  height: 300px; /* Altura do segundo bloco */
+}
+
+.chart-card canvas {
+  width: 100%!important;
+  height: 100%!important;
+}
+
+.placeholder {
+  margin: 0;
+  color: var(--text-secondary); /* <-- MUDOU */
+  font-size: .85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: var(--text-secondary); /* <-- MUDOU */
+}
+
+/* --- Media Queries de Responsividade --- */
+@media (max-width: 1200px) {
   .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-auto-rows: 340px;
   }
-  
-  .chart-card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+}
+@media (max-height: 780px) {
+  .chart-card { min-height: 320px; }
+  .charts-grid { grid-auto-rows: 320px; }
+}
+@media (max-height: 650px) {
+  .chart-card { min-height: 280px; }
+  .charts-grid { grid-auto-rows: 280px; }
+}
+
+/* --- Media Query de Impressão --- */
+@media print {
+  body {
+    zoom: 1.1;
   }
-  
-  .chart-card:hover {
-    transform: translateY(-5px);
+  .print-btn {
+    display: none; /* Oculta o botão de imprimir ao imprimir */
   }
-  
-  .chart-card h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #2c3e50;
-    font-size: 18px;
-  }
-  
+  .chart-inner,
   .chart-container {
-    height: 300px;
-    position: relative;
+    height: 350px !important;
   }
-  
-  .loading, .error {
-    text-align: center;
-    padding: 50px;
-    font-size: 18px;
+  .chart-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd; /* Borda simples para impressão */
   }
-  
-  .error {
-    color: #e74c3c;
-  }
-  
-  /* Melhorias para impressão */
-  @media print {
-    body {
-      zoom: 1.1;
-    }
-    
-    .chart-container {
-      height: 350px !important;
-    }
-    
-    .chart-card {
-      page-break-inside: avoid;
-      break-inside: avoid;
-      box-shadow: none;
-      border: 1px solid #ddd;
-    }
-  }
+}

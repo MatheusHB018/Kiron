@@ -1,25 +1,18 @@
 /* Arquivo: client/src/pages/styles/ListPage.css */
 
-/* --- Variáveis de Cores --- */
-:root {
-    --primary-green: #28a745; /* Verde principal */
-    --primary-green-darker: #1e7e34; /* Verde mais escuro para hover */
-    --secondary-yellow: #ffc107; /* Amarelo para editar */
-    --danger-red: #dc3545; /* Vermelho para excluir */
-    --light-gray: #f8f9fa; /* Fundo da página */
-    --border-color: #dee2e6; /* Cor da borda */
-    --text-color-dark: #495057; /* Cor do texto principal */
-    --text-color-light: #ffffff; /* Cor do texto sobre fundos escuros */
-}
+/* O bloco :root FOI REMOVIDO.
+  As regras duplicadas foram CONSOLIDADAS.
+  Os seletores inválidos (ex: .btn btn-primary) foram CORRIGIDOS.
+*/
 
 /* --- Container Principal --- */
 .page-container {
-    padding: 2rem;
-    background-color: var(--light-gray);
-    max-width: 1200px;
-    margin: 2rem auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  background-color: var(--bg-secondary); /* <-- MUDOU */
+  max-width: 1200px;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* --- Cabeçalho da Página (Título + Botão) --- */
@@ -35,98 +28,90 @@
 .list-page-header h1 {
   margin: 0;
   font-size: 2.2rem;
-  color: var(--text-color-dark);
-}
-
-.btn btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background-color: var(--primary-green);
-  color: var(--text-color-light);
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.btn btn-primary:hover {
-  background-color: var(--primary-green-darker);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  color: var(--text-primary); /* <-- MUDOU */
 }
 
 /* --- Filtro e Busca --- */
 .filter-container {
-  background-color: var(--text-color-light);
+  background-color: var(--bg-primary); /* <-- MUDOU */
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
 }
 
-.search-wrapper {
+.search-container {
   position: relative;
-  width: 100%;
-  max-width: 400px;
+  margin-bottom: 2rem;
+  max-width: 500px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 0.8rem 1rem 0.8rem 2.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 1rem;
-  color: var(--text-color-dark);
-}
-
-.search-icon {
+.search-container .search-icon,
+.search-wrapper .search-icon {
   position: absolute;
-  left: 1rem;
   top: 50%;
+  left: 15px;
   transform: translateY(-50%);
-  color: #aaa;
+  color: var(--text-secondary); /* <-- MUDOU */
+  font-size: 1rem;
+}
+
+.search-container input,
+.search-wrapper .search-input {
+  width: 100%;
+  padding: 12px 20px 12px 45px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color); /* <-- MUDOU */
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: var(--bg-primary); /* <-- ADICIONADO */
+  color: var(--text-primary); /* <-- ADICIONADO */
+  box-sizing: border-box;
+}
+
+.search-container input:focus,
+.search-wrapper .search-input:focus {
+  outline: none;
+  border-color: var(--color-primary); /* <-- MUDOU */
+  box-shadow: 0 0 0 0.2rem var(--focus-ring); /* <-- MUDOU */
 }
 
 /* --- Tabela de Dados --- */
 .table-container {
-  background-color: var(--text-color-light);
+  background-color: var(--bg-primary); /* <-- MUDOU */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow-x: auto; /* Adicionado para rolagem horizontal apenas na tabela */
+  overflow-x: auto;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  white-space: nowrap; /* Impede que o texto quebre e force a largura */
+  white-space: nowrap;
 }
 
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
   vertical-align: middle;
+  color: var(--text-primary); /* <-- ADICIONADO */
 }
 
 .data-table thead {
-  background-color: #e9ecef;
+  background-color: var(--bg-tertiary); /* <-- MUDOU */
 }
 
 .data-table th {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-color-dark);
+  color: var(--text-primary); /* <-- MUDOU */
   text-transform: uppercase;
 }
 
 .data-table tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-tertiary); /* <-- MUDOU */
 }
 
 /* --- Célula de Ações e Botões --- */
@@ -137,44 +122,121 @@
   align-items: center;
 }
 
-.data-table .btn-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-    border-radius: 5px;
-    padding: 0.6rem 1rem;
-    cursor: pointer;
-    color: var(--text-color-light);
-    font-size: 0.9rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Estilo base para os botões de ação retangulares */
+.data-table .btn-action,
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  color: var(--text-on-primary); /* <-- MUDOU */
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-.data-table .btn-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.data-table .btn-action:hover,
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0.85;
 }
 
-.data-table .btn-edit { background-color: var(--secondary-yellow); }
-.data-table .btn-delete { background-color: var(--danger-red); }
+/* Cores Semânticas (MANTIDAS) */
+.data-table .btn-edit,
+.action-button.edit {
+  background-color: #ffc107; /* Amarelo/Warning */
+  color: #212529; /* Texto escuro para contraste */
+}
+.data-table .btn-delete,
+.action-button.delete {
+  background-color: #dc3545; /* Vermelho/Danger */
+}
+.action-button.details {
+  background-color: var(--color-accent); /* Azul Kiron */
+  color: var(--text-on-primary);
+}
 
 /* Link de detalhes (para pacientes) */
 .data-table .btn-details {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--primary-green);
-    text-decoration: none;
-    font-weight: 500;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary); /* <-- MUDOU */
+  text-decoration: none;
+  font-weight: 500;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 .data-table .btn-details:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
+/* Botão desabilitado */
+.btn-action.disabled {
+  background-color: var(--border-color); /* <-- MUDOU */
+  color: var(--text-secondary); /* <-- ADICIONADO */
+  cursor: not-allowed;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.btn-action.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Botões Principais (Salvar, Voltar, Novo) --- */
+/* Seletor corrigido para .btn.btn-primary */
+.btn.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--color-primary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn.btn-primary:hover {
+  background-color: var(--color-primary-darker); /* <-- MUDOU */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.back-button,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--text-secondary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.back-button:hover,
+.btn-secondary:hover {
+  background-color: var(--text-primary); /* <-- MUDOU */
+}
+
+/* --- Outros --- */
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -182,13 +244,12 @@
   margin-bottom: 1.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #555;
+  color: var(--text-secondary); /* <-- MUDOU */
   text-decoration: none;
   transition: color 0.2s ease-in-out;
 }
-
 .back-link:hover {
-  color: #00796b; /* Cor primária do tema */
+  color: var(--color-primary); /* <-- MUDOU */
 }
 
 .sortable-header {
@@ -207,233 +268,30 @@
   gap: 8px;
   transition: background-color 0.2s;
 }
-
 .sortable-header:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05); /* Mantido por ser sutil */
 }
-
 .sort-icon {
   font-size: 0.8em;
-  color: #00796b; /* Cor primária */
+  color: var(--color-primary); /* <-- MUDOU */
 }
 
-.btn-action.disabled {
-  background-color: #cccccc; /* Cinza claro */
-  cursor: not-allowed; /* Ícone de "proibido" ao passar o mouse */
-  opacity: 0.7;
-  pointer-events: none; /* Garante que a ação de clique não seja disparada */
-}
-
-/* Remove o efeito de hover do botão desabilitado */
-.btn-action.disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.filter-container {
-    margin-bottom: 20px;
-}
-
-.search-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 500px; /* Ou o tamanho que preferir */
-}
-
-.search-icon {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888; /* Cor do ícone */
-    font-size: 16px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 12px 20px 12px 45px; /* Aumenta o padding à esquerda para dar espaço ao ícone */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box; /* Garante que padding não afete a largura total */
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #007bff; /* Cor da borda ao focar */
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-/* =============================================== */
-/* ESTILIZAÇÃO PADRÃO PARA BOTÕES (VERSÃO CORRIGIDA) */
-/* =============================================== */
-
-/* Botão "Novo" no topo da página de listagem */
-.btn btn-primary {
-  background-color: #28a745; /* Verde */
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn btn-primary:hover {
-  background-color: #218838; /* Verde mais escuro */
-}
-
-/* --- Botões na Tabela (Detalhes/Editar/Excluir) --- */
-
-/* Célula que contém os botões de ação */
-.actions-cell {
-  display: flex;
-  gap: 8px; /* Espaçamento entre os botões */
-  justify-content: center;
-  align-items: center;
-}
-
-/* Estilo base para os botões de ação retangulares */
-.action-button {
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: none;
-  color: white;
-  font-weight: 500;
-  font-size: 0.85rem;
-  cursor: pointer;
-  text-decoration: none; /* Para o caso de ser um Link */
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: opacity 0.2s;
-}
-
-.action-button:hover {
-  opacity: 0.85;
-}
-
-/* Cor específica para o botão DETALHES (se aplicável) */
-.action-button.details {
-  background-color: #17a2b8; /* Azul-petróleo/Info */
-}
-
-/* Cor específica para o botão EDITAR */
-.action-button.edit {
-  background-color: #ffc107; /* Amarelo/Warning */
-  color: #212529; /* Texto escuro para melhor contraste */
-}
-
-/* Cor específica para o botão EXCLUIR */
-.action-button.delete {
-  background-color: #dc3545; /* Vermelho/Danger */
-}
-
-/* --- Botões nos Formulários (Salvar/Voltar) --- */
-/* (Estes já estavam corretos, mas incluídos para garantir) */
-
-.back-button {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s;
-}
-
-.back-button:hover {
-    background-color: #5a6268;
-}
-
-.btn btn-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s;
-}
-
-.btn btn-primary:hover {
-    background-color: #0056b3;
-}
-
-/* ===================================== */
-/* ESTILO PARA A BARRA DE BUSCA/FILTRO   */
-/* ===================================== */
-
-.search-container {
-  position: relative;
-  margin-bottom: 2rem;
-}
-
-.search-container .search-icon {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
-  color: #adb5bd; /* Cinza claro */
-}
-
-.search-container input {
-  width: 100%;
-  padding: 12px 20px 12px 40px; /* Espaço para o ícone à esquerda */
-  border-radius: 8px;
-  border: 1px solid #dee2e6; /* Borda cinza clara */
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.search-container input:focus {
-  outline: none;
-  border-color: #80bdff; /* Azul claro no foco */
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-/* Estilo para o botão de impressão */
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background-color: #6c757d;
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-/* Melhorias para a tabela de impressão */
+/* --- Impressão --- */
 @media print {
-  .actions-cell, th:last-child {
+  .actions-cell,
+  th:last-child {
     display: none !important;
   }
-  
   .data-table {
     width: 100% !important;
     font-size: 12pt;
+    /* Cores de impressão não usam variáveis de tema */
+    color: #000;
   }
-  
-  .data-table th, .data-table td {
+  .data-table th,
+  .data-table td {
     padding: 8px 12px;
     border: 1px solid #ddd;
+    background: #fff;
   }
 }

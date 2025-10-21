@@ -1,27 +1,17 @@
 /* src/styles/common.css */
 
 /* ==========================================================================
-   VARIÁVEIS DE COR E PADRÕES GERAIS
-   ========================================================================== */
-:root {
-    --primary-color: #00796b;      /* Verde principal (um pouco mais escuro) */
-    --primary-color-light: #00A99D;/* Verde claro para hover/links */
-    --accent-color: #ffc107;      /* Amarelo para botões de edição/alerta */
-    --danger-color: #dc3545;      /* Vermelho para exclusão */
-    --gray-bg: #f8f9fa;           /* Fundo geral das páginas */
-    --white-bg: #ffffff;          /* Fundo dos cards e tabelas */
-    --dark-text: #343a40;         /* Texto principal */
-    --light-text: #6c757d;        /* Texto secundário */
-    --border-color: #dee2e6;      /* Bordas de inputs e tabelas */
-}
+    O BLOCO :root FOI REMOVIDO DAQUI. 
+    Este arquivo agora usa as variáveis do theme.css
+   ========================================================================== */
 
 /* ==========================================================================
-   LAYOUT DE PÁGINA PADRÃO
-   ========================================================================== */
+   LAYOUT DE PÁGINA PADRÃO
+   ========================================================================== */
 .page-container {
   padding: 2rem;
-  background-color: var(--gray-bg);
-  min-height: calc(100vh - 120px); /* Ajustado para header e footer */
+  background-color: var(--bg-secondary); /* <-- MUDOU */
+  min-height: calc(100vh - 120px);
 }
 
 .page-header {
@@ -41,25 +31,25 @@
 
 .page-title h1 {
   font-size: 2rem;
-  color: var(--dark-text);
+  color: var(--text-primary); /* <-- MUDOU */
   margin: 0;
 }
 
 .page-title .icon {
   font-size: 2rem;
-  color: var(--primary-color);
+  color: var(--color-primary); /* <-- MUDOU */
 }
 
 .content-box {
-  background-color: var(--white-bg);
+  background-color: var(--bg-primary); /* <-- MUDOU */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* ==========================================================================
-   BOTÕES PADRONIZADOS
-   ========================================================================== */
+   BOTÕES PADRONIZADOS
+   ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -76,63 +66,66 @@
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--color-primary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
 }
 .btn-primary:hover {
-  background-color: var(--primary-color-light);
+  background-color: var(--color-primary-darker); /* <-- MUDOU */
 }
 
+/* Cores semânticas (perigo/aviso) são mantidas hard-coded */
 .btn-danger {
-  background-color: var(--danger-color);
-  color: white;
+  background-color: #dc3545; /* <-- MUDOU (valor do :root antigo) */
+  color: var(--text-on-primary); /* <-- MUDOU */
 }
 .btn-danger:hover {
   background-color: #c82333;
 }
 
 .btn-warning {
-  background-color: var(--accent-color);
-  color: var(--dark-text);
+  background-color: #ffc107; /* <-- MUDOU (valor do :root antigo) */
+  color: var(--text-primary); /* <-- MUDOU */
 }
 .btn-warning:hover {
   background-color: #e0a800;
 }
 
 .btn-secondary {
-  background-color: var(--light-text);
-  color: white;
+  background-color: var(--text-secondary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
 }
 .btn-secondary:hover {
-  background-color: #5a6268;
+  background-color: var(--text-primary); /* <-- MUDOU (para hover) */
 }
 
 /* ==========================================================================
-   TABELAS PADRONIZADAS
-   ========================================================================== */
+   TABELAS PADRONIZADAS
+   ========================================================================== */
 .data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
   vertical-align: middle;
+  color: var(--text-primary); /* <-- ADICIONADO */
 }
 .data-table thead {
-  background-color: var(--gray-bg);
+  background-color: var(--bg-tertiary); /* <-- MUDOU */
 }
 .data-table th {
   font-weight: 600;
-  color: var(--dark-text);
+  color: var(--text-primary); /* <-- MUDOU */
 }
 .data-table tbody tr:hover {
-  background-color: #f1f1f1;
+  background-color: var(--bg-tertiary); /* <-- MUDOU */
 }
 .data-table .actions-cell {
   display: flex;
@@ -140,8 +133,8 @@
 }
 
 /* ==========================================================================
-   FORMULÁRIOS PADRONIZADOS
-   ========================================================================== */
+   FORMULÁRIOS PADRONIZADOS
+   ========================================================================== */
 .form-container {
   max-width: 800px;
   margin: 1.5rem auto;
@@ -153,13 +146,16 @@
 .form-group label {
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--dark-text);
+  color: var(--text-primary); /* <-- MUDOU */
 }
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 0.8rem;
   border-radius: 6px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color); /* <-- MUDOU */
+  background-color: var(--bg-primary); /* <-- ADICIONADO */
+  color: var(--text-primary); /* <-- ADICIONADO */
 }
 .form-actions {
   margin-top: 2rem;
@@ -167,8 +163,8 @@
 }
 
 /* ==========================================================================
-   PAGINAÇÃO PADRONIZADA
-   ========================================================================== */
+   PAGINAÇÃO PADRONIZADA
+   ========================================================================== */
 .pagination-container {
   display: flex;
   align-items: center;
@@ -185,25 +181,29 @@
 .pagination-buttons button {
   min-width: 36px;
   padding: 6px 10px;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--border-color); /* <-- MUDOU */
+  background: var(--bg-primary); /* <-- MUDOU */
+  color: var(--text-primary); /* <-- ADICIONADO */
   cursor: pointer;
   border-radius: 4px;
   font-weight: 500;
 }
 
 .pagination-buttons button.active {
-  background: #1d72b8;
-  color: #fff;
-  border-color: #1d72b8;
+  background: var(--color-primary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
+  border-color: var(--color-primary); /* <-- MUDOU */
 }
 
 .pagination-buttons button:disabled {
-  opacity: .5;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .page-size-select {
   margin-left: 8px;
   padding: 4px 6px;
+  background-color: var(--bg-primary); /* <-- ADICIONADO */
+  color: var(--text-primary); /* <-- ADICIONADO */
+  border: 1px solid var(--border-color); /* <-- ADICIONADO */
 }

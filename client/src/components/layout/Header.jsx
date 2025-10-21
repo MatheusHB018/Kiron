@@ -14,6 +14,7 @@ import {
   FaUserCircle
 } from 'react-icons/fa';
 import './Header.css';
+import ThemeToggle from '../ThemeToggle'; // <-- 1. IMPORTE O COMPONENTE AQUI
 
 function Header() {
   const [tipoUsuario, setTipoUsuario] = useState(null);
@@ -30,7 +31,8 @@ function Header() {
       text: "Você será desconectado do sistema.",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#00A99D',
+      // Use as variáveis de cor do seu tema!
+      confirmButtonColor: 'var(--color-primary)', 
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sim, desejo sair!',
       cancelButtonText: 'Cancelar'
@@ -73,6 +75,9 @@ function Header() {
         <NavLink to="/perfil" className="header-nav-profile-link" title="Meu Perfil">
           <FaUserCircle /> <span>Perfil</span>
         </NavLink>
+
+        <ThemeToggle /> {/* <-- 2. ADICIONE O COMPONENTE AQUI */}
+
         <button onClick={handleLogout} className="logout-button" title="Sair do sistema">
           <FaSignOutAlt />
           <span>Sair</span>

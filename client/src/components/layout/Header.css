@@ -7,8 +7,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem 2rem;
-  background: linear-gradient(90deg, #004d40, #00796b);
-  color: white;
+  
+  /* Usa as variáveis primárias para o fundo */
+  background: linear-gradient(90deg, var(--color-primary-darker), var(--color-primary));
+  color: var(--text-on-primary); /* Texto sobre fundo primário */
+  
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-family: 'Poppins', sans-serif;
   position: sticky;
@@ -19,7 +22,7 @@
 /* --- LOGOTIPO --- */
 .header-logo-link {
   text-decoration: none;
-  color: white;
+  color: var(--text-on-primary); /* Texto sobre fundo primário */
 }
 
 .header-logo {
@@ -51,22 +54,31 @@
   align-items: center;
   gap: 0.6rem;
   text-decoration: none;
-  color: #E0E0E0;
+  
+  /* Texto inativo levemente transparente */
+  color: var(--text-on-primary);
+  opacity: 0.9; 
+  
   font-weight: 500;
   padding: 0.6rem 1rem;
   border-radius: 8px;
-  transition: color 0.3s ease, background-color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
   font-size: 0.9rem;
 }
 
 .header-nav a:hover {
-  color: #FFFFFF;
+  color: var(--text-on-primary);
+  opacity: 1; /* Opacidade total no hover */
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header-nav a.active {
-  color: #FFFFFF;
-  background-color: #00A99D;
+  color: var(--text-on-primary);
+  opacity: 1; /* Opacidade total no ativo */
+  
+  /* Usa a cor de acento (Azul Kiron) para o link ativo */
+  background-color: var(--color-accent);
+  
   font-weight: 600;
 }
 
@@ -74,7 +86,7 @@
 .header-user-actions {
   display: flex;
   align-items: center;
-  gap: 1rem; /* Espaço entre o link de perfil e o botão de sair */
+  gap: 1rem; 
 }
 
 /* Estilo para o link de perfil - consistente com a navegação */
@@ -83,26 +95,36 @@
   align-items: center;
   gap: 0.6rem;
   text-decoration: none;
-  color: #E0E0E0;
+  
+  color: var(--text-on-primary);
+  opacity: 0.9;
+  
   font-weight: 500;
   padding: 0.6rem 1rem;
   border-radius: 8px;
-  transition: color 0.3s ease, background-color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
   font-size: 0.9rem;
 }
 
 .header-nav-profile-link:hover {
-  color: #FFFFFF;
+  color: var(--text-on-primary);
+  opacity: 1;
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header-nav-profile-link.active {
-  color: #FFFFFF;
-  background-color: #00A99D;
+  color: var(--text-on-primary);
+  opacity: 1;
+  
+  /* Usa a cor de acento (Azul Kiron) para o link ativo */
+  background-color: var(--color-accent);
+  
   font-weight: 600;
 }
 
 /* --- BOTÃO DE SAIR (Estilo refinado) --- */
+/* Cores de perigo (vermelho) são mantidas hard-coded 
+   pois não fazem parte do tema principal (light/dark) */
 .logout-button {
   display: flex;
   align-items: center;
@@ -120,14 +142,14 @@
 }
 
 .logout-button:hover {
-  background-color: #d32f2f; /* Fundo vermelho no hover */
-  color: #ffffff; /* Texto branco no hover */
+  background-color: #d32f2f; 
+  color: var(--text-on-primary); /* Texto branco no hover (do tema) */
   border-color: #d32f2f;
 }
 
 /* --- AJUSTES DE RESPONSIVIDADE --- */
+/* (Nenhuma mudança de cor aqui) */
 
-/* Oculta o texto dos links em telas menores, mantendo apenas os ícones */
 @media (max-width: 1200px) {
   .header-nav a span,
   .header-nav-profile-link span,
@@ -138,7 +160,7 @@
   .header-nav a,
   .header-nav-profile-link,
   .logout-button {
-    padding: 0.8rem; /* Aumenta a área de clique nos ícones */
+    padding: 0.8rem; 
   }
   
   .header-nav {
@@ -146,7 +168,6 @@
   }
 }
 
-/* Oculta o nome no logo em telas muito pequenas */
 @media (max-width: 768px) {
     .header-logo span {
         display: none;

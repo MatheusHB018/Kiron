@@ -1,9 +1,16 @@
+/* src/components/layout/MainLayout.css */
+
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* Garante que o layout ocupe 100% da altura da tela */
+  background-color: var(--bg-secondary); /* Cor de fundo da sua página */
 }
 
 .main-content {
-  flex-grow: 1; /* Faz com que o conteúdo principal ocupe o espaço disponível */
+  flex: 1; /* Faz o conteúdo principal "empurrar" o Footer para baixo */
+  padding: 1.5rem; /* Um espaçamento interno */
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto; /* Centraliza o conteúdo principal */
 }

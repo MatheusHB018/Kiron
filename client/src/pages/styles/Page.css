@@ -1,14 +1,14 @@
-/* Define o fundo cinza claro para a área inteira da página */
+/* Define o fundo da área inteira da página */
 .page-container {
   padding: 2rem;
-  background-color: #f8f9fa; /* Fundo cinza claro */
-  min-height: calc(100vh - 60px); /* Ocupa a altura da tela menos o header */
+  background-color: var(--bg-secondary);
+  min-height: calc(100vh - 60px);
 }
 
 /* Container do cabeçalho da página (Título + Botão) */
 .page-header {
   display: flex;
-  justify-content: space-between; /* Título na esquerda, botão na direita */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
@@ -23,18 +23,21 @@
 .page-title h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #343a40; /* Cor escura para o texto */
+  color: var(--text-primary);
+  /* <-- MUDOU */
   margin: 0;
 }
 
 .page-title .icon {
   font-size: 2rem;
-  color: #495057;
+  color: var(--text-secondary);
+  /* <-- MUDOU */
 }
 
 /* Container principal do conteúdo (a caixa branca) */
 .content-box {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+  /* <-- MUDOU */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);

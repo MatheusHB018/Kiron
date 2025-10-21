@@ -7,51 +7,51 @@
   gap: 0.5rem;
   margin-bottom: 1.5rem;
   text-decoration: none;
-  color: #007bff;
+  color: var(--color-accent); /* <-- MUDOU (Usa o Azul Kiron) */
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .back-link:hover {
-  color: #0056b3;
+  color: var(--color-primary); /* <-- MUDOU (Usa o Verde Kiron no hover) */
   text-decoration: underline;
 }
 
 /* Card principal de detalhes */
 .parceiro-detalhes .parceiro-card {
-  background-color: #fff;
+  background-color: var(--bg-primary); /* <-- MUDOU */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden; /* Garante que o border-radius se aplique a tudo */
+  overflow: hidden;
   margin-top: 1rem;
 }
 
 /* Cabeçalho do Card */
 .parceiro-card .card-header {
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary); /* <-- MUDOU */
   padding: 2rem;
   text-align: center;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--border-color); /* <-- MUDOU */
   position: relative;
 }
 
 .parceiro-card .card-header .icon-lg {
   font-size: 3rem;
-  color: #00A99D; /* Cor principal do tema */
+  color: var(--color-primary); /* <-- MUDOU */
   margin-bottom: 1rem;
 }
 
 .parceiro-card .card-header h2 {
   margin: 0;
   font-size: 1.75rem;
-  color: #343a40;
+  color: var(--text-primary); /* <-- MUDOU */
 }
 
 .parceiro-card .card-header .tipo {
   display: inline-block;
   margin-top: 0.75rem;
-  background-color: #00A99D;
-  color: white;
+  background-color: var(--color-primary); /* <-- MUDOU */
+  color: var(--text-on-primary); /* <-- MUDOU */
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
   font-size: 0.9rem;
@@ -68,13 +68,12 @@
 .info-group {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Espaçamento entre os itens de um mesmo grupo */
+  gap: 1rem;
   padding: 1.5rem 0;
 }
 
-/* Adiciona uma linha separadora entre os grupos */
 .info-group + .info-group {
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--border-color); /* <-- MUDOU */
 }
 
 .info-group span {
@@ -82,19 +81,19 @@
   align-items: center;
   gap: 0.8rem;
   font-size: 1rem;
-  color: #495057;
+  color: var(--text-secondary); /* <-- MUDOU (cor base do texto) */
 }
 
 /* Ícones dentro dos grupos */
 .info-group .info-icon {
   font-size: 1.2rem;
-  color: #00A99D;
-  width: 20px; /* Largura fixa para alinhamento perfeito */
+  color: var(--color-primary); /* <-- MUDOU */
+  width: 20px;
   text-align: center;
 }
 
 /* Rótulos (Ex: "Responsável:", "CNPJ:") */
 .info-group .info-label {
   font-weight: 600;
-  color: #343a40;
+  color: var(--text-primary); /* <-- MUDOU (sobrescreve o text-secondary) */
 }
