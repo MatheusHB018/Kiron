@@ -101,6 +101,14 @@ npm run dev
 -   **Manoela Pinheiro da Silva**
 -   **Matheus Henrique da Conceição Bispo**
 
+  ## 👥 Equipe da Startup
+
+-   **Gustavo Henrique Bispo Costa**
+-   **Victor Azambuja**
+-   **André Ferreira**
+-   **Diogo Campos**
+-   **Matheus Henrique da Conceição Bispo**
+
 ## 📜 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
