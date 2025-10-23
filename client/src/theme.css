@@ -21,7 +21,6 @@
   --font-size-2xl: 2rem;    /* 32px */
   --font-size-3xl: 2.5rem;  /* 40px */
 
-  
 /* * ==================================
  * Colors
  * ====================================
@@ -37,6 +36,10 @@
   --bg-primary: #ffffff;    /* Fundo de "cartões" e containers */
   --bg-secondary: #e7e7e9;  /* Fundo principal da página (do seu logo) */
   --bg-tertiary: #f8f9fa;   /* Um cinza neutro para fundos sutis (ex: logo) */
+
+  --color-danger-text: #080202;   /* Texto vermelho claro */
+  --color-danger-bg: #ffb6b6;     /* Fundo vermelho muito escuro */
+  --color-danger-border: #d80000; /* Borda vermelha escura */
 
   /* Cores de Texto (Text) */
   --text-primary: #002c71;    /* Texto principal (Azul Kiron) */
@@ -63,6 +66,10 @@
   --bg-primary: #031531;    /* Fundo do cartão (azul mais claro) */
   --bg-secondary: #000c1d;  /* Fundo da página (azul mais escuro) */
   --bg-tertiary: #002c71;   /* Fundo do logo (o Azul Kiron original) */
+
+  --color-danger-text: #fff5f4;   /* Texto vermelho claro */
+  --color-danger-bg: #1f0404;     /* Fundo vermelho muito escuro */
+  --color-danger-border: #d11818; /* Borda vermelha escura */
 
   /* Cores de Texto (Text) */
   --text-primary: #e7e8f2;    /* Texto principal (Fundo Claro Kiron) */

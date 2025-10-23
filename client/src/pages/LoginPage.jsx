@@ -61,7 +61,7 @@ function LoginPage() {
                     <div className="logo-container">
                       <img src={Logo} alt="Logotipo da Kiron" className="logo" />
                     </div>
-                    <h1 className="login-title">Bem-vindo ao Kiron</h1>
+                    <h1 className="login-title">Bem-vindo</h1>
                     
                     <form className="login-form" onSubmit={handleSubmit} noValidate>
                         {/* ... (código dos inputs de email e senha) ... */}

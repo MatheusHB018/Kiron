@@ -5,12 +5,14 @@
 
 /* 2. Declara a DEFINIÇÃO da fonte Colmeak */
 @font-face {
-  font-family: 'Colmeak'; /* O nome que você vai usar no CSS */
-  
+  font-family: 'Colmeak';
+  /* O nome que você vai usar no CSS */
+
   /* Caminho para o arquivo da fonte */
-  src: url('../public/fonts/coalmeak/COLMEAK.OTF') format('opentype'); /* <-- CORRIGIDO */
-        
-  font-weight: 400; /* 400 = normal */
+  src: url('../public/fonts/coalmeak/COLMEAK.OTF') format('opentype');
+
+  font-weight: 400;
+  /* 400 = normal */
   font-style: normal;
 }
 
@@ -18,26 +20,51 @@
 html {
   box-sizing: border-box;
 }
-*, *:before, *:after {
+
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
-/* 4. Reseta o 'body' e aplica as VARIÁVEIS DE TEMA */
+/* 4. Reseta o 'body' e aplica as VARIÁVEIS DE TEMA PADRÃO */
 body {
   margin: 0;
   padding: 0;
-  
+
+  /* --- ADIÇÕES IMPORTANTES --- */
+  font-family: var(--font-family-body);
+  /* Fonte padrão */
+  font-size: var(--font-size-base);
+  /* Tamanho padrão */
+  background-color: var(--bg-secondary);
+  /* Fundo da página */
+  color: var(--text-primary);
+  /* Cor do texto padrão */
+  /* --- FIM DAS ADIÇÕES --- */
+
   min-height: 100vh;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 
   /* Adicionado para fontes mais suaves */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 5. (ADICIONADO) Regra global para títulos */
-h1, h2, h3, h4, h5, h6 {
+/* 5. Regra global para títulos */
+/* Você usou --font-family-display (Colmeak), o que é ótimo para títulos!
+   Se quisesse usar a Switzer (como definimos em --font-family-heading),
+   era só trocar a variável aqui.
+*/
+h1, h2, h3,h4,h5,h6 {
   font-family: var(--font-family-display);
   color: var(--text-primary);
-  margin-top: 0; 
+  margin-top: 0;
+}
+
+/* 6. Regra para labels e links */
+label, a {
+  font-family: var(--font-family-body);
+  color: var(--text-primary);
+  margin-top: 0;
 }

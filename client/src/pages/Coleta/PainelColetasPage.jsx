@@ -111,7 +111,7 @@ function PainelColetasPage() {
 
       {/* Notificações */}
       {notificacoes.length > 0 && (
-        <div className="notificacao-alerta" style={{ color: 'red', margin: '10px 0', padding: '10px', borderRadius: '8px', background: '#fff0f0', border: '1px solid #ffb3b3' }}>
+        <div className="notificacao-alerta" >
           <strong>Atenção:</strong> Existem coletas agendadas com data já passada e não confirmadas!
           <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
           {notificacoes.map(n => {
@@ -232,7 +232,7 @@ function PainelColetasPage() {
                 const isAtrasada = coletaComMetodos.isAtrasada();
                 
                 return (
-                  <tr key={c.id_agenda} style={{ background: isAtrasada ? '#ffe5e5' : 'inherit' }}>
+                  <tr key={c.id_agenda} className={isAtrasada ? 'tr-Atrasada' : ''}>
                     <td>{c.id_agenda}</td>
                     <td>{getPacienteNome(c.id_paciente)}</td>
                     <td>{getParceiroNome(c.id_parceiro)}</td>

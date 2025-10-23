@@ -50,7 +50,7 @@ function Header() {
     <header className="header-container">
       <NavLink to="/dashboard" className="header-logo-link">
         <div className="header-logo">
-          <img src="/logotipo.png" alt="Kiron Logo" />
+          <img src="/LogoNav.png" alt="Kiron Logo" />
           <span>Kiron</span>
         </div>
       </NavLink>

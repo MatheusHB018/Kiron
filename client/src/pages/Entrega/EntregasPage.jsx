@@ -159,7 +159,7 @@ function EntregasPage() {
 
       {/* Notificações */}
       {notificacoes.length > 0 && (
-        <div className="notificacao-alerta" style={{ color: 'red', margin: '10px 0', padding: '10px', borderRadius: '8px', background: '#fff0f0', border: '1px solid #ffb3b3' }}>
+        <div className="notificacao-alerta">
           <strong>Atenção:</strong> Existem entregas com materiais vencidos e não devolvidos!
           <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
           {notificacoes.map(n => {
@@ -169,7 +169,7 @@ function EntregasPage() {
               <li key={n.id_entrega} style={{ marginBottom: 8 }}>
                 <span style={{ fontWeight: 500 }}>
                   Material entregue em {entregaComMetodos.getDataEntregaFormatada()}, devolução prevista para {entregaComMetodos.getDataDevolucaoFormatada()}<br />
-                  Paciente: <span style={{ color: '#c00' }}>{getPacienteNome(n.id_paciente)}</span> | Material: <span style={{ color: '#c00' }}>{getResiduoNome(n.id_residuo)}</span>
+                  Paciente: <span style={{ color:  '#006f40'  }}>{getPacienteNome(n.id_paciente)}</span> | Material: <span style={{ color: '#c00' }}>{getResiduoNome(n.id_residuo)}</span>
                 </span>
                 <button
                   onClick={async () => {
@@ -280,7 +280,7 @@ function EntregasPage() {
                 const isVencida = entregaComMetodos.isVencido();
                 
                 return (
-                  <tr key={e.id_entrega} style={{ background: isVencida ? '#ffe5e5' : 'inherit' }}>
+                  <tr key={e.id_entrega} className={isVencida ? 'tr-vencida' : ''}>
                     <td>{e.id_entrega}</td>
                     <td>{getPacienteNome(e.id_paciente)}</td>
                     <td>{getResiduoNome(e.id_residuo)}</td>

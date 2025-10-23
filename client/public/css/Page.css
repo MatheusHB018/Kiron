@@ -42,3 +42,40 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+
+/* Em common.css ou outro arquivo CSS */
+
+/* Em common.css */
+.notificacao-alerta {
+  color: var(--color-danger-text);
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Adicione em ListPage.css ou common.css 
+   Agora, esta regra se aplica a AMBAS as classes
+*/
+
+.data-table tbody tr.tr-vencida,
+.data-table tbody tr.tr-Atrasada {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  font-weight: 600; 
+}
+
+/* Garante que a cor do texto seja aplicada em todas as células */
+.data-table tbody tr.tr-vencida td,
+.data-table tbody tr.tr-Atrasada td {
+  color: var(--color-danger-text);
+}
+
+/* Sobrescreve o efeito de hover padrão */
+.data-table tbody tr.tr-vencida:hover,
+.data-table tbody tr.tr-Atrasada:hover {
+  background-color: var(--color-danger-bg);
+  opacity: 0.9; 
+}

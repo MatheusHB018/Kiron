@@ -79,10 +79,10 @@
   padding: 0.8rem 1rem;
   border: 1px solid var(--border-color); /* <- MUDOU */
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   
-  /* Adição: Cores de fundo e texto para os inputs */
+  /* Adição: Cores de fundo e texto paora os inputs */
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
