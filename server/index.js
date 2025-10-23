@@ -1,4 +1,7 @@
 // server/index.js
+
+
+// UM DIA ISSO TERA QUE SER ARRUMADO MAS EU MESMO NÃO VOU NEM RELAR NESSE CODIGO ass:eu
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
