@@ -1,5 +1,32 @@
 
 :root {
+
+
+/* * ==================================
+ * Fonts
+ * ====================================
+ */
+  --font-family-body: 'Switzer', system-ui, sans-serif; /* padrao */
+  --font-family-heading: 'Switzer', system-ui, sans-serif;
+  --font-family-display: 'Colmeak', sans-serif; /* especial */
+
+
+  /* size font */
+  --font-size-xs: 0.75rem;  /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem;   /* 16px (padrão do body) */
+  --font-size-md: 1.125rem; /* 18px */
+  --font-size-lg: 1.25rem;  /* 20px */
+  --font-size-xl: 1.5rem;   /* 24px */
+  --font-size-2xl: 2rem;    /* 32px */
+  --font-size-3xl: 2.5rem;  /* 40px */
+
+  
+/* * ==================================
+ * Colors
+ * ====================================
+ */
+
   /* Cores da Marca (Brand) */
   --color-primary: #006f40; /* Verde Kiron */
   --color-primary-darker: #005a33; /* Versão escura para hover */
@@ -20,10 +47,9 @@
   --border-color: #ced4da;
 }
 
-/* * ========================================
+/* * ==================================
  * TEMA ESCURO (DARK MODE)
- * Aplicado quando [data-theme="dark"]
- * ========================================
+ * ====================================
  */
 [data-theme="dark"] {
   /* Cores da Marca (Brand) */

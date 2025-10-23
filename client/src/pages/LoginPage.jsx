@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaUser, FaLock, FaArrowRight, FaKey, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 
-import './styles/LoginPage.css';
-import './styles/ForgotPassword.css';
-import Logo from '/Logo.png';
+import '../../public/css/LoginPage.css';
+import '../../public/css/ForgotPassword.css';
+import Logo from '../../public/Logo.png';
 import { login } from '../services/api';
 import ForgotPasswordFlow from '../components/auth/ForgotPasswordFlow'; // Importa o novo componente
 

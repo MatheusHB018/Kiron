@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { API_URL } from '../services/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './styles/Page.css';
-import './styles/ListPage.css';
+import '../../public/css/Page.css';
+import '../../public/css/ListPage.css';
 
 function ResiduosPage() {
   const navigate = useNavigate();

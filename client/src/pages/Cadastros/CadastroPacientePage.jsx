@@ -7,8 +7,8 @@ import axios from 'axios';
 import { InputMask } from '@react-input/mask'; // ATUALIZADO: Importar da nova biblioteca
 import { API_URL } from '../../services/api';
 import EntityFactory from '../../services/EntityFactory';
-import '../styles/Page.css';
-import '../styles/CadastroProfissionalPage.css';
+import '../../../public/css/Page.css';
+import '../../../public/css/CadastroProfissionalPage.css';
 
 function CadastroPacientePage() {
     const [formData, setFormData] = useState({

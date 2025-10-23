@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaBuilding, FaPhone, FaEnvelope, FaMapMarkerAlt, FaUser, FaInfoCircle, FaIdCard } from 'react-icons/fa';
 import axios from 'axios';
-import './styles/Page.css';
-import './styles/Detalhes.css'; 
+import '../../public/css/Page.css';
+import '../../public/css/Detalhes.css'; 
 
 export default function ParceiroDetalhesPage() {
   const { id } = useParams();

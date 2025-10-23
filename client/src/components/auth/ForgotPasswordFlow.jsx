@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FaEnvelope, FaKey, FaLock, FaSpinner } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { requestPasswordReset, validateResetCode, resetPassword } from '../../services/api';
-import '../../pages/styles/ForgotPassword.css';
+import '../../../public/css/ForgotPassword.css';
 
 function ForgotPasswordFlow({ closeModal }) {
     const [step, setStep] = useState(1);

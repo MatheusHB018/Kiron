@@ -6,8 +6,8 @@ import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaPrint } from 'react-i
 import { API_URL } from '../services/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './styles/Page.css';
-import './styles/ListPage.css';
+import '../../public/css/Page.css';
+import '../../public/css/ListPage.css';
 
 function PacientesPage() {
   const [pacientes, setPacientes] = useState([]);

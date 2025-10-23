@@ -14,8 +14,8 @@ import {
 } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import '../styles/Page.css';
-import '../styles/CadastroProfissionalPage.css'; // Reutilizando estilos
+import '../../../public/css/Page.css';
+import '../../../public/css/CadastroProfissionalPage.css'; // Reutilizando estilos
 
 function EditarParceiroPage() {
   const { id } = useParams();

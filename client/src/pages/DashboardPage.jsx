@@ -7,7 +7,7 @@ import {
   FaChartPie,
   FaHandshake
 } from 'react-icons/fa';
-import './styles/DashboardPage.css';
+import '../../public/css/DashboardPage.css';
 
 function DashboardPage() {
   return (

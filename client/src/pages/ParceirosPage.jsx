@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaArrowUp, FaArrowDown, FaPrint } from 'react-icons/fa';
 import { API_URL } from '../services/api';
-import './styles/Page.css';
-import './styles/ListPage.css';
+import '../../public/css/Page.css';
+import '../../public/css/ListPage.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 

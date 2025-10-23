@@ -1,27 +1,43 @@
-/* client/src/index.css */
+/* src/index.css */
 
-/* Define o padrão de 'box-sizing' para todos os elementos.
-   Isso evita que padding e bordas aumentem a largura total dos elementos,
-   prevenindo a maioria das causas de barras de rolagem. */
-   html {
-    box-sizing: border-box;
-  }
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+/* 1. Importa as DEFINIÇÕES da fonte Switzer */
+@import url('../public/css/switzer.css');
+
+/* 2. Declara a DEFINIÇÃO da fonte Colmeak */
+@font-face {
+  font-family: 'Colmeak'; /* O nome que você vai usar no CSS */
   
-  /* Reseta o 'body' e aplica a regra principal */
-  body {
-    margin: 0; /* Remove margens padrão */
-    padding: 0; /* Remove preenchimentos padrão */
-    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-    
-    /* Cor de fundo para as áreas fora do conteúdo principal */
-    background-color: #f0f2f5; 
-    
-    width: 100%;
-    min-height: 100vh;
+  /* Caminho para o arquivo da fonte */
+  src: url('../public/fonts/coalmeak/COLMEAK.OTF') format('opentype'); /* <-- CORRIGIDO */
+        
+  font-weight: 400; /* 400 = normal */
+  font-style: normal;
+}
+
+/* 3. Regras Globais */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* 4. Reseta o 'body' e aplica as VARIÁVEIS DE TEMA */
+body {
+  margin: 0;
+  padding: 0;
   
-    /* A regra definitiva para remover a barra de rolagem horizontal */
-    overflow-x: hidden; 
-  }
+  min-height: 100vh;
+  overflow-x: hidden; 
+
+  /* Adicionado para fontes mais suaves */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 5. (ADICIONADO) Regra global para títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  color: var(--text-primary);
+  margin-top: 0; 
+}

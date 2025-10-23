@@ -5,8 +5,8 @@ import { FaBoxOpen, FaSave, FaArrowLeft } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../services/api';
 import EntityFactory from '../../services/EntityFactory';
-import '../styles/Page.css';
-import '../styles/CadastroProfissionalPage.css';
+import '../../../public/css/Page.css';
+import '../../../public/css/CadastroProfissionalPage.css';
 
 function CadastroResiduoPage() {
   const navigate = useNavigate();

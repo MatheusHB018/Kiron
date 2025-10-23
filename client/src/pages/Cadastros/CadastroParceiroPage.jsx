@@ -15,8 +15,8 @@ import {
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import EntityFactory from '../../services/EntityFactory';
-import '../styles/Page.css';
-import '../styles/CadastroProfissionalPage.css'; // Pode reutilizar os estilos
+import '../../../public/css/Page.css';
+import '../../../public/css/CadastroProfissionalPage.css'; // Pode reutilizar os estilos
 
 function CadastroParceiroPage() {
   const [form, setForm] = useState({

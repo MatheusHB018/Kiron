@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaEdit, FaArrowLeft, FaSave, FaCalendarCheck } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../services/api';
-import '../styles/Page.css';
+import '../../../public/css/Page.css';
 
 
 function EditarColetaPage() {

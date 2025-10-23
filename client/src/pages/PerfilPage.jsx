@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { FaUserCircle, FaSave, FaSpinner, FaLock, FaEye, FaEyeSlash, FaMapMarkerAlt, FaUser, FaEnvelope } from 'react-icons/fa';
 import { getMeuPerfil, updateMeuPerfil, updateMinhaSenha } from '../services/api';
-import './styles/Page.css';
-import './styles/CadastroProfissionalPage.css';
+import '../../public/css/Page.css';
+import '../../public/css/CadastroProfissionalPage.css';
 
 function PerfilPage() {
     const [formData, setFormData] = useState({

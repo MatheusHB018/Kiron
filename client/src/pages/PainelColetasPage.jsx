@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaCalendarCheck } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import './styles/Page.css';
+import '../../public/css/Page.css';
 import { API_URL } from '../services/api';
 import EntityFactory from '../services/EntityFactory';
 

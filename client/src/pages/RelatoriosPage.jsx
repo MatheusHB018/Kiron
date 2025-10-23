@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { API_URL } from '../services/api';
-import './styles/RelatoriosPage.css';
+import '../../public/css/RelatoriosPage.css';
 import { Bar, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

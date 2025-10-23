@@ -1,5 +1,5 @@
 // src/pages/AgendamentoPage.jsx
-import './styles/Page.css';
+import '../../public/css/Page.css';
 
 function AgendamentoPage() {
   return (
