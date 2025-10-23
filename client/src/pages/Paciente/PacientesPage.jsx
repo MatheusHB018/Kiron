@@ -3,11 +3,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaHandshake, FaPlus, FaSearch, FaEdit, FaTrash, FaPrint } from 'react-icons/fa';
-import { API_URL } from '../services/api';
+import { API_URL } from '../../services/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import '../../public/css/Page.css';
-import '../../public/css/ListPage.css';
+import '../../../public/css/Page.css';
+import '../../../public/css/ListPage.css';
 
 function PacientesPage() {
   const [pacientes, setPacientes] = useState([]);

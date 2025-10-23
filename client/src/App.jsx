@@ -4,36 +4,36 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Layouts e Componentes
 import MainLayout from './components/layout/MainLayout.jsx';
 import AdminRoute from './components/auth/AdminRoute.jsx';
-import ParceiroDetalhesPage from './pages/ParceiroDetalhesPage.jsx';
+import ParceiroDetalhesPage from './pages/Paceiro/ParceiroDetalhesPage.jsx';
 
 // Cadastros
-import CadastroParceiroPage from './pages/Cadastros/CadastroParceiroPage.jsx';
-import CadastroResiduoPage from './pages/Cadastros/CadastroResiduoPage.jsx';
-import CadastroColetaPage from './pages/Cadastros/CadastroColetaPage.jsx';
-import CadastroProfissionalPage from './pages/Cadastros/CadastroProfissionalPage.jsx';
-import CadastroPacientePage from './pages/Cadastros/CadastroPacientePage.jsx'; 
-import CadastroEntregaPage from './pages/Cadastros/CadastroEntregaPage.jsx';
+import CadastroParceiroPage from './pages/Paceiro/CadastroParceiroPage.jsx';
+import CadastroResiduoPage from './pages/Residuo/CadastroResiduoPage.jsx';
+import CadastroColetaPage from './pages/Coleta/CadastroColetaPage.jsx';
+import CadastroProfissionalPage from './pages/Profissional/CadastroProfissionalPage.jsx';
+import CadastroPacientePage from './pages/Paciente/CadastroPacientePage.jsx'; 
+import CadastroEntregaPage from './pages/Entrega/CadastroEntregaPage.jsx';
 
 // Editar
-import EditarParceiroPage from './pages/Editar/EditarParceiroPage.jsx';
-import EditarResiduoPage from './pages/Editar/EditarResiduoPage.jsx';
-import EditarColetaPage from './pages/Editar/EditarColetaPage.jsx';
-import EditarUsuarioPage from './pages/Editar/EditarUsuarioPage.jsx';
-import EditarPacientePage from './pages/Editar/EditarPacientePage.jsx';
-import EditarEntregaPage from './pages/Editar/EditarEntregaPage.jsx'; 
+import EditarParceiroPage from './pages/Paceiro/EditarParceiroPage.jsx';
+import EditarResiduoPage from './pages/Residuo/EditarResiduoPage.jsx';
+import EditarColetaPage from './pages/Coleta/EditarColetaPage.jsx';
+import EditarUsuarioPage from './pages/Usuario/EditarUsuarioPage.jsx';
+import EditarPacientePage from './pages/Paciente/EditarPacientePage.jsx';
+import EditarEntregaPage from './pages/Entrega/EditarEntregaPage.jsx'; 
 
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import PacientesPage from './pages/PacientesPage.jsx';
-import PacienteDetalhesPage from './pages/PacienteDetalhesPage.jsx';
-import ResiduosPage from './pages/ResiduosPage.jsx';
-import PainelColetasPage from './pages/PainelColetasPage.jsx';
-import DetalhesColetaPage from './pages/DetalhesColetaPage.jsx';
+import PacientesPage from './pages/Paciente/PacientesPage.jsx';
+import PacienteDetalhesPage from './pages/Paciente/PacienteDetalhesPage.jsx';
+import ResiduosPage from './pages/Residuo/ResiduosPage.jsx';
+import PainelColetasPage from './pages/Coleta/PainelColetasPage.jsx';
+import DetalhesColetaPage from './pages/Coleta/DetalhesColetaPage.jsx';
 import RelatoriosPage from './pages/RelatoriosPage.jsx';
-import ParceirosPage from './pages/ParceirosPage.jsx';
+import ParceirosPage from './pages/Paceiro/ParceirosPage.jsx';
 import PerfilPage from './pages/PerfilPage.jsx';
-import ListarUsuarioPage from './pages/ListarUsuarioPage.jsx';
-import EntregasPage from './pages/EntregasPage.jsx';
+import ListarUsuarioPage from './pages/Usuario/ListarUsuarioPage.jsx';
+import EntregasPage from './pages/Entrega/EntregasPage.jsx';
 
 
 function App() {

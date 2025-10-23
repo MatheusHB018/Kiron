@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaCalendarCheck } from 'react-icons/fa';
-import { API_URL } from '../services/api';
-import '../../public/css/Page.css';
+import { API_URL } from '../../services/api';
+import '../../../public/css/Page.css';
 
 function DetalhesColetaPage() {
   const { id } = useParams();

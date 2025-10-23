@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaPlus, FaSearch, FaEdit, FaTrash, FaArrowUp, FaArrowDown, FaUserPlus } from 'react-icons/fa';
 
-import { getUsuarios, deleteUsuario } from '../services/api';
-import '../../public/css/ListPage.css';
+import { getUsuarios, deleteUsuario } from '../../services/api';
+import '../../../public/css/ListPage.css';
 
 const ListarUsuarioPage = () => {
     const [usuarios, setUsuarios] = useState([]);

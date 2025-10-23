@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUser, FaIdCard, FaPhone, FaEnvelope, FaMapMarkerAlt, FaCalendarAlt } from 'react-icons/fa';
-import { API_URL } from '../services/api';
-import '../../public/css/Page.css';
-import '../../public/css/Detalhes.css';
+import { API_URL } from '../../services/api';
+import '../../../public/css/Page.css';
+import '../../../public/css/Detalhes.css';
 
 function PacienteDetalhesPage() {
   const { id } = useParams();

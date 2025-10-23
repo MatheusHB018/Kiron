@@ -3,11 +3,11 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBoxOpen, FaPlus, FaEdit, FaTrash, FaSearch, FaPrint } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { API_URL } from '../services/api';
+import { API_URL } from '../../services/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import '../../public/css/Page.css';
-import '../../public/css/ListPage.css';
+import '../../../public/css/Page.css';
+import '../../../public/css/ListPage.css';
 
 function ResiduosPage() {
   const navigate = useNavigate();
